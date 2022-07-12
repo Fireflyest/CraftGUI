@@ -1,15 +1,16 @@
 package org.fireflyest.craftgui.view;
 
 import org.fireflyest.craftgui.api.ViewPage;
-import org.fireflyest.craftgui.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.fireflyest.craftgui.item.ViewItemBuilder;
+import org.fireflyest.craftgui.util.ItemUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Fireflyest
@@ -20,24 +21,24 @@ public class ErrorPage implements ViewPage {
 
     private final Inventory inventory;
 
-    private final Map<Integer, ItemStack> itemMap = new ConcurrentHashMap<>();
+    private final Map<Integer, ItemStack> itemMap = new HashMap<>();
 
     public ErrorPage() {
-        this.inventory = Bukkit.createInventory(null, 9, "页面未找到(NON_FOUND)");
+        this.inventory = Bukkit.createInventory(null, 9, "§c§lNON_FOUND");
 
         this.refreshPage();
     }
 
     @Override
     public @NotNull Map<Integer, ItemStack> getItemMap() {
-        Map<Integer, ItemStack> itemStackMap = new ConcurrentHashMap<>(itemMap);
+        Map<Integer, ItemStack> itemStackMap = new HashMap<>(itemMap);
         itemStackMap.put(0, new ItemStack(Material.STONE));
         return itemStackMap;
     }
 
     @Override
     public @NotNull Map<Integer, ItemStack> getButtonMap() {
-        return new ConcurrentHashMap<>(itemMap);
+        return new HashMap<>(itemMap);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ErrorPage implements ViewPage {
 
     @Override
     public String getTarget() {
-        return ErrorView.NOT_FOUND;
+        return null;
     }
 
     @Override
@@ -67,7 +68,8 @@ public class ErrorPage implements ViewPage {
     }
 
     @Override
-    public void setPre(ViewPage pre) { }
+    public void setPre(ViewPage pre) {
+    }
 
     @Override
     public void setNext(ViewPage pre) {
@@ -75,10 +77,10 @@ public class ErrorPage implements ViewPage {
 
     @Override
     public void refreshPage() {
-        ItemStack close = new ItemStack(Material.BARRIER);
-        ItemUtils.setDisplayName(close, "§c关闭");
-        ItemUtils.addLore(close, "§f点击关闭界面");
-
+        ItemStack close = new ViewItemBuilder(Material.REDSTONE)
+                .name("§c关闭")
+                .lore("§f按§3ESC§f关闭界面")
+                .build();
         itemMap.put(8, close);
     }
 }

@@ -46,7 +46,7 @@ public class ViewGuideImpl implements ViewGuide {
 
     @Override
     public ViewPage getUsingPage(@NotNull String playerName) {
-        return viewUsing.getOrDefault(playerName, errorView.getFirstPage(ErrorView.NOT_FOUND));
+        return viewUsing.getOrDefault(playerName, errorView.getFirstPage(null));
     }
 
     @Override
@@ -118,6 +118,6 @@ public class ViewGuideImpl implements ViewGuide {
 
     @Override
     public boolean isViewer(String playerName) {
-        return viewUsing.containsKey(playerName) && viewUsing.get(playerName) != errorView.getFirstPage(ErrorView.NOT_FOUND);
+        return viewUsing.containsKey(playerName) && viewUsing.get(playerName) != errorView.getFirstPage(null);
     }
 }
