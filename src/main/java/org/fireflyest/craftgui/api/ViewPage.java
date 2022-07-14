@@ -13,14 +13,14 @@ import java.util.Map;
 public interface ViewPage {
 
     /**
-     * 获取物品按钮，包括固定按钮和动态按钮
+     * 获取全部按钮，异步展示
      * @return 动态按钮
      */
     @NotNull
     Map<Integer, ItemStack> getItemMap();
 
     /**
-     * 获取固定物品按钮，展示速度较动态按钮快
+     * 获取固定物品按钮，直接展示
      * @return 固定按钮
      */
     @NotNull
@@ -77,4 +77,8 @@ public interface ViewPage {
      */
     void refreshPage();
 
+    /**
+     * 更新容器标题
+     */
+    void updateTitle(String title);
 }

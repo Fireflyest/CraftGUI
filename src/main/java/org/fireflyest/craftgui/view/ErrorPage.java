@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.fireflyest.craftgui.item.ViewItemBuilder;
-import org.fireflyest.craftgui.util.ItemUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -19,13 +18,12 @@ import java.util.Map;
 
 public class ErrorPage implements ViewPage {
 
-    private final Inventory inventory;
+    private Inventory inventory;
 
     private final Map<Integer, ItemStack> itemMap = new HashMap<>();
 
     public ErrorPage() {
-        this.inventory = Bukkit.createInventory(null, 9, "§c§lNON_FOUND");
-
+        this.updateTitle("404");
         this.refreshPage();
     }
 
@@ -82,5 +80,10 @@ public class ErrorPage implements ViewPage {
                 .lore("§f按§3ESC§f关闭界面")
                 .build();
         itemMap.put(8, close);
+    }
+
+    @Override
+    public void updateTitle(String title) {
+        inventory = Bukkit.createInventory(null, 9, "§c§lNON_FOUND §7" + title);
     }
 }

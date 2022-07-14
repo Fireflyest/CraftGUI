@@ -109,4 +109,9 @@ public class SimplePage implements ViewPage {
         itemMap.put(8, close);
     }
 
+    @Override
+    public void updateTitle(String title) {
+
+    }
+
 }
