@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
- * 页面，用target作为标签，每个标签下是一个ViewPage链表
+ * 一个ViewPage相当于一个链表节点
  */
 public interface ViewPage {
 

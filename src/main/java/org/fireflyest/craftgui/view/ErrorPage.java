@@ -18,12 +18,16 @@ import java.util.Map;
 
 public class ErrorPage implements ViewPage {
 
+    // 界面载体
     private Inventory inventory;
 
+    // 固定按钮物品位置
     private final Map<Integer, ItemStack> itemMap = new HashMap<>();
 
-    public ErrorPage() {
-        this.updateTitle("404");
+    public ErrorPage(String pluginName) {
+        // 新建容器
+        this.updateTitle(pluginName);
+        // 添加固定按钮
         this.refreshPage();
     }
 
@@ -84,6 +88,6 @@ public class ErrorPage implements ViewPage {
 
     @Override
     public void updateTitle(String title) {
-        inventory = Bukkit.createInventory(null, 9, "§c§lNON_FOUND §7" + title);
+        inventory = Bukkit.createInventory(null, 9, String.format("%s > §cNON_FOUND", title));
     }
 }

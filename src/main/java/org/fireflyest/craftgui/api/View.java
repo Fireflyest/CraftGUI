@@ -4,12 +4,13 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * 视图
- * @param <T> 视图页面
+ * @param <T> 实现ViewPage的页面类
  */
 public interface View<T extends ViewPage> {
 
     /**
      * 获取某个标签的界面的首页
+     * 标签一般指向一个ViewPage链表的头部
      * @param target 页面标签
      * @return 展示页面
      */
@@ -17,7 +18,7 @@ public interface View<T extends ViewPage> {
     T getFirstPage(@Nullable String target);
 
     /**
-     * 删除某个标签的所有界面
+     * 删除某个标签的页面
      * @param target 页面标签
      */
     void removePage(@Nullable String target);

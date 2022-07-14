@@ -12,7 +12,7 @@ public class ErrorView implements View<ErrorPage> {
     private final ErrorPage errorPage;
 
     public ErrorView() {
-        errorPage = new ErrorPage();
+        errorPage = new ErrorPage(null);
     }
 
     @Override
