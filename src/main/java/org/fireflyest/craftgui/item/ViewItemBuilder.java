@@ -24,6 +24,8 @@ public class ViewItemBuilder implements Listener {
 
     // 本地名称
     private String localName;
+    // 执行指令
+    private String command;
 
     // 物品标志
     private ItemFlag[] itemFlags;
@@ -53,6 +55,11 @@ public class ViewItemBuilder implements Listener {
         return this;
     }
 
+    public ViewItemBuilder command(@NotNull String command){
+        this.command = command;
+        return this;
+    }
+
     public ViewItemBuilder lore(@NotNull String lore){
         this.lore.add(lore.replace("&", "§"));
         return this;
@@ -71,6 +78,8 @@ public class ViewItemBuilder implements Listener {
 
         if (displayName != null) meta.setDisplayName(displayName);
         if (localName != null) meta.setLocalizedName(localName);
+        // TODO: 2022/7/17 command的nbt实现
+        if (command != null) meta.setLocalizedName(command);
         if (lore.size() > 0) meta.setLore(lore);
         if (itemFlags.length > 0) meta.addItemFlags(itemFlags);
 
