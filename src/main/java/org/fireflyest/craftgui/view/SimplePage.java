@@ -2,7 +2,6 @@ package org.fireflyest.craftgui.view;
 
 import org.fireflyest.craftgui.api.ViewPage;
 import org.fireflyest.craftgui.item.ViewItemBuilder;
-import org.fireflyest.craftgui.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -18,16 +17,16 @@ import java.util.Map;
  */
 public class SimplePage implements ViewPage {
 
-    private final Map<Integer, ItemStack> itemMap = new HashMap<>();
+    protected final Map<Integer, ItemStack> itemMap = new HashMap<>();
 
-    private Inventory inventory;
-    private final String pluginName;
-    private final String target;
-    private final int page;
-    private final int size;
+    protected Inventory inventory;
+    protected final String pluginName;
+    protected final String target;
+    protected final int page;
+    protected final int size;
 
-    private ViewPage next = null;
-    private ViewPage pre = null;
+    protected ViewPage next = null;
+    protected ViewPage pre = null;
 
     public SimplePage(String pluginName, String target, int page, int size) {
         this.pluginName = pluginName;
@@ -113,7 +112,7 @@ public class SimplePage implements ViewPage {
 
     @Override
     public void updateTitle(String title) {
-        inventory = Bukkit.createInventory(null, size, title);
+        inventory = Bukkit.createInventory(null, size, pluginName + title);
     }
 
 }

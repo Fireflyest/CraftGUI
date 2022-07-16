@@ -68,6 +68,6 @@ public interface ViewGuide {
      * @param playerName 玩家名称
      * @return 是否浏览者
      */
-    boolean isViewer(String playerName);
+    boolean unUsed(@NotNull String playerName);
 
 }

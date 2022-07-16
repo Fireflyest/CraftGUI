@@ -43,7 +43,7 @@ public class ViewEventListener implements Listener {
         // 判断是否浏览者
         HumanEntity human = event.getWhoClicked();
         String playerName = human.getName();
-        if ( !guide.isViewer(playerName)) return;
+        if (guide.unUsed(playerName)) return;
 
         // 获取点击页面
         ViewPage page = guide.getUsingPage(playerName);
@@ -133,7 +133,7 @@ public class ViewEventListener implements Listener {
         // 判断是否浏览者
         HumanEntity human = event.getWhoClicked();
         String playerName = human.getName();
-        if ( !guide.isViewer(playerName)) return;
+        if (guide.unUsed(playerName)) return;
 
         // 获取点击页面
         ViewPage page = guide.getUsingPage(playerName);
@@ -168,7 +168,7 @@ public class ViewEventListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent event){
         String playerName = event.getPlayer().getName();
         // 判断是否在浏览
-        if (! guide.isViewer(playerName)) return;
+        if (guide.unUsed(playerName)) return;
 
         // 关闭界面
         if(guide.getUsingPage(playerName) != null) {

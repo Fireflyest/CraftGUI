@@ -8,9 +8,9 @@ import java.util.Map;
 public class SimpleView implements View<SimplePage> {
 
     // 插件名称用于在监听事件时判断点击的是否本插件的界面
-    private final String pluginName;
+    protected final String pluginName;
     // 存储各个target的页面
-    private final Map<String, SimplePage> pageMap = new HashMap<>();
+    protected final Map<String, SimplePage> pageMap = new HashMap<>();
 
     public SimpleView(String pluginName) {
         this.pluginName = pluginName;

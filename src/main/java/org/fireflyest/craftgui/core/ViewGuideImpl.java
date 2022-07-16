@@ -1,14 +1,13 @@
 package org.fireflyest.craftgui.core;
 
-import org.fireflyest.craftgui.CraftGUI;
 import org.fireflyest.craftgui.api.View;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.api.ViewPage;
 import org.fireflyest.craftgui.protocol.ViewProtocol;
-import org.fireflyest.craftgui.view.ErrorView;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -27,11 +26,7 @@ public class ViewGuideImpl implements ViewGuide {
     // 玩家正在浏览的页面
     public static final Map<String, ViewPage> viewUsing = new ConcurrentHashMap<>();
 
-    public static final ErrorView errorView = new ErrorView();
-
     public ViewGuideImpl() {
-        // 错误界面
-        viewMap.put(CraftGUI.ERROR_VIEW, errorView);
     }
 
     @Override
@@ -46,28 +41,30 @@ public class ViewGuideImpl implements ViewGuide {
 
     @Override
     public ViewPage getUsingPage(@NotNull String playerName) {
-        return viewUsing.getOrDefault(playerName, errorView.getFirstPage(null));
+        return viewUsing.get(playerName);
     }
 
     @Override
     public void nextPage(@NotNull Player player) {
         String playerName = player.getName();
-        ViewPage page = this.getUsingPage(playerName).getNext();
-        if (page != null) {
+        if (this.unUsed(playerName)) return;
+        ViewPage next = this.getUsingPage(playerName).getNext();
+        if (next != null) {
             player.closeInventory();
-            viewUsing.put(playerName, page);
-            player.openInventory(page.getInventory());
+            viewUsing.put(playerName, next);
+            player.openInventory(next.getInventory());
         }
     }
 
     @Override
     public void prePage(@NotNull Player player) {
         String playerName = player.getName();
-        ViewPage page = this.getUsingPage(playerName).getPre();
-        if (page != null) {
+        if (this.unUsed(playerName)) return;
+        ViewPage pre = this.getUsingPage(playerName).getPre();
+        if (pre != null) {
             player.closeInventory();
-            viewUsing.put(playerName, page);
-            player.openInventory(page.getInventory());
+            viewUsing.put(playerName, pre);
+            player.openInventory(pre.getInventory());
         }
     }
 
@@ -78,22 +75,20 @@ public class ViewGuideImpl implements ViewGuide {
         String playerName = player.getName();
         // 判断视图是否存在
         if(! viewMap.containsKey(viewName)){
-            Bukkit.getLogger().warning(String.format("[Gui]View '%s' does not exist.", viewName));
+            Bukkit.getLogger().warning(String.format("View '%s' does not exist.", viewName));
             return;
         }
-        // 获取视图
-        View<? extends ViewPage> view = viewMap.get(viewName);
         // 获取视图的首页
-        ViewPage page = view.getFirstPage(target);
+        ViewPage page = viewMap.get(viewName).getFirstPage(target);
         // 首页是否存在
-        if (page != null) {
-            // 设置玩家正在浏览的视图
-            viewUsing.put(playerName, page);
-        }else {
-            Bukkit.getLogger().warning(String.format("[Gui]The first page of the '%s' does not exist.", viewName));
+        if (page == null) {
+            Bukkit.getLogger().warning(String.format("The first page of the '%s' does not exist.", viewName));
+            return;
         }
+        // 设置玩家正在浏览的视图
+        viewUsing.put(playerName, page);
         // 打开容器
-        player.openInventory(viewUsing.get(playerName).getInventory());
+        player.openInventory(page.getInventory());
     }
 
     @Override
@@ -101,13 +96,12 @@ public class ViewGuideImpl implements ViewGuide {
         for (String playerName : playerNames) {
             // 获取刷新页面
             ViewPage page = this.getUsingPage(playerName);
-
-            if (page != null) {
-                // 刷新物品
-                page.refreshPage();
-                // 发包
-                ViewProtocol.sendItemsPacketAsynchronously(playerName);
-            }
+            // 是否浏览者
+            if (page == null) continue;
+            // 刷新物品
+            page.refreshPage();
+            // 发包
+            ViewProtocol.sendItemsPacketAsynchronously(playerName);
         }
     }
 
@@ -117,7 +111,7 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public boolean isViewer(String playerName) {
-        return viewUsing.containsKey(playerName) && viewUsing.get(playerName) != errorView.getFirstPage(null);
+    public boolean unUsed(@NotNull String playerName) {
+        return !viewUsing.containsKey(playerName);
     }
 }

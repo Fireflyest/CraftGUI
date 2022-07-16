@@ -70,7 +70,7 @@ public class ViewProtocol {
                         PacketContainer packet = event.getPacket();
                         // 非浏览者不响应
                         // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
-                        if (!viewGuide.isViewer(playerName) || (packets.containsKey(playerName) && event.isAsync())) return;
+                        if (viewGuide.unUsed(playerName) || (packets.containsKey(playerName) && event.isAsync())) return;
                         // 非异步包不再发送，只能异步更新界面
                         if (packets.containsKey(playerName) && ! event.isAsync()) {
                             event.setCancelled(true);
@@ -79,7 +79,6 @@ public class ViewProtocol {
 
                         ViewPage page = viewGuide.getUsingPage(playerName);
                         // 判断玩家是否正在浏览界面
-                        if (page == null) return;
                         int size = page.getInventory().getSize();
 
                         // 放置固定按钮
@@ -130,13 +129,12 @@ public class ViewProtocol {
                 packet.getItemListModifier().write(0, itemStacks);
 
                 // 发送数据包
-                Player player = Bukkit.getPlayer(playerName);
-                if (player != null) {
-                    try {
-                        protocolManager.sendServerPacket(player, packet);
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
+                Player player = Bukkit.getPlayerExact(playerName);
+                if (player == null) return;
+                try {
+                    protocolManager.sendServerPacket(player, packet);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
                 }
             }
         }.runTaskLaterAsynchronously(CraftGUI.getPlugin(), 1);
