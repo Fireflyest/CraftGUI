@@ -81,7 +81,7 @@ public class ViewItemBuilder implements Listener {
         // TODO: 2022/7/17 command的nbt实现
         if (command != null) meta.setLocalizedName(command);
         if (lore.size() > 0) meta.setLore(lore);
-        if (itemFlags.length > 0) meta.addItemFlags(itemFlags);
+        if (itemFlags != null && itemFlags.length > 0) meta.addItemFlags(itemFlags);
 
         item.setItemMeta(meta);
 

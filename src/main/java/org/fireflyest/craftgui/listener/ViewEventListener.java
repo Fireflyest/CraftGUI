@@ -54,12 +54,8 @@ public class ViewEventListener implements Listener {
 
         // 是否点击容器内
         if (event.getRawSlot() >= 0 && event.getRawSlot() < inventory.getSize()){
-            // 点击容器内物品
-            Map<Integer, ItemStack> itemMap = new HashMap<>();
-            itemMap.putAll(page.getItemMap());
-            itemMap.putAll(page.getButtonMap());
             // 获取点击的物品
-            ItemStack clickItem = itemMap.get(event.getRawSlot());
+            ItemStack clickItem = page.getItem(event.getRawSlot());
             ItemStack cursor = event.getCursor();
             // 判断操作行为
             if (InventoryAction.PLACE_ALL == action || InventoryAction.PLACE_ONE == action || InventoryAction.PLACE_SOME == action){

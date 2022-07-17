@@ -27,6 +27,14 @@ public interface ViewPage {
     Map<Integer, ItemStack> getButtonMap();
 
     /**
+     * 点击监听获取用户所点击物品
+     * @param slot 格子
+     * @return 物品
+     */
+    @Nullable
+    ItemStack getItem(int slot);
+
+    /**
      * 获取页面容器，用于玩家打开
      * @return 页面容器
      */
