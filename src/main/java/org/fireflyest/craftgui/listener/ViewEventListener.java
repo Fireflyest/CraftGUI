@@ -91,13 +91,8 @@ public class ViewEventListener implements Listener {
                     human.getInventory().addItem(swap.clone());
                     swap.setAmount(0);
                 }
-                // 关闭界面
-                new BukkitRunnable(){
-                    @Override
-                    public void run() {
-                        human.closeInventory();
-                    }
-                }.runTask(CraftGUI.getPlugin());
+                // 刷新页面
+                guide.refreshPage(playerName);
             }else {
                 // 点空格不起作用
                 if (clickItem == null || clickItem.getType() == Material.AIR) return;

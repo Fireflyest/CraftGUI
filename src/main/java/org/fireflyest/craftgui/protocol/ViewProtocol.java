@@ -68,29 +68,48 @@ public class ViewProtocol {
                         // 获取数据包
                         String playerName = event.getPlayer().getName();
                         PacketContainer packet = event.getPacket();
+
+                        System.out.println("**************************************************************************************");
+                        List<ItemStack> iss = packet.getItemListModifier().read(0);
+                        System.out.println("isAsync = " + event.isAsync());
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < iss.size(); i++) {
+                            ItemStack is = iss.get(i);
+                            if (is == null) {
+                                continue;
+                            }
+                            sb.append(i)
+                                    .append("{")
+                                    .append(is.getType())
+                                    .append("x")
+                                    .append(is.getAmount())
+                                    .append("} ");
+                            if (i % 8 == 0){
+                                System.out.println(sb);
+                                sb = new StringBuilder();
+                            }
+                        }
+                        packet.getItemListModifier().write(0, iss);
+
                         // 非浏览者不响应
                         // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
                         if (viewGuide.unUsed(playerName) || (packets.containsKey(playerName) && event.isAsync())) return;
-                        // 非异步包不再发送，只能异步更新界面
-                        if (packets.containsKey(playerName) && ! event.isAsync()) {
-                            event.setCancelled(true);
-                            return;
-                        }
 
                         ViewPage page = viewGuide.getUsingPage(playerName);
-                        // 判断玩家是否正在浏览界面
-                        int size = page.getInventory().getSize();
 
                         // 放置固定按钮
                         List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
                         for (Map.Entry<Integer, ItemStack> entry : page.getButtonMap().entrySet()) {
                             itemStacks.set(entry.getKey(), entry.getValue());
                         }
-                        // 删除容器的物品
-                        Iterator<ItemStack> iterator = itemStacks.listIterator(size);
-                        while (iterator.hasNext()) {
-                            iterator.next();
-                            iterator.remove();
+                        // 如果还没存包，说明第一次打开，只发送容器内物品，所以删除容器的物品
+                        if (! packets.containsKey(playerName)){
+                            int size = page.getInventory().getSize();
+                            Iterator<ItemStack> iterator = itemStacks.listIterator(size);
+                            while (iterator.hasNext()) {
+                                iterator.next();
+                                iterator.remove();
+                            }
                         }
 
                         packet.getItemListModifier().write(0, itemStacks);
