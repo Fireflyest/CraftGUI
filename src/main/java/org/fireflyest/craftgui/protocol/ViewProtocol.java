@@ -7,6 +7,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.Material;
 import org.fireflyest.craftgui.CraftGUI;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.api.ViewPage;
@@ -34,6 +35,7 @@ public class ViewProtocol {
     private static JavaPlugin plugin;
     private static ViewGuide viewGuide;
 
+    private static final ItemStack AIR = new ItemStack(Material.AIR);
     private static final HashMap<String, PacketContainer> packets = new HashMap<>();
 
     private ViewProtocol(){
@@ -69,27 +71,27 @@ public class ViewProtocol {
                         String playerName = event.getPlayer().getName();
                         PacketContainer packet = event.getPacket();
 
-                        System.out.println("**************************************************************************************");
-                        List<ItemStack> iss = packet.getItemListModifier().read(0);
-                        System.out.println("isAsync = " + event.isAsync());
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < iss.size(); i++) {
-                            ItemStack is = iss.get(i);
-                            if (is == null) {
-                                continue;
-                            }
-                            sb.append(i)
-                                    .append("{")
-                                    .append(is.getType())
-                                    .append("x")
-                                    .append(is.getAmount())
-                                    .append("} ");
-                            if (i % 8 == 0){
-                                System.out.println(sb);
-                                sb = new StringBuilder();
-                            }
-                        }
-                        packet.getItemListModifier().write(0, iss);
+//                        System.out.println("**************************************************************************************");
+//                        List<ItemStack> iss = packet.getItemListModifier().read(0);
+//                        System.out.println("isAsync = " + event.isAsync());
+//                        StringBuilder sb = new StringBuilder();
+//                        for (int i = 0; i < iss.size(); i++) {
+//                            ItemStack is = iss.get(i);
+//                            if (is == null) {
+//                                continue;
+//                            }
+//                            sb.append(i)
+//                                    .append("{")
+//                                    .append(is.getType())
+//                                    .append("x")
+//                                    .append(is.getAmount())
+//                                    .append("} ");
+//                            if (i % 8 == 0){
+//                                System.out.println(sb);
+//                                sb = new StringBuilder();
+//                            }
+//                        }
+//                        packet.getItemListModifier().write(0, iss);
 
                         // 非浏览者不响应
                         // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
@@ -140,8 +142,14 @@ public class ViewProtocol {
 
                 // 获取页面所有按钮并放置到容器中
                 List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
-                for (Map.Entry<Integer, ItemStack> entry : page.getItemMap().entrySet()) {
-                    itemStacks.set(entry.getKey(), entry.getValue());
+                Map<Integer, ItemStack> viewItemMap = page.getItemMap();
+                for (int i = 0; i < viewItemMap.size(); i++) {
+                    ItemStack item = viewItemMap.get(i);
+                    if (item == null) {
+                        itemStacks.set(i, AIR);
+                    }else {
+                        itemStacks.set(i, item);
+                    }
                 }
 
                 // 写入

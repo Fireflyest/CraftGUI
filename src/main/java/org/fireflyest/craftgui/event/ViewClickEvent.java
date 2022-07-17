@@ -23,12 +23,15 @@ public class ViewClickEvent extends InventoryInteractEvent {
     private final int rawSlot;
     private ItemStack current;
 
-    public ViewClickEvent(@NotNull InventoryView view, @NotNull ClickType click, int slot, ItemStack current) {
+    private boolean refresh;
+
+    public ViewClickEvent(@NotNull InventoryView view, @NotNull ClickType click, int slot, ItemStack current, boolean refresh) {
         super(view);
         this.click = click;
         this.rawSlot = slot;
         this.whichSlot = view.convertSlot(slot);
         this.current = current;
+        this.refresh = refresh;
     }
 
     @Override
@@ -73,6 +76,14 @@ public class ViewClickEvent extends InventoryInteractEvent {
 
     public int getRawSlot() {
         return this.rawSlot;
+    }
+
+    public boolean needRefresh() {
+        return refresh;
+    }
+
+    public void setRefresh(boolean refresh) {
+        this.refresh = refresh;
     }
 
     @NotNull

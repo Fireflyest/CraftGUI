@@ -98,11 +98,11 @@ public class ViewEventListener implements Listener {
                 if (clickItem == null || clickItem.getType() == Material.AIR) return;
 
                 // 发布事件
-                ViewClickEvent clickEvent = new ViewClickEvent(event.getView(), event.getClick(), event.getSlot(), clickItem);
+                ViewClickEvent clickEvent = new ViewClickEvent(event.getView(), event.getClick(), event.getSlot(), clickItem, true);
                 Bukkit.getPluginManager().callEvent(clickEvent);
 
                 // 刷新页面
-                guide.refreshPage(playerName);
+                if (clickEvent.needRefresh()) guide.refreshPage(playerName);
             }
         }else {
             // 防止移动东西进入
