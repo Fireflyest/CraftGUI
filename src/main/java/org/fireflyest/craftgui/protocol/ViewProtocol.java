@@ -70,10 +70,12 @@ public class ViewProtocol {
                         // 获取数据包
                         String playerName = event.getPlayer().getName();
                         PacketContainer packet = event.getPacket();
-
+//
 //                        System.out.println("**************************************************************************************");
 //                        List<ItemStack> iss = packet.getItemListModifier().read(0);
 //                        System.out.println("isAsync = " + event.isAsync());
+//                        ItemStack itr = packet.getItemModifier().read(0);
+//                        System.out.println("Item = " + itr);
 //                        StringBuilder sb = new StringBuilder();
 //                        for (int i = 0; i < iss.size(); i++) {
 //                            ItemStack is = iss.get(i);
@@ -92,6 +94,8 @@ public class ViewProtocol {
 //                            }
 //                        }
 //                        packet.getItemListModifier().write(0, iss);
+//                        packet.getItemModifier().write(0, itr);
+
 
                         // 非浏览者不响应
                         // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
@@ -140,10 +144,10 @@ public class ViewProtocol {
 
                 if (packet == null || page == null) return;
 
-                // 获取页面所有按钮并放置到容器中
+                // 获取页面所有按钮并放置到容器中，如果空的，填充空气
                 List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
                 Map<Integer, ItemStack> viewItemMap = page.getItemMap();
-                for (int i = 0; i < viewItemMap.size(); i++) {
+                for (int i = 0; i < page.getInventory().getSize(); i++) {
                     ItemStack item = viewItemMap.get(i);
                     if (item == null) {
                         itemStacks.set(i, AIR);
@@ -163,6 +167,21 @@ public class ViewProtocol {
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
+
+                PacketContainer packetContainer = packet.shallowClone();
+                // 删掉多余格
+                int invSize = page.getInventory().getSize();
+                Iterator<ItemStack> iterator = itemStacks.listIterator(invSize);
+                while (iterator.hasNext()){
+                    iterator.next();
+                    iterator.remove();
+                }
+                // 写入
+                packetContainer.getItemListModifier().write(0, itemStacks);
+                packetContainer.getItemModifier().write(0, null);
+                packetContainer.getIntegers().write(1,  invSize + 36);
+                packets.put(playerName, packetContainer);
+
             }
         }.runTaskLaterAsynchronously(CraftGUI.getPlugin(), 1);
     }

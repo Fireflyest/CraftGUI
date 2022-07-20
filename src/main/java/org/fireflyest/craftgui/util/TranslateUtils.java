@@ -1278,12 +1278,12 @@ public class TranslateUtils {
             put("SWEET_BERRY_BUSH", "甜浆果灌木");
             put("TADPOLE_BUCKET", "蝌蚪桶");
             put("TADPOLE_SPAWN_EGG", "蝌蚪刷怪蛋");
-            put("TALL_SEAGRASS", "高大的海草");
+            put("TALL_SEAGRASS", "高海草");
             put("TARGET", "标靶");
             put("TINTED_GLASS", "有色玻璃");
             put("TNT_MINECART", "TNT矿车");
-            put("TRADER_LLAMA_SPAWN_EGG", "交易员骆驼刷怪蛋");
-            put("TRAPPED_CHEST", "被困的箱子");
+            put("TRADER_LLAMA_SPAWN_EGG", "骆驼刷怪蛋");
+            put("TRAPPED_CHEST", "陷阱箱");
             put("TRIPWIRE", "绊线");
             put("TROPICAL_FISH", "热带鱼");
             put("TROPICAL_FISH_BUCKET", "热带鱼桶");

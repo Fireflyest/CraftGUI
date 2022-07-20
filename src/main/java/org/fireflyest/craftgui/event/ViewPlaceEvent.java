@@ -23,6 +23,8 @@ public class ViewPlaceEvent extends InventoryInteractEvent {
     // 按钮物品
     private ItemStack current;
 
+    private boolean handBack;
+
     public ViewPlaceEvent(@NotNull InventoryView view, @NotNull ClickType click, int slot, ItemStack current, ItemStack cursor) {
         super(view);
         this.click = click;
@@ -30,6 +32,15 @@ public class ViewPlaceEvent extends InventoryInteractEvent {
         this.whichSlot = view.convertSlot(slot);
         this.current = current;
         this.cursor = cursor;
+        this.handBack = true;
+    }
+
+    public boolean handBack() {
+        return handBack;
+    }
+
+    public void setHandBack(boolean handBack){
+        this.handBack = handBack;
     }
 
     @Override

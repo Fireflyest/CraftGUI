@@ -16,6 +16,22 @@ public class ItemUtils {
     private ItemUtils(){
     }
 
+    public static void setItemValue(ItemStack item, String value) {
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null)return;
+        meta.setLocalizedName(value);
+        item.setItemMeta(meta);
+//        setItemNBT(item, "market", value);
+
+    }
+
+    public static String getItemValue(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null)return "";
+        return meta.getLocalizedName();
+//        return getItemNBT(item, "market");
+    }
+
     /**
      * 设置物品名称
      * @param item 物品
