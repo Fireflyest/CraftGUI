@@ -88,13 +88,28 @@ public class ViewEventListener implements Listener {
                     int itemIndex = event.getHotbarButton();
                     swap = human.getInventory().getItem(itemIndex);
                 }
-                // 归还东西
-                if (swap != null && swap.getType() != Material.AIR) {
-                    human.getInventory().addItem(swap.clone());
-                    swap.setAmount(0);
+
+                if (swap == null || swap.getType() == Material.AIR) {
+                    guide.refreshPage(playerName);
+                    return;
                 }
+                ItemStack itemBack = swap.clone();
                 // 刷新页面
-                 guide.refreshPage(playerName);
+                if (clickItem != null && clickItem.getType() != Material.AIR) {
+                    guide.refreshPage(playerName);
+                }
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        inventory.remove(swap);
+                    }
+                }.runTask(CraftGUI.getPlugin());
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        human.getInventory().addItem(itemBack);
+                    }
+                }.runTaskLater(CraftGUI.getPlugin(), 5);
             }else {
                 // 点空格不起作用
                 if (clickItem == null || clickItem.getType() == Material.AIR) return;
