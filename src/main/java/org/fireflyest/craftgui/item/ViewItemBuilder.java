@@ -33,6 +33,8 @@ public class ViewItemBuilder implements Listener {
     // 注释
     private final List<String> lore = new ArrayList<>();
 
+    private int amount = 1;
+
     public ViewItemBuilder() {
     }
 
@@ -70,6 +72,11 @@ public class ViewItemBuilder implements Listener {
         return this;
     }
 
+    public ViewItemBuilder amount(int amount){
+        this.amount = amount;
+        return this;
+    }
+
     public ItemStack build(){
         ItemStack item = new ItemStack(material == null ? Material.STONE : material);
 
@@ -84,6 +91,7 @@ public class ViewItemBuilder implements Listener {
         if (itemFlags != null && itemFlags.length > 0) meta.addItemFlags(itemFlags);
 
         item.setItemMeta(meta);
+        item.setAmount(amount);
 
         return item;
     }
