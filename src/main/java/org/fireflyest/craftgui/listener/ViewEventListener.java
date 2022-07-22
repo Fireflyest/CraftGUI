@@ -62,8 +62,8 @@ public class ViewEventListener implements Listener {
                 // 在容器内放置东西
                 if (cursor == null) return;
                 ViewPlaceEvent placeEvent = new ViewPlaceEvent(event.getView(), event.getClick(), event.getSlot(), clickItem, cursor.clone());
-                Bukkit.getPluginManager().callEvent(placeEvent);
                 cursor.setAmount(0);
+                Bukkit.getPluginManager().callEvent(placeEvent);
                 // 还给玩家
                 if (placeEvent.handBack()){
                     human.getInventory().addItem(placeEvent.getCursorItem());

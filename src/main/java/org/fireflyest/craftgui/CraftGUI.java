@@ -10,8 +10,6 @@ import org.fireflyest.craftgui.protocol.ViewProtocol;
 
 public final class CraftGUI extends JavaPlugin {
 
-    public static final String ERROR_VIEW = "error";
-
     private static JavaPlugin plugin;
 
     public static JavaPlugin getPlugin(){

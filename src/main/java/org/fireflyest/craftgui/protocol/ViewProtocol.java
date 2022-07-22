@@ -183,7 +183,7 @@ public class ViewProtocol {
                 packets.put(playerName, packetContainer);
 
             }
-        }.runTaskLaterAsynchronously(CraftGUI.getPlugin(), 1);
+        }.runTaskAsynchronously(CraftGUI.getPlugin());
     }
 
     /**
