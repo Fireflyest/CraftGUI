@@ -13,15 +13,11 @@ import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.fireflyest.craftgui.CraftGUI;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class SerializeUtil {
@@ -33,42 +29,38 @@ public class SerializeUtil {
     private static final Map<String, ItemMeta> metaStorage = new HashMap<>();
     private static final Map<String, ItemStack> stackStorage = new HashMap<>();
 
+    private static boolean debug = false;
+
     static {
         Class<?> clazz = null;
         try {
-            String versionPacket = "v";
-            Enumeration<URL> dirs = Thread.currentThread().getContextClassLoader().getResources("org\\bukkit\\craftbukkit");
-            while (dirs.hasMoreElements()) {
-                URL url = dirs.nextElement();
-                // 获取此包的目录 建立一个File
-                String filePath = URLDecoder.decode(url.getFile(), String.valueOf(StandardCharsets.UTF_8));
-                File dir = new File(filePath);
-                // 如果不存在或者 也不是目录 或者目录为空
-                // 这里是找到craftbukkit
-                if (!dir.exists() || !dir.isDirectory()) {
-                    continue;
-                }
-                // 找到版本包名称
-                for (File subFile : Objects.requireNonNull(dir.listFiles())) {
-                    if (!subFile.isDirectory() || !subFile.getName().startsWith("v")) continue;
-                    versionPacket = subFile.getName();
-                    break;
-                }
+            String versionPacket = "";
+            // 找到版本包
+            for (Package pack : Package.getPackages()) {
+                String name = pack.getName();
+                if ( ! name.startsWith("org.bukkit.craftbukkit.v")) continue;
+                versionPacket = pack.getName().split("\\.")[3];
+                break;
             }
+            if ("".equals(versionPacket)) Bukkit.getLogger().severe("[CraftGUI] The versionPacket not found!");
             // 获取类
             clazz = Class.forName(
                     String.format("org.bukkit.craftbukkit.%s.inventory.CraftMetaItem$SerializableMeta", versionPacket));
-        } catch (ClassNotFoundException ignore) {} catch (IOException e) {
-            Bukkit.getLogger().severe("The SerializableMeta.class not found");
-            throw new RuntimeException(e);
-        }
+        } catch (ClassNotFoundException ignore) {}
         if (clazz != null) {
             try {
                 deserialize = clazz.getMethod("deserialize", Map.class);
             } catch (NoSuchMethodException e) {
+                Bukkit.getLogger().severe("[CraftGUI] The method of deserialize not found!");
                 e.printStackTrace();
             }
+        }else {
+            Bukkit.getLogger().severe("[CraftGUI] The SerializableMeta.class not found!");
         }
+    }
+
+    public static void setDebug(boolean debug) {
+        SerializeUtil.debug = debug;
     }
 
     /**
@@ -132,6 +124,7 @@ public class SerializeUtil {
                 metaStorage.put(itemMeta, meta);
             }
             item.setItemMeta(meta);
+            if (debug)CraftGUI.getPlugin().getLogger().info(String.format("\nmeta：%s", meta));
         }
 
         return item;
@@ -143,10 +136,14 @@ public class SerializeUtil {
      * @return 元
      */
     public static ItemMeta deserializeItemMeta(Map<String, Object> map) {
-        if (deserialize == null) return null;
+        if (deserialize == null) {
+            if (debug)CraftGUI.getPlugin().getLogger().info("error：the method of deserialize not found!");
+            return null;
+        }
 
         ItemMeta meta;
         String metaType = String.valueOf(map.get("meta-type"));
+        if (debug)CraftGUI.getPlugin().getLogger().info(String.format("metaType：%s", metaType));
 
         // 耐久装备
         double damage = 0.0, repairCost = 0.0;
@@ -202,6 +199,7 @@ public class SerializeUtil {
                     map.remove("firework-effect");
                 }
                 // TODO type数据读取
+                if (debug) CraftGUI.getPlugin().getLogger().info(String.format("unused key %s for firework-effect", map.get("type")));
                 map.remove("type");
                 break;
             }
@@ -277,7 +275,7 @@ public class SerializeUtil {
             }
         }
 
-        meta = invokeMeta(map);
+        meta = invokeMeta(map, metaType);
         if (meta == null) return null;
 
         if (isLeather) ((LeatherArmorMeta)meta).setColor(Color.fromRGB((int)red, (int)green, (int)blue));
@@ -309,12 +307,16 @@ public class SerializeUtil {
      * @param map 键值
      * @return 元
      */
-    private static ItemMeta invokeMeta(Map<String, Object> map){
+    private static ItemMeta invokeMeta(Map<String, Object> map, String metaType){
         // 解析
         try{
             return  (ItemMeta) deserialize.invoke(null, map);
         }catch (InvocationTargetException | IllegalAccessException e){
-            Bukkit.getLogger().severe(String.format("There were some errors deserializing item：%s", map));
+            if (debug) {
+                CraftGUI.getPlugin().getLogger().severe(String.format("There were some errors deserializing item：%s", map));
+            }else{
+                CraftGUI.getPlugin().getLogger().severe(String.format("There were some errors deserializing item：%s", metaType));
+            }
             e.printStackTrace();
         }
         return null;

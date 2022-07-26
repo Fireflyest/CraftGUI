@@ -81,7 +81,7 @@ public class ViewItemBuilder implements Listener {
         ItemStack item = new ItemStack(material == null ? Material.STONE : material);
 
         ItemMeta meta = item.getItemMeta();
-        if (meta == null) return item;
+        if (meta == null) return item ;
 
         if (displayName != null) meta.setDisplayName(displayName);
         if (localName != null) meta.setLocalizedName(localName);
