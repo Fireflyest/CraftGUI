@@ -124,7 +124,6 @@ public class SerializeUtil {
                 metaStorage.put(itemMeta, meta);
             }
             item.setItemMeta(meta);
-            if (debug)CraftGUI.getPlugin().getLogger().info(String.format("\nmeta：%s", meta));
         }
 
         return item;
@@ -143,7 +142,6 @@ public class SerializeUtil {
 
         ItemMeta meta;
         String metaType = String.valueOf(map.get("meta-type"));
-        if (debug)CraftGUI.getPlugin().getLogger().info(String.format("metaType：%s", metaType));
 
         // 耐久装备
         double damage = 0.0, repairCost = 0.0;

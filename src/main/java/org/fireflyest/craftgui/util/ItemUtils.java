@@ -1,5 +1,7 @@
 package org.fireflyest.craftgui.util;
 
+import com.cryptomorin.xseries.XMaterial;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,23 +15,24 @@ import java.util.List;
  */
 public class ItemUtils {
 
+    public static final String NBT_KEY = "craft-gui-value";
+
     private ItemUtils(){
     }
 
     public static void setItemValue(ItemStack item, String value) {
-        ItemMeta meta = item.getItemMeta();
-        if(meta == null)return;
-        meta.setLocalizedName(value);
-        item.setItemMeta(meta);
-//        setItemNBT(item, "market", value);
-
+        NBTItem nbtItem = new NBTItem(item, true);
+        nbtItem.setString(ItemUtils.NBT_KEY, value);
     }
 
     public static String getItemValue(ItemStack item) {
-        ItemMeta meta = item.getItemMeta();
-        if(meta == null)return "";
-        return meta.getLocalizedName();
-//        return getItemNBT(item, "market");
+        NBTItem nbtItem = new NBTItem(item);
+        return nbtItem.getString(ItemUtils.NBT_KEY);
+    }
+
+    public static boolean hasCustomNBT(ItemStack item){
+        NBTItem nbtItem = new NBTItem(item);
+        return nbtItem.hasCustomNbtData();
     }
 
     /**
@@ -91,6 +94,7 @@ public class ItemUtils {
      * @param player 头颅
      */
     public static void setSkullOwner(ItemStack item, OfflinePlayer player){
+        if (item.getType() != XMaterial.PLAYER_HEAD.parseMaterial()) return;
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         if (meta != null) {
             meta.setOwningPlayer(player);

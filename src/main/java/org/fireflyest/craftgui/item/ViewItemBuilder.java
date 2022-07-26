@@ -1,10 +1,12 @@
 package org.fireflyest.craftgui.item;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.fireflyest.craftgui.util.ItemUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,13 +87,17 @@ public class ViewItemBuilder implements Listener {
 
         if (displayName != null) meta.setDisplayName(displayName);
         if (localName != null) meta.setLocalizedName(localName);
-        // TODO: 2022/7/17 command的nbt实现
-        if (command != null) meta.setLocalizedName(command);
+
         if (lore.size() > 0) meta.setLore(lore);
         if (itemFlags != null && itemFlags.length > 0) meta.addItemFlags(itemFlags);
 
         item.setItemMeta(meta);
         item.setAmount(amount);
+
+        if (command != null) {
+            NBTItem nbtItem = new NBTItem(item, true);
+            nbtItem.setString(ItemUtils.NBT_KEY, command);
+        }
 
         return item;
     }
