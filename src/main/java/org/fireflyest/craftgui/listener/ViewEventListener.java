@@ -72,15 +72,15 @@ public class ViewEventListener implements Listener {
                 guide.refreshPage(playerName);
             }else if(ClickType.NUMBER_KEY == type || ClickType.SWAP_OFFHAND == type) {
                 // 试图和页面中的物品交换，给出一个事件
+                ViewHotbarEvent hotbarEvent = null;
                 if (clickItem != null && clickItem.getType() != Material.AIR) {
-                    ViewHotbarEvent hotbarEvent = new ViewHotbarEvent(event.getView(), event.getClick(), event.getSlot(), clickItem, event.getHotbarButton());
-                    Bukkit.getPluginManager().callEvent(hotbarEvent);
+                    hotbarEvent = new ViewHotbarEvent(event.getView(), event.getClick(), event.getSlot(), clickItem, event.getHotbarButton());
                 }
                 // 防止卡物品出来，把物品放进去的一瞬间按数字键或副手有几率卡物品出来
-                if (event.getCurrentItem() != null){
-                    event.getCurrentItem().setAmount(0);
-                }
-                // 获取被玩家切换的物品
+                if (event.getCurrentItem() != null) event.getCurrentItem().setAmount(0);
+                // call 事件
+                if (hotbarEvent != null) Bukkit.getPluginManager().callEvent(hotbarEvent);
+                // 获取被玩家放上去的物品
                 ItemStack swap;
                 if (event.getHotbarButton() == -1){
                     swap = human.getInventory().getItemInOffHand();
@@ -88,16 +88,13 @@ public class ViewEventListener implements Listener {
                     int itemIndex = event.getHotbarButton();
                     swap = human.getInventory().getItem(itemIndex);
                 }
-
+                // 如果没有物品被放上去，直接刷新
                 if (swap == null || swap.getType() == Material.AIR) {
                     guide.refreshPage(playerName);
                     return;
                 }
+                // 要归还物品
                 ItemStack itemBack = swap.clone();
-                // 刷新页面
-                if (clickItem != null && clickItem.getType() != Material.AIR) {
-                    guide.refreshPage(playerName);
-                }
                 new BukkitRunnable(){
                     @Override
                     public void run() {
@@ -110,6 +107,13 @@ public class ViewEventListener implements Listener {
                         human.getInventory().addItem(itemBack);
                     }
                 }.runTaskLater(CraftGUI.getPlugin(), 5);
+                // 刷新页面
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        if (clickItem != null && clickItem.getType() != Material.AIR) guide.refreshPage(playerName);
+                    }
+                }.runTaskLater(CraftGUI.getPlugin(), 2);
             }else {
                 // 点空格不起作用
                 if (clickItem == null || clickItem.getType() == Material.AIR) return;

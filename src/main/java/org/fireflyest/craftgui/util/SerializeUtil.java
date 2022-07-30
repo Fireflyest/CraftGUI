@@ -163,6 +163,12 @@ public class SerializeUtil {
         List<Pattern> patternList = new ArrayList<>();
         // 地图
         double mapId = -1;
+        // 美西螈
+        boolean axolotl = false;
+        float axolotlVariant;
+        // 热带雨
+        boolean tropicalFish = false;
+        float tropicalFishVariant;
 
         // 先处理部分meta数据
         switch (metaType){
@@ -197,7 +203,7 @@ public class SerializeUtil {
                     map.remove("firework-effect");
                 }
                 // TODO type数据读取
-                if (debug) CraftGUI.getPlugin().getLogger().info(String.format("unused key %s for firework-effect", map.get("type")));
+                if (debug) CraftGUI.getPlugin().getLogger().info(String.format("lose key %s for firework-effect", map.get("type")));
                 map.remove("type");
                 break;
             }
@@ -236,6 +242,22 @@ public class SerializeUtil {
                 if ( !map.containsKey("map-id") ) break;
                 mapId = (Double) map.get("map-id");
                 map.remove("map-id");
+                break;
+            }
+            case "AXOLOTL_BUCKET":{
+                if ( !map.containsKey("axolotl-variant") ) break;
+                axolotl = true;
+                axolotlVariant = Float.parseFloat(map.get("axolotl-variant").toString());
+                if (debug) CraftGUI.getPlugin().getLogger().info(String.format("lose key %s for axolotl-variant", axolotlVariant));
+                map.remove("axolotl-variant");
+                break;
+            }
+            case "TROPICAL_FISH_BUCKET":{
+                if ( !map.containsKey("fish-variant") ) break;
+                tropicalFish = true;
+                tropicalFishVariant = Float.parseFloat(map.get("fish-variant").toString());
+                if (debug) CraftGUI.getPlugin().getLogger().info(String.format("lose key %s for fish-variant", tropicalFishVariant));
+                map.remove("fish-variant");
                 break;
             }
             default : {}

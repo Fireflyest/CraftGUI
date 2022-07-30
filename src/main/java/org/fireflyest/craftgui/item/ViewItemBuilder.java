@@ -1,5 +1,6 @@
 package org.fireflyest.craftgui.item;
 
+import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 用于构建一个物品用来做按钮
@@ -42,6 +44,10 @@ public class ViewItemBuilder implements Listener {
 
     public ViewItemBuilder(@Nullable Material material) {
         this.material = material;
+    }
+    public ViewItemBuilder(@NotNull String material) {
+        Optional<XMaterial> xMaterial = XMaterial.matchXMaterial(material);
+        xMaterial.ifPresent(value -> this.material = value.parseMaterial());
     }
 
     public ViewItemBuilder material(@Nullable Material material){

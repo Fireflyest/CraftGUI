@@ -37,7 +37,7 @@ public class TranslateUtils {
         if ("zh-CN".equals(language)) {
             return MaterialChinese.translate(material);
         }
-        return material.name().replace("_", " ").toLowerCase(Locale.ROOT);
+        return material.name().toLowerCase(Locale.ROOT);
     }
 
 }

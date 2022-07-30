@@ -147,7 +147,9 @@ public class ViewProtocol {
                 // 获取页面所有按钮并放置到容器中，如果空的，填充空气
                 List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
                 Map<Integer, ItemStack> viewItemMap = page.getItemMap();
-                for (int i = 0; i < page.getInventory().getSize(); i++) {
+                int invSize = page.getInventory().getSize();
+                while (itemStacks.size() < invSize) itemStacks.add(AIR);
+                for (int i = 0; i < invSize; i++) {
                     ItemStack item = viewItemMap.get(i);
                     if (item == null) {
                         itemStacks.set(i, AIR);
@@ -170,7 +172,6 @@ public class ViewProtocol {
 
                 PacketContainer packetContainer = packet.shallowClone();
                 // 删掉多余格
-                int invSize = page.getInventory().getSize();
                 Iterator<ItemStack> iterator = itemStacks.listIterator(invSize);
                 while (iterator.hasNext()){
                     iterator.next();
@@ -183,7 +184,7 @@ public class ViewProtocol {
                 packets.put(playerName, packetContainer);
 
             }
-        }.runTaskAsynchronously(CraftGUI.getPlugin());
+        }.runTaskLaterAsynchronously(CraftGUI.getPlugin(), 1);
     }
 
     /**
