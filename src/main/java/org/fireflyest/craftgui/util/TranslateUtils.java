@@ -1,12 +1,23 @@
 package org.fireflyest.craftgui.util;
 
 import org.bukkit.Material;
-import org.fireflyest.craftgui.lang.MaterialChinese;
+import org.fireflyest.craftgui.lang.*;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class TranslateUtils {
 
+    private static final Map<String, MaterialName> langMap = new HashMap<>(){
+        {
+            put("zh-CN", MaterialChinese.getInstance()); // 简体中文
+            put("zh-TW", MaterialChineseF.getInstance()); // 繁体中文
+            put("de", MaterialGerman.getInstance()); // 德语 German
+            put("fr", MaterialFrench.getInstance()); // 法语 French
+            put("ja", MaterialJapanese.getInstance()); // 日语 Japanese
+        }
+    };
     private static String language = Locale.getDefault().toLanguageTag();
 
     private TranslateUtils(){
@@ -18,6 +29,8 @@ public class TranslateUtils {
      */
     public static void setLocale(Locale locale) {
         TranslateUtils.language = locale.toLanguageTag();
+        // 初始化
+        if (langMap.containsKey(language)) langMap.get(language).enable();
     }
 
     /**
@@ -26,6 +39,8 @@ public class TranslateUtils {
      */
     public static void setLanguage(String language) {
         TranslateUtils.language = language;
+        // 初始化
+        if (langMap.containsKey(language)) langMap.get(language).enable();
     }
 
     /**
@@ -34,10 +49,10 @@ public class TranslateUtils {
      * @return 名称
      */
     public static String translate(Material material){
-        if ("zh-CN".equals(language)) {
-            return MaterialChinese.translate(material);
+        if (langMap.containsKey(language)) {
+            return langMap.get(language).translate(material);
         }
-        return material.name().toLowerCase(Locale.ROOT);
+        return material.name().toLowerCase();
     }
 
 }
