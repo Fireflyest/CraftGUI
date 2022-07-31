@@ -6,6 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.fireflyest.craftgui.item.ViewItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,19 +16,27 @@ import java.util.List;
  */
 public class ItemUtils {
 
-    public static final String NBT_KEY = "craft-gui-value";
-
     private ItemUtils(){
     }
 
     public static void setItemValue(ItemStack item, String value) {
         NBTItem nbtItem = new NBTItem(item, true);
-        nbtItem.setString(ItemUtils.NBT_KEY, value);
+        nbtItem.setString(ViewItem.NBT_VALUE_KEY, value);
     }
 
     public static String getItemValue(ItemStack item) {
         NBTItem nbtItem = new NBTItem(item);
-        return nbtItem.getString(ItemUtils.NBT_KEY);
+        return nbtItem.getString(ViewItem.NBT_VALUE_KEY);
+    }
+
+    public static void setItemAction(ItemStack item, int action) {
+        NBTItem nbtItem = new NBTItem(item, true);
+        nbtItem.setInteger(ViewItem.NBT_ACTION_KEY, action);
+    }
+
+    public static int getItemAction(ItemStack item) {
+        NBTItem nbtItem = new NBTItem(item);
+        return nbtItem.getInteger(ViewItem.NBT_ACTION_KEY);
     }
 
     public static boolean hasCustomNBT(ItemStack item){

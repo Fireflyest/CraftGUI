@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.fireflyest.craftgui.util.ItemUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +17,7 @@ import java.util.Optional;
 /**
  * 用于构建一个物品用来做按钮
  */
-public class ViewItemBuilder implements Listener {
+public class ViewItemBuilder extends ViewItem implements Listener {
 
     // 材料
     private Material material;
@@ -45,11 +44,11 @@ public class ViewItemBuilder implements Listener {
     public ViewItemBuilder(@Nullable Material material) {
         this.material = material;
     }
+
     public ViewItemBuilder(@NotNull String material) {
         Optional<XMaterial> xMaterial = XMaterial.matchXMaterial(material);
         xMaterial.ifPresent(value -> this.material = value.parseMaterial());
     }
-
     public ViewItemBuilder material(@Nullable Material material){
         this.material = material;
         return this;
@@ -85,6 +84,7 @@ public class ViewItemBuilder implements Listener {
         return this;
     }
 
+    @Override
     public ItemStack build(){
         ItemStack item = new ItemStack(material == null ? Material.STONE : material);
 
@@ -100,9 +100,13 @@ public class ViewItemBuilder implements Listener {
         item.setItemMeta(meta);
         item.setAmount(amount);
 
+        NBTItem nbtItem = new NBTItem(item, true);
         if (command != null) {
-            NBTItem nbtItem = new NBTItem(item, true);
-            nbtItem.setString(ItemUtils.NBT_KEY, command);
+            nbtItem.setInteger(ViewItem.NBT_ACTION_KEY, ViewItem.ACTION_COMMAND);
+            nbtItem.setString(ViewItem.NBT_VALUE_KEY, command);
+        }else {
+            nbtItem.setInteger(ViewItem.NBT_ACTION_KEY, action);
+            nbtItem.setString(ViewItem.NBT_VALUE_KEY, value);
         }
 
         return item;

@@ -7,7 +7,6 @@ import org.fireflyest.craftgui.protocol.ViewProtocol;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -66,6 +65,16 @@ public class ViewGuideImpl implements ViewGuide {
             viewUsing.put(playerName, pre);
             player.openInventory(pre.getInventory());
         }
+    }
+
+    @Override
+    public void back(@NotNull Player player) {
+
+    }
+
+    @Override
+    public void jump(@NotNull Player player, int page) {
+
     }
 
     @Override

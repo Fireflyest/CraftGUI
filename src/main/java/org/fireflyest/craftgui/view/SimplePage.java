@@ -19,7 +19,7 @@ import java.util.Map;
 public class SimplePage implements ViewPage {
 
     protected final Map<Integer, ItemStack> itemMap = new HashMap<>();
-    protected Map<Integer, ItemStack> crashMap;
+    protected Map<Integer, ItemStack> crashMap = new HashMap<>();
 
     protected Inventory inventory;
     protected final String pluginName;
@@ -55,10 +55,13 @@ public class SimplePage implements ViewPage {
 
     @Override
     public @NotNull Map<Integer, ItemStack> getItemMap(){
-        crashMap = new HashMap<>(itemMap);
+        crashMap.clear();
+        crashMap.putAll(itemMap);
+
         // 这里是需要异步加载的按钮
         // 例如需要先读取数据再放置的按钮
         crashMap.put(0, new ItemStack(Material.STONE));
+
         return crashMap;
     }
 

@@ -52,6 +52,19 @@ public interface ViewGuide {
     void prePage(@NotNull Player player);
 
     /**
+     * 返回到上一个界面，通常是不同的View
+     * @param player 玩家
+     */
+    void back(@NotNull Player player);
+
+    /**
+     * 跳转页面
+     * @param player 玩家
+     * @param page 到达的页面
+     */
+    void jump(@NotNull Player player, int page);
+
+    /**
      * 刷新玩家的页面
      * @param playerNames 玩家名称
      */
