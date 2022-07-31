@@ -7,6 +7,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Material;
 import org.fireflyest.craftgui.CraftGUI;
 import org.fireflyest.craftgui.api.ViewGuide;
@@ -34,7 +35,7 @@ public class ViewProtocol {
 
     private static final ItemStack AIR = new ItemStack(Material.AIR);
     private static final HashMap<String, PacketContainer> packets = new HashMap<>();
-
+    private static final int version = XMaterial.getVersion();
     private ViewProtocol(){
     }
 
@@ -176,12 +177,12 @@ public class ViewProtocol {
                 }
                 // 写入
                 packetContainer.getItemListModifier().write(0, itemStacks);
-                packetContainer.getItemModifier().write(0, null);
-                packetContainer.getIntegers().write(1,  invSize + 36);
+                // 1.17开始才会更新鼠标上的物品
+                if (version > 16) packetContainer.getItemModifier().write(0, null);
                 packets.put(playerName, packetContainer);
 
             }
-        }.runTaskLaterAsynchronously(CraftGUI.getPlugin(), 1);
+        }.runTaskAsynchronously(CraftGUI.getPlugin());
     }
 
     /**

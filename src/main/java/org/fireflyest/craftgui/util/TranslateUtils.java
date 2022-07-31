@@ -18,9 +18,10 @@ public class TranslateUtils {
             put("ja", MaterialJapanese.getInstance()); // 日语 Japanese
         }
     };
-    private static String language = Locale.getDefault().toLanguageTag();
+    private static String language;
 
     private TranslateUtils(){
+        setLocale(Locale.getDefault());
     }
 
     /**
@@ -28,9 +29,7 @@ public class TranslateUtils {
      * @param locale 语言地区
      */
     public static void setLocale(Locale locale) {
-        TranslateUtils.language = locale.toLanguageTag();
-        // 初始化
-        if (langMap.containsKey(language)) langMap.get(language).enable();
+        setLanguage(locale.toLanguageTag());
     }
 
     /**
