@@ -35,7 +35,6 @@ public class ViewProtocol {
 
     private static final ItemStack AIR = new ItemStack(Material.AIR);
     private static final HashMap<String, PacketContainer> packets = new HashMap<>();
-    private static final int version = XMaterial.getVersion();
     private ViewProtocol(){
     }
 
@@ -178,7 +177,7 @@ public class ViewProtocol {
                 // 写入
                 packetContainer.getItemListModifier().write(0, itemStacks);
                 // 1.17开始才会更新鼠标上的物品
-                if (version > 16) packetContainer.getItemModifier().write(0, null);
+                if (CraftGUI.BUKKIT_VERSION > 16) packetContainer.getItemModifier().write(0, null);
                 packets.put(playerName, packetContainer);
 
             }

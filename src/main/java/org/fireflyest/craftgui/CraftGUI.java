@@ -1,5 +1,6 @@
 package org.fireflyest.craftgui;
 
+import com.cryptomorin.xseries.XMaterial;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +22,7 @@ public final class CraftGUI extends JavaPlugin {
     public static ViewGuideImpl getViewGuide() {
         return viewGuide;
     }
+    public static final int BUKKIT_VERSION = XMaterial.getVersion();
 
     @Override
     public void onEnable() {
