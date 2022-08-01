@@ -1,5 +1,6 @@
 package org.fireflyest.craftgui.item;
 
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -22,11 +23,13 @@ public abstract class ViewItem {
     // 关闭
     public static final int ACTION_CLOSE = 2;
     // 执行指令，值一般是要执行的指令
-    public static final int ACTION_COMMAND = 3;
+    public static final int ACTION_PLAYER_COMMAND = 3;
+    // 控制台指令
+    public static final int ACTION_CONSOLE_COMMAND = 4;
     // 翻页，值一般是pre或next
-    public static final int ACTION_PAGE = 4;
+    public static final int ACTION_PAGE = 5;
     // 界面编辑，不需要bukkit的事件监听处理，由Page自己处理
-    public static final int ACTION_EDIT = 5;
+    public static final int ACTION_EDIT = 6;
 
     protected int action = ACTION_NONE;
     protected String value = "";

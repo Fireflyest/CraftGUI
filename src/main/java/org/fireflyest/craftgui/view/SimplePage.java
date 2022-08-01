@@ -122,7 +122,7 @@ public class SimplePage implements ViewPage {
 
     @Override
     public void updateTitle(String title) {
-        inventory = Bukkit.createInventory(null, size, pluginName + title);
+        inventory = Bukkit.createInventory(null, size, title);
     }
 
 }

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class ViewEventListener implements Listener {
 
-    public final ViewGuide guide;
+    private final ViewGuide guide;
 
     public ViewEventListener(){
         this.guide = CraftGUI.getViewGuide();
@@ -176,7 +176,7 @@ public class ViewEventListener implements Listener {
      * 玩家关闭容器，说明一次浏览结束
      * @param event 容器关闭事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClose(InventoryCloseEvent event){
         String playerName = event.getPlayer().getName();
         // 判断是否在浏览
