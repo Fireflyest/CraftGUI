@@ -28,8 +28,13 @@ public abstract class ViewItem {
     public static final int ACTION_CONSOLE_COMMAND = 4;
     // 翻页，值一般是pre或next
     public static final int ACTION_PAGE = 5;
-    // 界面编辑，不需要bukkit的事件监听处理，由Page自己处理
+    // 界面编辑，不需要bukkit的事件监听处理，由ViewPage自己处理
     public static final int ACTION_EDIT = 6;
+    // 插件自定义行为，由插件识别value自己判别
+    public static final int ACTION_PLUGIN = 7;
+
+    // 未知
+    public static final int ACTION_UNKNOWN = 10;
 
     protected int action = ACTION_NONE;
     protected String value = "";
