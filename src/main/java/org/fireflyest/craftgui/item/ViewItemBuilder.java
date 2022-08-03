@@ -102,7 +102,7 @@ public class ViewItemBuilder extends ViewItem implements Listener {
 
         NBTItem nbtItem = new NBTItem(item, true);
         if (command != null) {
-            nbtItem.setInteger(ViewItem.NBT_ACTION_KEY, ViewItem.ACTION_COMMAND);
+            nbtItem.setInteger(ViewItem.NBT_ACTION_KEY, ViewItem.ACTION_PLAYER_COMMAND);
             nbtItem.setString(ViewItem.NBT_VALUE_KEY, command);
         }else {
             nbtItem.setInteger(ViewItem.NBT_ACTION_KEY, action);

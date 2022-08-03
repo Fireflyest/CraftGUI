@@ -25,6 +25,9 @@ public class ViewGuideImpl implements ViewGuide {
     // 玩家正在浏览的页面
     public static final Map<String, ViewPage> viewUsing = new ConcurrentHashMap<>();
 
+    // 玩家上一个浏览
+    public static final Map<String, ViewPage> lastUsing = new ConcurrentHashMap<>();
+
     public ViewGuideImpl() {
     }
 
@@ -35,6 +38,11 @@ public class ViewGuideImpl implements ViewGuide {
 
     @Override
     public void closeView(@NotNull String playerName) {
+        // 转存可以返回
+        if (viewUsing.containsKey(playerName)){
+            lastUsing.put(playerName, viewUsing.get(playerName));
+        }
+        // 删除正在浏览
         viewUsing.remove(playerName);
     }
 
@@ -69,12 +77,45 @@ public class ViewGuideImpl implements ViewGuide {
 
     @Override
     public void back(@NotNull Player player) {
-        // TODO: 2022/7/31
+        String playerName = player.getName();
+        if (!lastUsing.containsKey(playerName)) return;
+        // 首页是否存在
+        ViewPage page = lastUsing.get(playerName);
+        if (page == null) {
+            Bukkit.getLogger().warning("The page player last used does not exist.");
+            return;
+        }
+        // 设置玩家正在浏览的视图
+        viewUsing.put(playerName, page);
+        lastUsing.remove(playerName); // TODO: 2022/8/4 这里只能记录一层，考虑用堆实现一下
+        // 打开容器
+        player.openInventory(page.getInventory());
     }
 
     @Override
     public void jump(@NotNull Player player, int page) {
-        // TODO: 2022/7/31
+        String playerName = player.getName();
+        if (this.unUsed(playerName)) return;
+        ViewPage viewPage = this.getUsingPage(playerName), targetPage = viewPage;
+        // 找到目标页面
+        int delta = page - viewPage.getPage();
+        if (delta > 0){
+            for (int i = 0; i < delta; i++) {
+                ViewPage tempPage = targetPage.getNext();
+                if (tempPage == null) break;
+                targetPage = tempPage;
+            }
+        }else {
+            for (int i = 0; i > delta; i--) {
+                ViewPage tempPage = targetPage.getPre();
+                if (tempPage == null) break;
+                targetPage = tempPage;
+            }
+        }
+        // 打开目标页面
+        player.closeInventory();
+        viewUsing.put(playerName, targetPage);
+        player.openInventory(targetPage.getInventory());
     }
 
     @Override

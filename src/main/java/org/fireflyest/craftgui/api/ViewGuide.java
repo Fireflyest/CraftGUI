@@ -52,7 +52,7 @@ public interface ViewGuide {
     void prePage(@NotNull Player player);
 
     /**
-     * 返回到上一个界面，通常是不同的View
+     * 返回到上一个界面，在打开不同的View时记录
      * @param player 玩家
      */
     void back(@NotNull Player player);
