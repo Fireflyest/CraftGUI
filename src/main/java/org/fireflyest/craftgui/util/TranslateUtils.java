@@ -20,8 +20,8 @@ public class TranslateUtils {
             put("fr-FR", MaterialFrench.getInstance()); // 法语 French
             put("ja", MaterialJapanese.getInstance()); // 日语 Japanese
             put("ja-JA", MaterialJapanese.getInstance()); // 日语 Japanese
-//            put("ru", MaterialRussian.getInstance()); // 俄语 Russian
-//            put("ru-RU", MaterialRussian.getInstance()); // 俄语 Russian
+            put("ru", MaterialRussian.getInstance()); // 俄语 Russian
+            put("ru-RU", MaterialRussian.getInstance()); // 俄语 Russian
         }
     };
     private static String language;
