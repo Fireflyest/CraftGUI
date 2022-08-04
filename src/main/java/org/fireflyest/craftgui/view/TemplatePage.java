@@ -44,7 +44,7 @@ public abstract class TemplatePage implements ViewPage {
         // 标题
         String guiTitle = pluginName;
         if (target != null)  guiTitle += ("§9" + target);
-        if (page != 0) guiTitle += (" §7#§8" + page);
+        if (page != -1) guiTitle += (" §7#§8" + page);
 
         // 界面容器
         this.updateTitle(guiTitle);
