@@ -19,7 +19,7 @@ public class SimpleView implements View<SimplePage> {
     @Override
     public SimplePage getFirstPage(String target){
         if (!pageMap.containsKey(target)){
-            pageMap.put(target, new SimplePage(pluginName, target, 0, 54));
+            pageMap.put(target, new SimplePage(pluginName, target, 0, 27));
         }
         return pageMap.get(target);
     }

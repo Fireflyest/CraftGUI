@@ -22,16 +22,18 @@ public abstract class ViewItem {
     public static final int ACTION_BACK = 1;
     // 关闭
     public static final int ACTION_CLOSE = 2;
+    // 打开某个界面
+    public static final int ACTION_OPEN = 3;
     // 执行指令，值一般是要执行的指令
-    public static final int ACTION_PLAYER_COMMAND = 3;
+    public static final int ACTION_PLAYER_COMMAND = 4;
     // 控制台指令
-    public static final int ACTION_CONSOLE_COMMAND = 4;
+    public static final int ACTION_CONSOLE_COMMAND = 5;
     // 翻页，值一般是pre或next
-    public static final int ACTION_PAGE = 5;
+    public static final int ACTION_PAGE = 6;
     // 界面编辑，不需要bukkit的事件监听处理，由ViewPage自己处理
-    public static final int ACTION_EDIT = 6;
+    public static final int ACTION_EDIT = 7;
     // 插件自定义行为，由插件识别value自己判别
-    public static final int ACTION_PLUGIN = 7;
+    public static final int ACTION_PLUGIN = 8;
 
     // 未知
     public static final int ACTION_UNKNOWN = 10;
