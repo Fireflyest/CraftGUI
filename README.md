@@ -102,7 +102,7 @@ ItemStack button = new ViewItemBuilder(Material.DIAMOND)
 当用户与界面中的物品交互时，插件需要获取玩家交互的物品，以及该物品对应的行为。
 可以使用本插件提供的`ItemUtils`获取物品的相关数据。
 
-在新建物品时设置参数
+在新建物品时设置额外参数
 ```java 
 ItemStack button = new ViewItemBuilder(Material.DIAMOND)
                 .name("§c按钮")
@@ -137,9 +137,85 @@ public void setupGuide() {
 ```
 
 ### 自定义界面
-自定义界面可以用两种方法实现，自己定义类实现接口或者直接继承本插件提供的`SimpleView`和`SimplePage`。
+新建一个类并实现`View`接口，可以参考如下代码
+```java 
+public class CustomView implements View<CustomPage> {
 
-todo
+    // 插件名称用于在监听事件时判断点击的是否本插件的界面
+    protected final String pluginName;
+    // 存储各个target的页面
+    protected final Map<String, CustomPage> pageMap = new HashMap<>();
+
+    public CustomView(String pluginName) {
+        this.pluginName = pluginName;
+    }
+
+    /**
+     * 玩家打开该界面时显示的页面
+     * @param target 页面标签
+     * @return 页面
+     */
+    @Override
+    public CustomPage getFirstPage(String target){
+        if (!pageMap.containsKey(target)){
+            pageMap.put(target, new CustomPage(pluginName, target, 0, 27));
+        }
+        return pageMap.get(target);
+    }
+
+    @Override
+    public void removePage(String target) {
+        pageMap.remove(target);
+    }
+}
+```
+创建完界面后，创建相应的页面。可以新建一个类实现`ViewPage`接口，当然也可以继承本插件提供的`TemplatePage`，代码如下
+```java 
+public class CustomPage extends TemplatePage {
+
+    public CustomPage(String pluginName, String target, int page, int size) {
+        super(pluginName, target, page, size);
+    }
+
+    @Override
+    public @NotNull Map<Integer, ItemStack> getItemMap(){
+        crashMap.clear();
+        crashMap.putAll(itemMap);
+
+        // 这里是需要异步加载的按钮
+        for (int i = 0; i < 9; i++) {
+            ItemStack item = new ViewItemBuilder(Material.STONE)
+                    .name(String.format("Button%s", i))
+                    .build();
+            crashMap.put(i, item);
+        }
+        return crashMap;
+    }
+
+    @Override
+    public ViewPage getNext() {
+        // 自动创建下一页
+        if(next == null && page < 7){
+            next = new CustomPage(pluginName, target, page+1, size);
+            next.setPre(this);
+        }
+        return next;
+    }
+
+    @Override
+    public void refreshPage() {
+        // 关闭按钮
+        ItemStack closeButton = new ViewItemBuilder(Material.REDSTONE)
+                .name("§c关闭")
+                .lore("§f关闭界面")
+                .action(ViewItem.ACTION_CLOSE)
+                .build();
+        itemMap.put(26, closeButton);
+    }
+
+}
+```
+这样就完成了一个简单的自定义页面。
 ### 添加界面
 自定义界面后，需要将界面添加到导航里面，才能让玩家打开。
 
@@ -161,10 +237,64 @@ guide.openView(player, SIMPLE_VIEW, "target");
 插件提供三种界面操作，分别是界面点击`ViewClickEvent`、界面物品放置`ViewPlaceEvent`
 和数字键按钮操作`ViewHotbarEvent`（数字按钮类型在1.17以下表现得不完美）。
 
-todo
+监听代码参考如下
+```java 
+@EventHandler
+public void onViewClick(ViewClickEvent event) {
+    // 判断是否本插件相关的事件
+    if(!event.getView().getTitle().contains("[CraftGUI]")) return;
+    // 是否点击到物品，一般来说是有物品
+    ItemStack item = event.getCurrentItem();
+    if(item == null) return;
+    // 获取点击的玩家
+    Player player = (Player)event.getWhoClicked();
+    // 获取行为和值
+    int action = ItemUtils.getItemAction(item);
+    String value = ItemUtils.getItemValue(item);
+    // 根据行为做反应，如果是页面跳转，请取消刷新，防止不必要算力消耗
+    switch (action){
+        case ViewItem.ACTION_CLOSE: // 关闭页面
+            event.setRefresh(false);
+            player.closeInventory();
+            break;
+        case ViewItem.ACTION_PAGE: // 页面跳转
+            event.setRefresh(false);
+            if ("pre".equals(value)){
+                guide.prePage(player);
+            } else if ("next".equals(value)) {
+                guide.nextPage(player);
+            } else {
+                guide.jump(player, NumberUtils.toInt(value));
+            }
+            break;
+        case ViewItem.ACTION_BACK: // 返回上一个界面
+            event.setRefresh(false);
+            guide.back(player);
+            break;
+        case ViewItem.ACTION_OPEN: // 打开一个界面
+            event.setRefresh(false);
+            guide.openView(player, CraftGUI.SIMPLE_VIEW, value);
+            break;
+        case ViewItem.ACTION_PLAYER_COMMAND: // 玩家指令
+            if (value != null) player.performCommand(value);
+            break;
+        case ViewItem.ACTION_CONSOLE_COMMAND: // 控制台指令
+            if (value != null) {
+                Bukkit.getServer().dispatchCommand(
+                        Bukkit.getConsoleSender(), value.replace("%player%", player.getName()));
+            }
+            break;
+        case ViewItem.ACTION_PLUGIN:
+            // do something
+            break;
+        case ViewItem.ACTION_UNKNOWN:
+        case ViewItem.ACTION_EDIT:
+        case ViewItem.ACTION_NONE:
+        default:
+    }
+}
+```
 ## 维护人员
 [@Fireflyest](https://github.com/Fireflyest) QQ: 746969484
 ## 使用情况
-
-todo
-
+![bstats](https://bstats.org/signatures/bukkit/CraftGUI.svg)
