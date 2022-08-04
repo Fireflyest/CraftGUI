@@ -38,14 +38,16 @@
 ```
 ViewGuide {
 
-  view_name → View {
-    target → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
+  "view_name" → View {
+    "target" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
   }
   
-  view_name → View {
-    target → ViewPage
-    target → ViewPage
+  "view_name" → View {
+    "target" → ViewPage
+    "target" → ViewPage
   }
+  
+  ...
   
 }
 ```
@@ -59,20 +61,22 @@ ViewGuide {
 ```
 ViewGuide {
 
-  view_name → View {
+  "view_name" → View {
   
-    target → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
-    target → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
-    target → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
+    "target" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
+    "target" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
+    "target" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
     ...
   }
   
-  view_name → View {
-    target → ViewPage
-    target → ViewPage
-    target → ViewPage
+  "view_name" → View {
+    "target" → ViewPage
+    "target" → ViewPage
+    "target" → ViewPage
     ...
   }
+  
+  ...
   
 }
 ```
@@ -113,6 +117,10 @@ ItemStack button = new ViewItemBuilder(Material.DIAMOND)
 
 ## 使用方法
 ### 获取导航
+在plugin.yml文件下添加依赖，让GUI插件优先于你的插件加载。
+```yml
+depend: [ProtocolLib,CraftGUI]
+```
 在插件的`onEnable()`方法内添加导航获取代码`this.setupGuide();`。
 在类内添加初始化方法如下
 ```java 
