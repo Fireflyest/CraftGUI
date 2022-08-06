@@ -219,19 +219,19 @@ public class CustomPage extends TemplatePage {
 ### 添加界面
 自定义界面后，需要将界面添加到导航里面，才能让玩家打开。
 
-首先为自定义界面起个名字，例如`craftgui.simple`。即使用插件的名称和界面名称组成，避免和其他插件的界面重名。
+首先为自定义界面起个名字，例如`myplugin.custom`。即使用插件的名称和界面名称组成，避免和其他插件的界面重名。
 ```java 
-public static final String SIMPLE_VIEW = "craftgui.simple";
+public static final String CUSTOM_VIEW = "myplugin.custom";
 ```
 设置了名称后，使用导航添加界面。
 建议界面需要带有一些标记，在事件监听的时候能够判别该事件是否他人的界面。
 例如我传入插件的名称作为容器的标题。
 ```java 
-guide.addView(SIMPLE_VIEW, new SimpleView("[CraftGUI]"));
+guide.addView(CUSTOM_VIEW, new CustomView("[CraftGUI]"));
 ```
 需要玩家打开界面时，调用
 ```java 
-guide.openView(player, SIMPLE_VIEW, "target");
+guide.openView(player, CUSTOM_VIEW, "target");
 ```
 ### 事件
 插件提供三种界面操作，分别是界面点击`ViewClickEvent`、界面物品放置`ViewPlaceEvent`
