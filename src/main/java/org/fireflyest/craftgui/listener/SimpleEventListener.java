@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.fireflyest.craftgui.CraftGUI;
 import org.fireflyest.craftgui.api.ViewGuide;
-import org.fireflyest.craftgui.api.ViewPage;
 import org.fireflyest.craftgui.core.ViewGuideImpl;
 import org.fireflyest.craftgui.event.ViewClickEvent;
 import org.fireflyest.craftgui.item.ViewItem;
@@ -37,6 +36,12 @@ public class SimpleEventListener implements Listener {
         String playerName = player.getName();
         if (ViewGuideImpl.DEBUG) {
             guide.openView(player, CraftGUI.SIMPLE_VIEW, playerName);
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    guide.openView(player, CraftGUI.SIMPLE_VIEW, "playerName");
+                }
+            }.runTaskLater(CraftGUI.getPlugin(), 40);
         }
     }
 

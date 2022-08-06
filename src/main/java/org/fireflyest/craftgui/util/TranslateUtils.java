@@ -14,6 +14,7 @@ public class TranslateUtils {
             put("zh", MaterialChinese.getInstance()); // 简体中文
             put("zh-CN", MaterialChinese.getInstance()); // 简体中文
             put("zh-TW", MaterialChineseF.getInstance()); // 繁体中文
+            put("zh-HK", MaterialChineseF.getInstance()); // 繁体中文
             put("de", MaterialGerman.getInstance()); // 德语 German
             put("de-DE", MaterialGerman.getInstance()); // 德语 German
             put("fr", MaterialFrench.getInstance()); // 法语 French
