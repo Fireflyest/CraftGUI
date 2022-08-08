@@ -66,7 +66,6 @@ public class ViewProtocol {
                         // 获取数据包
                         String playerName = event.getPlayer().getName();
                         PacketContainer packet = event.getPacket();
-//
 //                        System.out.println("**************************************************************************************");
 //                        List<ItemStack> iss = packet.getItemListModifier().read(0);
 //                        System.out.println("isAsync = " + event.isAsync());
@@ -98,9 +97,15 @@ public class ViewProtocol {
                         if (viewGuide.unUsed(playerName) || (packets.containsKey(playerName) && event.isAsync())) return;
 
                         ViewPage page = viewGuide.getUsingPage(playerName);
-
+                        // 是否页面的浏览者浏览者
+                        if (! page.getInventory().getViewers().contains(event.getPlayer())){
+                            viewGuide.closeView(playerName);
+                            return;
+                        }
                         // 放置固定按钮
                         List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
+                        int invSize = page.getInventory().getSize();
+                        while (itemStacks.size() < invSize) itemStacks.add(AIR);
                         for (Map.Entry<Integer, ItemStack> entry : page.getButtonMap().entrySet()) {
                             itemStacks.set(entry.getKey(), entry.getValue());
                         }

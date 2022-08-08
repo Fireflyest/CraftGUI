@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -42,6 +43,16 @@ public class SimpleEventListener implements Listener {
                     guide.openView(player, CraftGUI.SIMPLE_VIEW, "playerName");
                 }
             }.runTaskLater(CraftGUI.getPlugin(), 40);
+        }
+    }
+
+    @EventHandler
+    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+        // 测试用的，不用管
+        Player player = event.getPlayer();
+        if (player.isOp() && event.getMessage().contains("gui debug")){
+            ViewGuideImpl.DEBUG = !ViewGuideImpl.DEBUG;
+            player.sendMessage(String.format("[CraftGUI] debug -> %s", ViewGuideImpl.DEBUG));
         }
     }
 
