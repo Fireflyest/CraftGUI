@@ -85,6 +85,16 @@ public class ViewItemBuilder extends ViewItem implements Listener {
     }
 
     @Override
+    public ViewItem action(int action) {
+        return super.action(action);
+    }
+
+    @Override
+    public ViewItem value(String value) {
+        return super.value(value);
+    }
+
+    @Override
     public ItemStack build(){
         ItemStack item = new ItemStack(material == null ? Material.STONE : material);
 
