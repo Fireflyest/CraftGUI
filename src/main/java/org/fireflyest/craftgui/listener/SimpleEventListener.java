@@ -6,9 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.fireflyest.craftgui.CraftGUI;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.core.ViewGuideImpl;
@@ -31,28 +29,15 @@ public class SimpleEventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDropItem(PlayerDropItemEvent event) {
-        // 测试用的，不用管
-        Player player = event.getPlayer();
-        String playerName = player.getName();
-        if (ViewGuideImpl.DEBUG) {
-            guide.openView(player, CraftGUI.SIMPLE_VIEW, playerName);
-            new BukkitRunnable(){
-                @Override
-                public void run() {
-                    guide.openView(player, CraftGUI.SIMPLE_VIEW, "playerName");
-                }
-            }.runTaskLater(CraftGUI.getPlugin(), 40);
-        }
-    }
-
-    @EventHandler
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         // 测试用的，不用管
         Player player = event.getPlayer();
         if (player.isOp() && event.getMessage().contains("gui debug")){
             ViewGuideImpl.DEBUG = !ViewGuideImpl.DEBUG;
             player.sendMessage(String.format("[CraftGUI] debug -> %s", ViewGuideImpl.DEBUG));
+        }
+        if (player.isOp() && event.getMessage().contains("gui open")){
+            guide.openView(player, CraftGUI.SIMPLE_VIEW, player.getName());
         }
     }
 

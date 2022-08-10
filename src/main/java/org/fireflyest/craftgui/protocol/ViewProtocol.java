@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.fireflyest.craftgui.core.ViewGuideImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -66,35 +67,34 @@ public class ViewProtocol {
                         // 获取数据包
                         String playerName = event.getPlayer().getName();
                         PacketContainer packet = event.getPacket();
-//                        System.out.println("**************************************************************************************");
-//                        List<ItemStack> iss = packet.getItemListModifier().read(0);
-//                        System.out.println("isAsync = " + event.isAsync());
-//                        ItemStack itr = packet.getItemModifier().read(0);
-//                        System.out.println("Item = " + itr);
-//                        StringBuilder sb = new StringBuilder();
-//                        for (int i = 0; i < iss.size(); i++) {
-//                            ItemStack is = iss.get(i);
-//                            if (is == null) {
-//                                continue;
-//                            }
-//                            sb.append(i)
-//                                    .append("{")
-//                                    .append(is.getType())
-//                                    .append("x")
-//                                    .append(is.getAmount())
-//                                    .append("} ");
-//                            if (i % 8 == 0){
-//                                System.out.println(sb);
-//                                sb = new StringBuilder();
-//                            }
-//                        }
-//                        packet.getItemListModifier().write(0, iss);
-//                        packet.getItemModifier().write(0, itr);
-
+                        if (ViewGuideImpl.DEBUG) {
+                            List<ItemStack> iss = packet.getItemListModifier().read(0);
+                            ItemStack itr = packet.getItemModifier().read(0);
+                            System.out.println("**************************************************************************************");
+                            System.out.println("isAsync = " + event.isAsync());
+                            System.out.println("Item = " + itr);
+                            StringBuilder sb = new StringBuilder("\n");
+                            for (int i = 0; i < iss.size(); i++) {
+                                ItemStack is = iss.get(i);
+                                if (is == null) {
+                                    sb.append(i).append("{null}");
+                                }else {
+                                    sb.append(i).append(String.format("{%sx%s}", is.getType(), is.getAmount()));
+                                }
+                                if ((i+1) % 9 == 0){
+                                    System.out.println(sb);
+                                    sb = new StringBuilder();
+                                }
+                            }
+                            System.out.println(sb);
+                            packet.getItemListModifier().write(0, iss);
+                            packet.getItemModifier().write(0, itr);
+                        }
 
                         // 非浏览者不响应
                         // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
-                        if (viewGuide.unUsed(playerName) || (packets.containsKey(playerName) && event.isAsync())) return;
+                        if (viewGuide.unUsed(playerName)
+                                || (packets.containsKey(playerName) && event.isAsync())) return;
 
                         ViewPage page = viewGuide.getUsingPage(playerName);
                         // 是否页面的浏览者浏览者
