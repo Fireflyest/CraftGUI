@@ -35,6 +35,7 @@ public class ViewProtocol {
 
     private static final ItemStack AIR = new ItemStack(Material.AIR);
     private static final HashMap<String, PacketContainer> packets = new HashMap<>();
+    private static final HashMap<String, Integer> lastSend = new HashMap<>();
     private ViewProtocol(){
     }
 
@@ -67,10 +68,12 @@ public class ViewProtocol {
                         // 获取数据包
                         String playerName = event.getPlayer().getName();
                         PacketContainer packet = event.getPacket();
+                        int id = event.getPacket().getIntegers().read(0);
                         if (ViewGuideImpl.DEBUG) {
                             List<ItemStack> iss = packet.getItemListModifier().read(0);
                             ItemStack itr = packet.getItemModifier().read(0);
                             System.out.println("**************************************************************************************");
+                            System.out.println("id = " + id);
                             System.out.println("isAsync = " + event.isAsync());
                             System.out.println("Item = " + itr);
                             StringBuilder sb = new StringBuilder("\n");
@@ -94,7 +97,8 @@ public class ViewProtocol {
                         // 非浏览者不响应
                         // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
                         if (viewGuide.unUsed(playerName)
-                                || (packets.containsKey(playerName) && event.isAsync())) return;
+                                || (packets.containsKey(playerName) && event.isAsync())
+                                || Objects.equals(id, lastSend.get(playerName))) return;
 
                         ViewPage page = viewGuide.getUsingPage(playerName);
                         // 是否页面的浏览者浏览者
@@ -123,6 +127,7 @@ public class ViewProtocol {
 
                         // 存包
                         packets.put(playerName, packet);
+                        lastSend.put(playerName, id);
 
                         // 更新动态按钮
                         sendItemsPacketAsynchronously(playerName);
@@ -181,7 +186,7 @@ public class ViewProtocol {
                 // 写入
                 packetContainer.getItemListModifier().write(0, itemStacks);
                 // 1.17开始才会更新鼠标上的物品
-                if (CraftGUI.BUKKIT_VERSION > 16) packetContainer.getItemModifier().write(0, null);
+                if (CraftGUI.BUKKIT_VERSION > 16) packetContainer.getItemModifier().write(0, AIR);
                 packets.put(playerName, packetContainer);
 
             }
@@ -194,5 +199,10 @@ public class ViewProtocol {
      */
     public static void removePacket(String playerName) {
         packets.remove(playerName);
+    }
+
+
+    public static void close(){
+        protocolManager.removePacketListeners(CraftGUI.getPlugin());
     }
 }

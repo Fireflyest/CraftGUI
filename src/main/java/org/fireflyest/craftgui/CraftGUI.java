@@ -52,6 +52,6 @@ public final class CraftGUI extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        ViewProtocol.close();
     }
 }
