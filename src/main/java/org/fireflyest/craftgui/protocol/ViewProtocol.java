@@ -98,7 +98,7 @@ public class ViewProtocol {
                         // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
                         if (viewGuide.unUsed(playerName)
                                 || (packets.containsKey(playerName) && event.isAsync())
-                                || Objects.equals(id, lastSend.get(playerName))) return;
+                                || (id > 0 && Objects.equals(id, lastSend.get(playerName)))) return;
 
                         ViewPage page = viewGuide.getUsingPage(playerName);
                         // 是否页面的浏览者浏览者

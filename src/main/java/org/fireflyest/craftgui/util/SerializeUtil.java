@@ -2,6 +2,7 @@ package org.fireflyest.craftgui.util;
 
 import com.cryptomorin.xseries.XEnchantment;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import org.bukkit.Bukkit;
@@ -25,6 +26,7 @@ public class SerializeUtil {
     private SerializeUtil(){
     }
 
+    private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
     private static Method deserialize;
     private static final Map<String, ItemMeta> metaStorage = new HashMap<>();
     private static final Map<String, ItemStack> stackStorage = new HashMap<>();
@@ -69,10 +71,9 @@ public class SerializeUtil {
      * @return 堆析构后的文本
      */
     public static String serializeItemStack(ItemStack itemStack) {
-        Gson stack = new Gson();
         ItemStack item = itemStack.clone();
         item.setItemMeta(null);
-        return stack.toJson(item.serialize());
+        return gson.toJson(item.serialize());
     }
 
     /**
@@ -81,9 +82,89 @@ public class SerializeUtil {
      * @return 元析构后的文本
      */
     public static String serializeItemMeta(ItemStack itemStack){
-        Gson meta = new Gson();
+        return serializeItemMeta(itemStack, false);
+    }
+
+    public static String serializeItemMeta(ItemStack itemStack, boolean mysql){
         ItemMeta itemMeta = itemStack.getItemMeta();
-        return itemMeta == null ? "" : meta.toJson(itemMeta.serialize());
+        if (itemMeta == null) {
+            return null;
+        }
+        String json = gson.toJson(itemMeta.serialize());
+        if (mysql){
+            json = formalText(json);
+        }
+        return json;
+    }
+
+    private static String formalText(String text){
+        String value = text.substring(1, text.length()-1);
+        if (!value.contains("{")) return text;
+
+        StringBuilder textBuilder = new StringBuilder("{");
+        int index;
+        if ((index = value.indexOf("\"display-name\":\"")) != -1){
+            textBuilder.append(value, 0, index+="\"display-name\":\"".length());
+            StringBuilder valueBuilder = new StringBuilder();
+            int layer = 0;
+            for ( ; index < value.length(); index++){
+                char c = value.charAt(index);
+                valueBuilder.append(c == '\"' ? "\\\"" : c);
+                if (c == '{') {
+                    layer++;
+                }else  if (c == '}') {
+                    layer--;
+                    if (layer == 0) break;
+                }
+            }
+            textBuilder.append(valueBuilder);
+            value = value.substring(index+1);
+        }
+        if ((index = value.indexOf("\"lore\":")) != -1){
+            textBuilder.append(value, 0, index+="\"lore\":".length());
+            StringBuilder valueBuilder = new StringBuilder();
+            int layer = 0, loreLayer = 0;
+            for ( ; index < value.length(); index++){
+                char c = value.charAt(index);
+                valueBuilder.append(c == '\"' && layer > 0 ? "\\\"" : c);
+                if (c == '{') {
+                    layer++;
+                } else  if (c == '}') {
+                    layer--;
+                } else if (c == '[') {
+                    loreLayer++;
+                } else if (c == ']') {
+                    loreLayer--;
+                    if (loreLayer == 0) break;
+                }
+            }
+            textBuilder.append(valueBuilder);
+            value = value.substring(index+1);
+        }
+        if ((index = value.indexOf("\"pages\":")) != -1){
+            textBuilder.append(value, 0, index+="\"pages\":".length());
+            StringBuilder valueBuilder = new StringBuilder();
+            int layer = 0, loreLayer = 0;
+            for ( ; index < value.length(); index++){
+                char c = value.charAt(index);
+                valueBuilder.append(c == '\"' && layer > 0 ? "\\\"" : c);
+                if (c == '{') {
+                    layer++;
+                } else  if (c == '}') {
+                    layer--;
+                } else if (c == '[') {
+                    loreLayer++;
+                } else if (c == ']') {
+                    loreLayer--;
+                    if (loreLayer == 0) break;
+                }
+            }
+            textBuilder.append(valueBuilder);
+            value = value.substring(index+1);
+        }
+        textBuilder.append(value)
+                .append("}");
+        return textBuilder.toString();
     }
 
     /**
@@ -93,10 +174,9 @@ public class SerializeUtil {
      * @return 物品
      */
     public static ItemStack deserialize(String itemStack, String itemMeta) {
-        Gson gson = new Gson();
         Map<String, Object> itemMap;
         Map<String, Object> metaMap;
-        Type type = new TypeToken<Map<String, Object>>() {}.getType();
+        Type type = new TypeToken<LinkedHashMap<String, Object>>() {}.getType();
 
         ItemStack item;
         itemMap = gson.fromJson(itemStack, type);

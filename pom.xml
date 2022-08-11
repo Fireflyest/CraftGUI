@@ -6,7 +6,7 @@
 
     <groupId>org.fireflyest</groupId>
     <artifactId>CraftGUI</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.12</version>
     <packaging>jar</packaging>
 
     <name>CraftGUI</name>
