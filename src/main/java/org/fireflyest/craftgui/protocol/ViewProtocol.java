@@ -53,6 +53,14 @@ public class ViewProtocol {
 
     /**
      * 创建一个数据包监听
+     *
+     * 打开普通容器(page+inv)-不处理
+     * 首次打开界面(page+inv)-放置固定按钮((page)+inv)-存包(page)-记录最后发送-发送异步包(page)
+     * 异步包(page)-不处理(1.19以下可以用isAsync判断)
+     * 异步包(page)-不处理(1.19以上用容器大小判断)
+     * 背包更新(page+inv)-放置固定按钮((page)+inv)-存包(page)-记录最后发送-发送异步包(page)
+     * 背包更新异步包(page+inv)-不处理(1.19以下可以用isAsync判断)
+     * 背包更新异步包(page+inv)-不处理(1.19以上可以用isAsync判断)
      */
     public static void createPacketListener(){
         // 打开界面监听
@@ -71,12 +79,13 @@ public class ViewProtocol {
                         int id = event.getPacket().getIntegers().read(0);
                         if (ViewGuideImpl.DEBUG) {
                             List<ItemStack> iss = packet.getItemListModifier().read(0);
-                            ItemStack itr = packet.getItemModifier().read(0);
+                            ItemStack itr = null;
+                            if (CraftGUI.BUKKIT_VERSION > 16) itr = packet.getItemModifier().read(0);
                             System.out.println("**************************************************************************************");
                             System.out.println("id = " + id);
                             System.out.println("isAsync = " + event.isAsync());
                             System.out.println("Item = " + itr);
-                            StringBuilder sb = new StringBuilder("\n");
+                            StringBuilder sb = new StringBuilder();
                             for (int i = 0; i < iss.size(); i++) {
                                 ItemStack is = iss.get(i);
                                 if (is == null) {
@@ -85,35 +94,53 @@ public class ViewProtocol {
                                     sb.append(i).append(String.format("{%sx%s}", is.getType(), is.getAmount()));
                                 }
                                 if ((i+1) % 9 == 0){
-                                    System.out.println(sb);
+                                    plugin.getLogger().info(sb.toString());
                                     sb = new StringBuilder();
                                 }
                             }
-                            System.out.println(sb);
-                            packet.getItemListModifier().write(0, iss);
-                            packet.getItemModifier().write(0, itr);
+                            plugin.getLogger().info(sb.toString());
                         }
 
                         // 非浏览者不响应
                         // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
                         if (viewGuide.unUsed(playerName)
-                                || (packets.containsKey(playerName) && event.isAsync())
-                                || (id > 0 && Objects.equals(id, lastSend.get(playerName)))) return;
+                                || (packets.containsKey(playerName) && event.isAsync())) {
+                            if (ViewGuideImpl.DEBUG) {
+                                plugin.getLogger().info("viewGuide.unUsed(playerName) = " + viewGuide.unUsed(playerName));
+                                plugin.getLogger().info("packets.containsKey(playerName = " + packets.containsKey(playerName));
+                            }
+                            return;
+                        }
 
                         ViewPage page = viewGuide.getUsingPage(playerName);
                         // 是否页面的浏览者浏览者
                         if (! page.getInventory().getViewers().contains(event.getPlayer())){
+                            if (ViewGuideImpl.DEBUG) plugin.getLogger().info("!page.getInventory().getViewers().contains(event.getPlayer())");
                             viewGuide.closeView(playerName);
                             return;
                         }
-                        // 放置固定按钮
+
                         List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
                         int invSize = page.getInventory().getSize();
+                        // 1.19以上判断是否异步包，第一次打开和背包更新都会比异步包大
+                        if (packets.containsKey(playerName) && itemStacks.size() == invSize){
+                            if (ViewGuideImpl.DEBUG) plugin.getLogger().info("itemStacks.size() = invSize");
+                            return;
+                        }
+                        // 1.19以上判断是否背包更新的异步包
+                        if (lastSend.get(playerName) != null
+                                && itemsToString(itemStacks).hashCode() == lastSend.get(playerName)){
+                            if (ViewGuideImpl.DEBUG) plugin.getLogger().info("packet.equals(lastSend.get(playerName))");
+                            return;
+                        }
+                        // 填充空气
                         while (itemStacks.size() < invSize) itemStacks.add(AIR);
+                        // 放置固定按钮
                         for (Map.Entry<Integer, ItemStack> entry : page.getButtonMap().entrySet()) {
                             itemStacks.set(entry.getKey(), entry.getValue());
                         }
-                        // 如果还没存包，说明第一次打开，只发送容器内物品，所以删除容器的物品
+                        // 如果还没存包，说明第一次打开，只发送界面内物品，所以删除背包物品
+                        // 如果已存包，应该是背包更新
                         if (! packets.containsKey(playerName)){
                             int size = page.getInventory().getSize();
                             Iterator<ItemStack> iterator = itemStacks.listIterator(size);
@@ -125,9 +152,10 @@ public class ViewProtocol {
 
                         packet.getItemListModifier().write(0, itemStacks);
 
+                        if (ViewGuideImpl.DEBUG) plugin.getLogger().info("itemSize = " + itemStacks.size());
+
                         // 存包
                         packets.put(playerName, packet);
-                        lastSend.put(playerName, id);
 
                         // 更新动态按钮
                         sendItemsPacketAsynchronously(playerName);
@@ -137,9 +165,14 @@ public class ViewProtocol {
 
     /**
      * 刷新页面的时候，异步发包，发送的是所有按钮
+     *
+     * 首次打开的异步刷新(page)
+     * 背包更新的异步刷新(page+inv)
+     * 导航的异步刷新(page)
+     *
      * @param playerName 用户名
      */
-    public static void sendItemsPacketAsynchronously(String playerName){
+    public static void sendItemsPacketAsynchronously(final String playerName){
         new BukkitRunnable(){
             @Override
             public void run() {
@@ -166,6 +199,10 @@ public class ViewProtocol {
 
                 // 写入
                 packet.getItemListModifier().write(0, itemStacks);
+                // 判断是否背包更新的异步包
+                if (itemStacks.size() > invSize) {
+                    lastSend.put(playerName, itemsToString(itemStacks).hashCode());
+                }
 
                 // 发送数据包
                 Player player = Bukkit.getPlayerExact(playerName);
@@ -177,7 +214,7 @@ public class ViewProtocol {
                 }
 
                 PacketContainer packetContainer = packet.shallowClone();
-                // 删掉多余格
+                // 删掉多余格，只有背包的异步更新需要删减
                 Iterator<ItemStack> iterator = itemStacks.listIterator(invSize);
                 while (iterator.hasNext()){
                     iterator.next();
@@ -204,5 +241,18 @@ public class ViewProtocol {
 
     public static void close(){
         protocolManager.removePacketListeners(CraftGUI.getPlugin());
+    }
+
+    private static String itemsToString(List<ItemStack> itemStacks){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < itemStacks.size(); i++) {
+            ItemStack is = itemStacks.get(i);
+            if (is != null) {
+                String name = is.getType().name();
+                sb.append(i).append(name);
+                if (Material.AIR != is.getType()) sb.append(is.getAmount());
+            }
+        }
+        return sb.toString();
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.fireflyest.craftgui.CraftGUI;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.api.ViewPage;
+import org.fireflyest.craftgui.core.ViewGuideImpl;
 import org.fireflyest.craftgui.event.ViewClickEvent;
 import org.fireflyest.craftgui.event.ViewHotbarEvent;
 import org.fireflyest.craftgui.event.ViewPlaceEvent;
@@ -184,6 +185,7 @@ public class ViewEventListener implements Listener {
 
         // 关闭界面
         if(guide.getUsingPage(playerName) != null) {
+            if (ViewGuideImpl.DEBUG) CraftGUI.getPlugin().getLogger().info("onInventoryClose");
             guide.closeView(playerName);
         }
         // 删除数据包
