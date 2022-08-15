@@ -129,7 +129,8 @@ public class ViewProtocol {
                         }
                         // 1.19以上判断是否背包更新的异步包
                         if (lastSend.get(playerName) != null
-                                && itemsToString(itemStacks).hashCode() == lastSend.get(playerName)){
+                                && itemsToString(itemStacks, invSize).hashCode() == lastSend.get(playerName)){
+                            lastSend.remove(playerName);
                             if (ViewGuideImpl.DEBUG) plugin.getLogger().info("packet.equals(lastSend.get(playerName))");
                             return;
                         }
@@ -190,18 +191,14 @@ public class ViewProtocol {
                 while (itemStacks.size() < invSize) itemStacks.add(AIR);
                 for (int i = 0; i < invSize; i++) {
                     ItemStack item = viewItemMap.get(i);
-                    if (item == null) {
-                        itemStacks.set(i, AIR);
-                    }else {
-                        itemStacks.set(i, item);
-                    }
+                    itemStacks.set(i, Objects.requireNonNullElse(item, AIR));
                 }
 
                 // 写入
                 packet.getItemListModifier().write(0, itemStacks);
                 // 判断是否背包更新的异步包
                 if (itemStacks.size() > invSize) {
-                    lastSend.put(playerName, itemsToString(itemStacks).hashCode());
+                    lastSend.put(playerName, itemsToString(itemStacks, invSize).hashCode());
                 }
 
                 // 发送数据包
@@ -243,9 +240,9 @@ public class ViewProtocol {
         protocolManager.removePacketListeners(CraftGUI.getPlugin());
     }
 
-    private static String itemsToString(List<ItemStack> itemStacks){
+    private static String itemsToString(List<ItemStack> itemStacks, int start){
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < itemStacks.size(); i++) {
+        for (int i = start; i < itemStacks.size(); i++) {
             ItemStack is = itemStacks.get(i);
             if (is != null) {
                 String name = is.getType().name();

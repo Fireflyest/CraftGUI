@@ -36,9 +36,6 @@ public class SimpleEventListener implements Listener {
             ViewGuideImpl.DEBUG = !ViewGuideImpl.DEBUG;
             player.sendMessage(String.format("[CraftGUI] debug -> %s", ViewGuideImpl.DEBUG));
         }
-        if (player.isOp() && event.getMessage().contains("gui open")){
-            guide.openView(player, CraftGUI.SIMPLE_VIEW, player.getName());
-        }
     }
 
     @EventHandler

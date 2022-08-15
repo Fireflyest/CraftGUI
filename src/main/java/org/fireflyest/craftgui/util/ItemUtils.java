@@ -44,6 +44,12 @@ public class ItemUtils {
         return nbtItem.getInteger(ViewItem.NBT_ACTION_KEY);
     }
 
+    public static void setItemModel(@NotNull ItemStack item, int model) {
+        if (item.getType() == XMaterial.AIR.parseMaterial()) return;
+        NBTItem nbtItem = new NBTItem(item, true);
+        nbtItem.setInteger(ViewItem.NBT_MODEL_KEY, model);
+    }
+
     public static boolean hasCustomNBT(@NotNull ItemStack item){
         if (item.getType() == XMaterial.AIR.parseMaterial()) return false;
         NBTItem nbtItem = new NBTItem(item);

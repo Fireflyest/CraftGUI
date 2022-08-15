@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.fireflyest.craftgui.util.SerializeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +33,8 @@ public class ViewItemBuilder extends ViewItem implements Listener {
 
     // 物品标志
     private ItemFlag[] itemFlags;
+
+    private int model = -1;
 
     // 注释
     private final List<String> lore = new ArrayList<>();
@@ -84,14 +87,9 @@ public class ViewItemBuilder extends ViewItem implements Listener {
         return this;
     }
 
-    @Override
-    public ViewItem action(int action) {
-        return super.action(action);
-    }
-
-    @Override
-    public ViewItem value(String value) {
-        return super.value(value);
+    public ViewItemBuilder model(int model){
+        this.model = model;
+        return this;
     }
 
     @Override
@@ -106,11 +104,15 @@ public class ViewItemBuilder extends ViewItem implements Listener {
 
         if (lore.size() > 0) meta.setLore(lore);
         if (itemFlags != null && itemFlags.length > 0) meta.addItemFlags(itemFlags);
+        if (model != -1){
+            meta.setCustomModelData(model);
+        }
 
         item.setItemMeta(meta);
         item.setAmount(amount);
 
         NBTItem nbtItem = new NBTItem(item, true);
+
         if (command != null) {
             nbtItem.setInteger(ViewItem.NBT_ACTION_KEY, ViewItem.ACTION_PLAYER_COMMAND);
             nbtItem.setString(ViewItem.NBT_VALUE_KEY, command);

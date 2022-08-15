@@ -15,6 +15,8 @@ public abstract class ViewItem {
     public static final String NBT_VALUE_KEY = "craft-gui-value";
     // nbt行为键，存储int类型值，让插件开发者在监听点击事件的时候判断按钮是用来干嘛
     public static final String NBT_ACTION_KEY = "craft-gui-action";
+    // 模型
+    public static final String NBT_MODEL_KEY = "custom-model-data";
 
     // 无
     public static final int ACTION_NONE = 0;

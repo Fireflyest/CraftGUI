@@ -38,16 +38,16 @@
 ```
 ViewGuide {
 
-  "view_name" → View {
-    "target" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
+  "view-key" → View {
+    "target-key" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
   }
   
-  "view_name" → View {
-    "target" → ViewPage
-    "target" → ViewPage
+  "view-key" → View {
+    "target-key" → ViewPage
+    "target-key" → ViewPage
   }
   
-  ...
+  more view...
   
 }
 ```
@@ -55,28 +55,30 @@ ViewGuide {
 对于不同的玩家打开容器，可以使用参数`target`来获取对应玩家的专属页面。
 这个界面的`target`数量取决于使用容器的玩家数量，并非固定的
 
-一般来说，使用一个`Map<String, ViewPage>`来存储一个界面的所有页面，其中数据的键为`target`。
+一般来说，使用一个`Map<String, ViewPage>`来存储一个界面的首页，供玩家打开，其中数据的键为`target`。
 
 大致结构如下
 ```
 ViewGuide {
 
-  "view_name" → View {
+  "view-key" → View {
   
-    "target" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
-    "target" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
-    "target" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
-    ...
+    "target-key" → { ViewPage ↔ ViewPage ↔ ... }
+    "target-key" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
+    "target-key" → { ViewPage ↔ ViewPage ↔ ViewPage ↔ ... }
+    
+    more page...
   }
   
-  "view_name" → View {
-    "target" → ViewPage
-    "target" → ViewPage
-    "target" → ViewPage
-    ...
+  "view-key" → View {
+    "target-key" → ViewPage
+    "target-key" → ViewPage
+    "target-key" → ViewPage
+    
+    more page...
   }
   
-  ...
+  more view...
   
 }
 ```
@@ -254,11 +256,11 @@ public void onViewClick(ViewClickEvent event) {
     // 根据行为做反应，如果是页面跳转，请取消刷新，防止不必要算力消耗
     switch (action){
         case ViewItem.ACTION_CLOSE: // 关闭页面
-            event.setRefresh(false);
+            event.setRefresh(event.isShiftClick());
             player.closeInventory();
             break;
         case ViewItem.ACTION_PAGE: // 页面跳转
-            event.setRefresh(false);
+            event.setRefresh(event.isShiftClick());
             if ("pre".equals(value)){
                 guide.prePage(player);
             } else if ("next".equals(value)) {
@@ -268,21 +270,20 @@ public void onViewClick(ViewClickEvent event) {
             }
             break;
         case ViewItem.ACTION_BACK: // 返回上一个界面
-            event.setRefresh(false);
+            event.setRefresh(event.isShiftClick());
             guide.back(player);
             break;
         case ViewItem.ACTION_OPEN: // 打开一个界面
-            event.setRefresh(false);
+            event.setRefresh(event.isShiftClick());
             guide.openView(player, CraftGUI.SIMPLE_VIEW, value);
             break;
         case ViewItem.ACTION_PLAYER_COMMAND: // 玩家指令
             if (value != null) player.performCommand(value);
             break;
         case ViewItem.ACTION_CONSOLE_COMMAND: // 控制台指令
-            if (value != null) {
-                Bukkit.getServer().dispatchCommand(
-                        Bukkit.getConsoleSender(), value.replace("%player%", player.getName()));
-            }
+            if (value == null) break;
+            String command = value.replace("%player%", player.getName());
+            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
             break;
         case ViewItem.ACTION_PLUGIN:
             // do something
