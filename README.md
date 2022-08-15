@@ -31,7 +31,7 @@
 只有一页，而且界面的内容不由使用者的变化而变化。
 通常界面的归属是某个插件，例如用来显示插件的信息，每个玩家打开看到都是一样的内容。
 
-该类型下使用导航调用的指令`viewGuide.openView(player, viewName,  target)`中的target的作用就不是用来区分界面的使用者。
+该类型下使用导航调用的指令`viewGuide.openView(player, "view-key",  "target-key")`中的target的作用就不是用来区分界面的使用者。
 这种界面一般只有固定的几个`target`。
 
 大致结构如下
@@ -135,6 +135,7 @@ public void setupGuide() {
           return;
       }
       guide = rsp.getProvider();
+      ...
 }
 ```
 
@@ -237,7 +238,7 @@ guide.openView(player, CUSTOM_VIEW, "target");
 ```
 ### 事件
 插件提供三种界面操作，分别是界面点击`ViewClickEvent`、界面物品放置`ViewPlaceEvent`
-和数字键按钮操作`ViewHotbarEvent`（数字按钮类型在1.17以下表现得不完美）。
+和数字键按钮操作`ViewHotbarEvent`。
 
 监听代码参考如下
 ```java 
