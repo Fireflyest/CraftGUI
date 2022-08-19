@@ -26,6 +26,8 @@
 本插件的页面实现简单来说就是通过一个导航`ViewGuide`控制玩家打开界面、切换界面和翻页。
 每一个界面`View`可以包含多数的页面`ViewPage`双向链表，其中每个页面都能通过`viewPage.getNext()`来获取下一页或`viewPage.getPre()`获取上一页。
 
+![guide](https://wx2.sinaimg.cn/mw2000/007vuuAIgy1h5c0b75lkbj30qh0gljxd.jpg)
+
 这里列出一些常用界面类型，当然你可以自己挖掘其他用法
 #### 单目标界面
 只有一页，而且界面的内容不由使用者的变化而变化。
@@ -297,6 +299,6 @@ public void onViewClick(ViewClickEvent event) {
 }
 ```
 ## 维护人员
-[@Fireflyest](https://github.com/Fireflyest) QQ: 746969484
+[Fireflyest](https://github.com/Fireflyest) QQ: 746969484
 ## 使用情况
 ![bstats](https://bstats.org/signatures/bukkit/CraftGUI.svg)
