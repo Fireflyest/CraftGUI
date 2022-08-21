@@ -1,6 +1,5 @@
 package org.fireflyest.craftgui.item;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 /**

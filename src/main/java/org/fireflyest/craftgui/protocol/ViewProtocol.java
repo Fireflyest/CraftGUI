@@ -22,8 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * 玩家打开容器时，服务端发送物品数据包。如果玩家打开的是视图，本类先将数据包内物品更改为固定按钮，
- * 同时保存数据包，然后再发送一个包更新动态按钮，并删除保存的包
+ * 玩家打开容器时，服务端发送物品数据包。如果玩家打开的是视图，本类先将数据包内物品更改为固定按钮，<br/>
+ * 同时保存数据包，然后再发送一个包更新动态按钮，并删除保存的包<br/>
  * @author Fireflyest
  * 2022/1/16 18:45
  */
@@ -52,15 +52,15 @@ public class ViewProtocol {
     }
 
     /**
-     * 创建一个数据包监听
-     *
-     * 打开普通容器(page+inv)-不处理
-     * 首次打开界面(page+inv)-放置固定按钮((page)+inv)-存包(page)-记录最后发送-发送异步包(page)
-     * 异步包(page)-不处理(1.19以下可以用isAsync判断)
-     * 异步包(page)-不处理(1.19以上用容器大小判断)
-     * 背包更新(page+inv)-放置固定按钮((page)+inv)-存包(page)-记录最后发送-发送异步包(page)
-     * 背包更新异步包(page+inv)-不处理(1.19以下可以用isAsync判断)
-     * 背包更新异步包(page+inv)-不处理(1.19以上可以用isAsync判断)
+     * 创建一个数据包监听<br/>
+     * <br/>
+     * 打开普通容器(page+inv)-不处理<br/>
+     * 首次打开界面(page+inv)-放置固定按钮((page)+inv)-存包(page)-记录最后发送-发送异步包(page)<br/>
+     * 异步包(page)-不处理(1.19以下可以用isAsync判断)<br/>
+     * 异步包(page)-不处理(1.19以上用容器大小判断)<br/>
+     * 背包更新(page+inv)-放置固定按钮((page)+inv)-存包(page)-记录最后发送-发送异步包(page)<br/>
+     * 背包更新异步包(page+inv)-不处理(1.19以下可以用isAsync判断)<br/>
+     * 背包更新异步包(page+inv)-不处理(1.19以上可以用isAsync判断)<br/>
      */
     public static void createPacketListener(){
         // 打开界面监听
@@ -165,11 +165,11 @@ public class ViewProtocol {
     }
 
     /**
-     * 刷新页面的时候，异步发包，发送的是所有按钮
-     *
-     * 首次打开的异步刷新(page)
-     * 背包更新的异步刷新(page+inv)
-     * 导航的异步刷新(page)
+     * 刷新页面的时候，异步发包，发送的是所有按钮<br/>
+     * <br/>
+     * 首次打开的异步刷新(page)<br/>
+     * 背包更新的异步刷新(page+inv)<br/>
+     * 导航的异步刷新(page)<br/>
      *
      * @param playerName 用户名
      */
