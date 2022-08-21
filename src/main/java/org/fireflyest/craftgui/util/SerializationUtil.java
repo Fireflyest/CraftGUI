@@ -42,16 +42,18 @@ public class SerializationUtil {
         // 解析物品堆
         ItemStack stack;
         if (stackCrashMap.containsKey(stackData)) {
-            stack = stackCrashMap.get(stackData);
+            stack = stackCrashMap.get(stackData).clone();
         }else {
             stack = deserialize(stackData, ItemStack.class);
-            stackCrashMap.put(stackData, stack);
+            stackCrashMap.put(stackData, stack.clone());
         }
         return stack;
     }
 
     public static String serializeItemStack(ItemStack itemStack){
-        return serialize(itemStack);
+        String data = serialize(itemStack);
+        stackCrashMap.put(data, itemStack.clone());
+        return data;
     }
 
 }
