@@ -292,8 +292,11 @@ public class SerializeUtil {
             }
             case "SKULL": {
                 if ( map.containsKey("skull-owner") && CraftGUI.BUKKIT_VERSION > 17){
-                    skull = map.get("skull-owner").toString();
-                    map.remove("skull-owner");
+                    String[] skullData = map.get("skull-owner").toString().split("@");
+                    if (skullData.length > 1) {
+                        skull = skullData[1];
+                        map.put("skull-owner", skullData[0]);
+                    }
                 }
                 break;
             }
@@ -419,11 +422,7 @@ public class SerializeUtil {
             ((Repairable)meta).setRepairCost(((int) repairCost));
         }
         if (hasPatterns) ((BannerMeta)meta).setPatterns(patternList);
-        if (skull != null && CraftGUI.BUKKIT_VERSION > 17) {
-            String[] skullData = skull.split("@");
-            ((SkullMeta) meta).setOwner(skullData[0]);
-            if (skullData.length > 1) meta = SkullUtils.applySkin(meta, skullData[1]);
-        }
+        if (skull != null && CraftGUI.BUKKIT_VERSION > 17)  meta = SkullUtils.applySkin(meta, skull);
         return meta;
     }
 
