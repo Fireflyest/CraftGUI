@@ -1,14 +1,13 @@
 package org.fireflyest.craftgui.util;
 
+import com.cryptomorin.xseries.SkullUtils;
 import com.cryptomorin.xseries.XEnchantment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.DyeColor;
-import org.bukkit.FireworkEffect;
+import de.tr7zw.changeme.nbtapi.NBTItem;
+import org.bukkit.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
@@ -26,11 +25,11 @@ public class SerializeUtil {
     private SerializeUtil(){
     }
 
-    private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
     private static Method deserialize;
     private static final Map<String, ItemMeta> metaStorage = new HashMap<>();
     private static final Map<String, ItemStack> stackStorage = new HashMap<>();
 
+    private static final java.util.regex.Pattern uniqueIdPattern = java.util.regex.Pattern.compile("uniqueId=[a-zA-Z0-9-]+");
     private static boolean debug = false;
 
     static {
@@ -71,6 +70,7 @@ public class SerializeUtil {
      * @return 堆析构后的文本
      */
     public static String serializeItemStack(ItemStack itemStack) {
+        Gson gson = new Gson();
         ItemStack item = itemStack.clone();
         item.setItemMeta(null);
         return gson.toJson(item.serialize());
@@ -86,11 +86,22 @@ public class SerializeUtil {
     }
 
     public static String serializeItemMeta(ItemStack itemStack, boolean mysql){
+        Gson gson = new Gson();
+
         ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta == null) {
-            return null;
+        if (itemMeta == null) return "";
+
+        // 1.18之后头颅meta存储方式改变，不存在nbt中了
+        Map<String, Object> objectMap = itemMeta.serialize();
+        if (itemMeta instanceof SkullMeta && CraftGUI.BUKKIT_VERSION > 17) {
+            SkullMeta skullMeta = ((SkullMeta) itemMeta);
+            if (objectMap.containsKey("skull-owner")) {
+                objectMap = new HashMap<>(objectMap);
+                objectMap.put("skull-owner", skullMeta.getOwner()+ "@" + SkullUtils.getSkinValue(skullMeta));
+            }
         }
-        String json = gson.toJson(itemMeta.serialize());
+
+        String json = gson.toJson(objectMap);
         if (mysql){
             json = formalText(json);
         }
@@ -174,6 +185,7 @@ public class SerializeUtil {
      * @return 物品
      */
     public static ItemStack deserialize(String itemStack, String itemMeta) {
+        Gson gson = new Gson();
         Map<String, Object> itemMap;
         Map<String, Object> metaMap;
         Type type = new TypeToken<LinkedHashMap<String, Object>>() {}.getType();
@@ -249,6 +261,8 @@ public class SerializeUtil {
         // 热带雨
         boolean tropicalFish = false;
         float tropicalFishVariant;
+        // 头颅
+        String skull = null;
 
         // 先处理部分meta数据
         switch (metaType){
@@ -274,6 +288,13 @@ public class SerializeUtil {
                                 .replace("}", "")
                                 .replace("\"", "");
                 map.remove("stored-enchants");
+                break;
+            }
+            case "SKULL": {
+                if ( map.containsKey("skull-owner") && CraftGUI.BUKKIT_VERSION > 17){
+                    skull = map.get("skull-owner").toString();
+                    map.remove("skull-owner");
+                }
                 break;
             }
             case "FIREWORK_EFFECT" : {
@@ -398,7 +419,11 @@ public class SerializeUtil {
             ((Repairable)meta).setRepairCost(((int) repairCost));
         }
         if (hasPatterns) ((BannerMeta)meta).setPatterns(patternList);
-
+        if (skull != null && CraftGUI.BUKKIT_VERSION > 17) {
+            String[] skullData = skull.split("@");
+            ((SkullMeta) meta).setOwner(skullData[0]);
+            if (skullData.length > 1) meta = SkullUtils.applySkin(meta, skullData[1]);
+        }
         return meta;
     }
 
