@@ -1,6 +1,4 @@
 # CraftGUI - Frame of Minecraft GUI
-![GitHub all releases](https://img.shields.io/github/downloads/Fireflyest/CraftGUI/total?style=flat-square)
-![GitHub release (latest by date)](https://img.shields.io/github/downloads/Fireflyest/CraftGUI/latest/total?style=flat-square)
 ![Spiget Downloads](https://img.shields.io/spiget/downloads/104722?label=spigot%20downloads&style=flat-square)
 ![Spiget Rating](https://img.shields.io/spiget/rating/104722?style=flat-square)
 ##### 以游戏自带的容器作为可操作的用户界面，简化界面的开发流程
@@ -306,4 +304,7 @@ public void onViewClick(ViewClickEvent event) {
 ## 维护人员
 [Fireflyest](https://github.com/Fireflyest) QQ: 746969484
 ## 使用情况
+![GitHub all releases](https://img.shields.io/github/downloads/Fireflyest/CraftGUI/total?style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/downloads/Fireflyest/CraftGUI/latest/total?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/Fireflyest/CraftGUI?style=flat-square)
 ![bstats](https://bstats.org/signatures/bukkit/CraftGUI.svg)
