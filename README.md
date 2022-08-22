@@ -1,7 +1,7 @@
 # CraftGUI - Frame of Minecraft GUI
 ![GitHub all releases](https://img.shields.io/github/downloads/Fireflyest/CraftGUI/total?style=flat-square)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/Fireflyest/CraftGUI/latest/total?style=flat-square)
-![Spiget Rating](https://img.shields.io/spiget/rating/CraftGUI?style=flat-square)
+![Spiget Rating](https://img.shields.io/spiget/rating/104722?style=flat-square)
 ##### 以游戏自带的容器作为可操作的用户界面，简化界面的开发流程
 
 在原生的服务器中，使用GUI界面操作可以减少玩家需要输入的指令数量，让玩家无需为太多指令需要记忆而发愁。
