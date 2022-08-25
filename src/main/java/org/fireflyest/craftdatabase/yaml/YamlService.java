@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,7 +27,6 @@ public abstract class YamlService {
     public YamlService(@Nonnull JavaPlugin plugin) {
         this.plugin = plugin;
         this.dataFolder = plugin.getDataFolder();
-        // TODO: 2022/8/23 该类未测试
     }
 
     /**
@@ -50,22 +50,20 @@ public abstract class YamlService {
 
 
     /**
-     * 保存配置数据
+     * 设置配置数据
      * @param key 据键值
      * @param value 数据值
      */
     public void setConfigData(String key, Object value) {
-//        if (config == null) {
-//            return;
-//        }
-//        config.set(key, value);
-//        File file = new File(dataFolder, "config.yml");
-//
-//        try {
-//            config.save(file);
-//        } catch (IOException e) {
-//            Bukkit.getServer().getLogger().severe(String.format("无法保存数据 %s!", "config.yml"));
-//        }
+        if (config == null) return;
+
+        config.set(key, value);
+        File file = new File(dataFolder, "config.yml");
+
+        try {
+            config.save(file);
+        } catch (IOException ignored) {
+        }
     }
 
 
