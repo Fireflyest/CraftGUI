@@ -98,11 +98,25 @@ public class SQLConnector {
         Connection connection = connectionMap.get(url);
         if (connection == null) return;
         try {
-            connection.close();
+            if (!connection.isClosed()) connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         connectionMap.remove(url);
+    }
+
+    /**
+     * 关闭所有
+     */
+    public static void closeAll(){
+        for (Connection connection : connectionMap.values()) {
+            try {
+                if (connection == null || connection.isClosed()) continue;
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private static class ConnectInfo {
