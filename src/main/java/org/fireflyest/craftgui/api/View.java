@@ -1,6 +1,6 @@
 package org.fireflyest.craftgui.api;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * 视图

@@ -5,8 +5,8 @@ import org.fireflyest.craftgui.item.ViewItem;
 import org.fireflyest.craftgui.item.ViewItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -20,7 +20,7 @@ public class SimplePage extends TemplatePage {
     }
 
     @Override
-    public @NotNull Map<Integer, ItemStack> getItemMap(){
+    public @Nonnull Map<Integer, ItemStack> getItemMap(){
         crashMap.clear();
         crashMap.putAll(itemMap);
 

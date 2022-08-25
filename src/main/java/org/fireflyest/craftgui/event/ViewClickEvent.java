@@ -6,8 +6,9 @@ import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * 界面被点击的时候调用，点击按钮的时候才起效
@@ -25,7 +26,7 @@ public class ViewClickEvent extends InventoryInteractEvent {
 
     private boolean refresh;
 
-    public ViewClickEvent(@NotNull InventoryView view, @NotNull ClickType click, int slot, ItemStack current, boolean refresh) {
+    public ViewClickEvent(@Nonnull InventoryView view, @Nonnull ClickType click, int slot, ItemStack current, boolean refresh) {
         super(view);
         this.click = click;
         this.rawSlot = slot;
@@ -35,12 +36,12 @@ public class ViewClickEvent extends InventoryInteractEvent {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public HandlerList getHandlers() {
         return handlers;
     }
 
-    @NotNull
+    @Nonnull
     public static HandlerList getHandlerList() {
         return handlers;
     }
@@ -86,7 +87,7 @@ public class ViewClickEvent extends InventoryInteractEvent {
         this.refresh = refresh;
     }
 
-    @NotNull
+    @Nonnull
     public ClickType getClick() {
         return this.click;
     }

@@ -7,9 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +47,7 @@ public class ViewItemBuilder extends ViewItem implements Listener {
         this.material = material;
     }
 
-    public ViewItemBuilder(@NotNull String material) {
+    public ViewItemBuilder(@Nonnull String material) {
         Optional<XMaterial> xMaterial = XMaterial.matchXMaterial(material);
         xMaterial.ifPresent(value -> this.material = value.parseMaterial());
     }
@@ -56,27 +56,27 @@ public class ViewItemBuilder extends ViewItem implements Listener {
         return this;
     }
 
-    public ViewItemBuilder name(@NotNull String displayName){
+    public ViewItemBuilder name(@Nonnull String displayName){
         this.displayName = displayName.replace("&", "§");
         return this;
     }
 
-    public ViewItemBuilder localName(@NotNull String localName){
+    public ViewItemBuilder localName(@Nonnull String localName){
         this.localName = localName;
         return this;
     }
 
-    public ViewItemBuilder command(@NotNull String command){
+    public ViewItemBuilder command(@Nonnull String command){
         this.command = command;
         return this;
     }
 
-    public ViewItemBuilder lore(@NotNull String lore){
+    public ViewItemBuilder lore(@Nonnull String lore){
         this.lore.add(lore.replace("&", "§"));
         return this;
     }
 
-    public ViewItemBuilder flags(@NotNull ItemFlag... itemFlags){
+    public ViewItemBuilder flags(@Nonnull ItemFlag... itemFlags){
         this.itemFlags = itemFlags;
         return this;
     }
