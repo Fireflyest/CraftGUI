@@ -2,6 +2,8 @@ package org.fireflyest.craftdatabase.jedis;
 
 import redis.clients.jedis.JedisPooled;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Fireflyest
  * @since 2022/8/25
@@ -17,7 +19,7 @@ public class JedisServiceFactory {
         jedisPooled.close();
     }
 
-    public JedisService create(String pluginName){
+    public JedisService create(@Nonnull String pluginName){
         return new JedisService(jedisPooled, pluginName);
     }
 

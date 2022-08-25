@@ -1,5 +1,7 @@
 package org.fireflyest.craftdatabase.sql;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -30,7 +32,7 @@ public class SQLConnector {
      * @param url 地址
      * @return 连接
      */
-    public static Connection getConnect(String url) {
+    public static Connection getConnect(@Nonnull String url) {
         // 获取连接
         Connection connection = connectionMap.get(url);
         try {
@@ -59,7 +61,10 @@ public class SQLConnector {
      * @throws SQLException 数据库连接错误
      * @throws ClassNotFoundException 驱动类无法找到
      */
-    public static Connection connect(String sqlClass, String url, String user, String password) throws SQLException, ClassNotFoundException {
+    public static Connection connect(@Nonnull String sqlClass,
+                                     @Nonnull String url,
+                                     @Nullable String user,
+                                     @Nullable String password) throws SQLException, ClassNotFoundException {
         // 加载驱动类
         if (!loadedClass.contains(sqlClass)) {
             Class.forName(sqlClass);
@@ -76,7 +81,7 @@ public class SQLConnector {
      * @return 连接
      * @throws SQLException 数据库连接错误
      */
-    public static Connection connect(ConnectInfo connectInfo) throws SQLException {
+    public static Connection connect(@Nonnull ConnectInfo connectInfo) throws SQLException {
         // 存储连接密码，可以重连
         connectInfoMap.put(connectInfo.url, connectInfo);
 
@@ -94,7 +99,7 @@ public class SQLConnector {
      * 关闭连接
      * @param url 连接地址
      */
-    public static void close(String url){
+    public static void close(@Nonnull String url){
         Connection connection = connectionMap.get(url);
         if (connection == null) return;
         try {
