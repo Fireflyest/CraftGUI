@@ -2,9 +2,9 @@ package org.fireflyest.craftgui.api;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -16,14 +16,14 @@ public interface ViewPage {
      * 获取全部按钮，异步展示
      * @return 动态按钮
      */
-    @NotNull
+    @Nonnull
     Map<Integer, ItemStack> getItemMap();
 
     /**
      * 获取固定物品按钮，直接展示
      * @return 固定按钮
      */
-    @NotNull
+    @Nonnull
     Map<Integer, ItemStack> getButtonMap();
 
     /**
@@ -38,7 +38,7 @@ public interface ViewPage {
      * 获取页面容器，用于玩家打开
      * @return 页面容器
      */
-    @NotNull
+    @Nonnull
     Inventory getInventory();
 
     /**

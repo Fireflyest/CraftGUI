@@ -6,8 +6,9 @@ import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * 玩家将东西放置到容器里面的时候调用，需要放置到按钮上才起效
@@ -25,7 +26,7 @@ public class ViewPlaceEvent extends InventoryInteractEvent {
 
     private boolean handBack;
 
-    public ViewPlaceEvent(@NotNull InventoryView view, @NotNull ClickType click, int slot, ItemStack current, ItemStack cursor) {
+    public ViewPlaceEvent(@Nonnull InventoryView view, @Nonnull ClickType click, int slot, ItemStack current, ItemStack cursor) {
         super(view);
         this.click = click;
         this.rawSlot = slot;
@@ -44,12 +45,12 @@ public class ViewPlaceEvent extends InventoryInteractEvent {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public HandlerList getHandlers() {
         return handlers;
     }
 
-    @NotNull
+    @Nonnull
     public static HandlerList getHandlerList() {
         return handlers;
     }
@@ -95,7 +96,7 @@ public class ViewPlaceEvent extends InventoryInteractEvent {
         return this.rawSlot;
     }
 
-    @NotNull
+    @Nonnull
     public ClickType getClick() {
         return this.click;
     }

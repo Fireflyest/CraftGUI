@@ -1,9 +1,9 @@
 package org.fireflyest.craftgui.api;
 
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
@@ -16,13 +16,13 @@ public interface ViewGuide {
      * @param viewName 视图名称
      * @param view 视图对象
      */
-    void addView(@NotNull String viewName, @NotNull View<? extends ViewPage> view);
+    void addView(@Nonnull String viewName, @Nonnull View<? extends ViewPage> view);
 
     /**
      * 关闭玩家正在浏览的界面
      * @param playerName 玩家名称
      */
-    void closeView(@NotNull String playerName);
+    void closeView(@Nonnull String playerName);
 
     /**
      * 让玩家打开界面的首页
@@ -30,39 +30,39 @@ public interface ViewGuide {
      * @param viewName 视图名称
      * @param target 页面标签
      */
-    void openView(@NotNull Player player, @NotNull String viewName, @Nullable String target);
+    void openView(@Nonnull Player player, @Nonnull String viewName, @Nullable String target);
 
     /**
      * 获取某个玩家正在浏览的界面
      * @param playerName 玩家名称
      * @return 页面
      */
-    ViewPage getUsingPage(@NotNull String playerName);
+    ViewPage getUsingPage(@Nonnull String playerName);
 
     /**
      * 玩家切换到下一页
      * @param player 玩家
      */
-    void nextPage(@NotNull Player player);
+    void nextPage(@Nonnull Player player);
 
     /**
      * 玩家切换到上一页
      * @param player 玩家
      */
-    void prePage(@NotNull Player player);
+    void prePage(@Nonnull Player player);
 
     /**
      * 返回到上一个界面，在打开不同的View时记录
      * @param player 玩家
      */
-    void back(@NotNull Player player);
+    void back(@Nonnull Player player);
 
     /**
      * 跳转页面
      * @param player 玩家
      * @param page 到达的页面
      */
-    void jump(@NotNull Player player, int page);
+    void jump(@Nonnull Player player, int page);
 
     /**
      * 刷新玩家的页面
@@ -81,6 +81,6 @@ public interface ViewGuide {
      * @param playerName 玩家名称
      * @return 是否浏览者
      */
-    boolean unUsed(@NotNull String playerName);
+    boolean unUsed(@Nonnull String playerName);
 
 }

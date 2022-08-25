@@ -4,9 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.fireflyest.craftgui.api.ViewPage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,17 +52,17 @@ public abstract class TemplatePage implements ViewPage {
         this.refreshPage();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Inventory getInventory(){
         return inventory;
     }
 
     @Override
-    public abstract @NotNull Map<Integer, ItemStack> getItemMap();
+    public abstract @Nonnull Map<Integer, ItemStack> getItemMap();
 
     @Override
-    public @NotNull Map<Integer, ItemStack> getButtonMap() {
+    public @Nonnull Map<Integer, ItemStack> getButtonMap() {
         return new HashMap<>(itemMap);
     }
 

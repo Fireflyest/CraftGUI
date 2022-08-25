@@ -6,8 +6,8 @@ import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.api.ViewPage;
 import org.fireflyest.craftgui.protocol.ViewProtocol;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -38,12 +38,12 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public void addView(@NotNull String viewName, @NotNull View<? extends ViewPage> view) {
+    public void addView(@Nonnull String viewName, @Nonnull View<? extends ViewPage> view) {
         viewMap.put(viewName, view);
     }
 
     @Override
-    public void closeView(@NotNull String playerName) {
+    public void closeView(@Nonnull String playerName) {
         if (viewRedirect.contains(playerName)){
             if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s redirect", playerName));
             viewRedirect.remove(playerName);
@@ -54,12 +54,12 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public ViewPage getUsingPage(@NotNull String playerName) {
+    public ViewPage getUsingPage(@Nonnull String playerName) {
         return viewUsing.get(playerName);
     }
 
     @Override
-    public void nextPage(@NotNull Player player) {
+    public void nextPage(@Nonnull Player player) {
         if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s next", player.getName()));
         String playerName = player.getName();
         if (this.unUsed(playerName)) return;
@@ -72,7 +72,7 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public void prePage(@NotNull Player player) {
+    public void prePage(@Nonnull Player player) {
         if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s pre", player.getName()));
         String playerName = player.getName();
         if (this.unUsed(playerName)) return;
@@ -85,7 +85,7 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public void back(@NotNull Player player) {
+    public void back(@Nonnull Player player) {
         String playerName = player.getName();
         if (this.unUsed(playerName)) return;
         // 上一页是否存在
@@ -109,7 +109,7 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public void jump(@NotNull Player player, int page) {
+    public void jump(@Nonnull Player player, int page) {
         String playerName = player.getName();
         if (this.unUsed(playerName)) return;
         ViewPage viewPage = this.getUsingPage(playerName), targetPage = viewPage;
@@ -136,7 +136,7 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public void openView(@NotNull Player player, @NotNull String viewName, String target) {
+    public void openView(@Nonnull Player player, @Nonnull String viewName, String target) {
         String playerName = player.getName();
         // 记录玩家返回界面
         if (!viewUsd.containsKey(playerName)) viewUsd.put(playerName, new Stack<>());
@@ -193,7 +193,7 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public boolean unUsed(@NotNull String playerName) {
+    public boolean unUsed(@Nonnull String playerName) {
         return !viewUsing.containsKey(playerName);
     }
 }

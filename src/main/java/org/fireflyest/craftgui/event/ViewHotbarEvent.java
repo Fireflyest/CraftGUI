@@ -6,8 +6,9 @@ import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * 玩家使用数字键盘或者F键切换容器中物品的时候调用，指针在按钮上才起效
@@ -21,9 +22,9 @@ public class ViewHotbarEvent extends InventoryInteractEvent {
     private final int rawSlot;
     private ItemStack current;
 
-    private int hotbarKey = -1;
+    private int hotbarKey;
 
-    public ViewHotbarEvent(@NotNull InventoryView view, @NotNull ClickType click, int slot, ItemStack current, int key) {
+    public ViewHotbarEvent(@Nonnull InventoryView view, @Nonnull ClickType click, int slot, ItemStack current, int key) {
         super(view);
         this.click = click;
         this.rawSlot = slot;
@@ -33,12 +34,12 @@ public class ViewHotbarEvent extends InventoryInteractEvent {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public HandlerList getHandlers() {
         return handlers;
     }
 
-    @NotNull
+    @Nonnull
     public static HandlerList getHandlerList() {
         return handlers;
     }
@@ -80,7 +81,7 @@ public class ViewHotbarEvent extends InventoryInteractEvent {
         return hotbarKey;
     }
 
-    @NotNull
+    @Nonnull
     public ClickType getClick() {
         return this.click;
     }
