@@ -100,7 +100,7 @@ public class SQLServiceInitial {
             case "java.lang.Float":
             case "double":
             case "float":
-                return "decimal(10,2)";
+                return "decimal(10,3)";
             case "java.lang.Integer":
                 return "integer";
             default:

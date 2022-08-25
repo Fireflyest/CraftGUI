@@ -31,7 +31,7 @@ public abstract class SQLService {
         return url;
     }
 
-    public void execute(String sql){
+    public void execute(@Nonnull String sql){
         // 获取连接
         Connection connection = SQLConnector.getConnect(url);
         // 执行指令

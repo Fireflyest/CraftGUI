@@ -33,7 +33,7 @@ public abstract class YamlService {
      * 加载配置文件
      * @param aClass 配置类
      */
-    public void setupConfig(Class<?> aClass){
+    public void setupConfig(@Nonnull Class<?> aClass){
         this.config = loadYamlFile("config");
         this.setupClass(config, aClass);
     }
@@ -43,18 +43,17 @@ public abstract class YamlService {
      * @param aClass 语言类
      * @param local 语言
      */
-    public void setupLanguage(Class<?> aClass, @Nullable String local){
+    public void setupLanguage(@Nonnull Class<?> aClass, @Nullable String local){
         this.lang = loadYamlFile(LANGUAGE_FOLDER + "/" + (local == null ? "default" : local));
         this.setupClass(lang, aClass);
     }
-
 
     /**
      * 设置配置数据
      * @param key 据键值
      * @param value 数据值
      */
-    public void setConfigData(String key, Object value) {
+    public void setConfigData(@Nonnull String key, Object value) {
         if (config == null) return;
 
         config.set(key, value);
@@ -97,7 +96,7 @@ public abstract class YamlService {
      * @param fileName 不带后缀文件名
      * @return FileConfiguration
      */
-    protected FileConfiguration loadYamlFile(String fileName) {
+    protected FileConfiguration loadYamlFile(@Nonnull String fileName) {
         File file = new File(dataFolder, fileName+".yml");
         if (!file.exists()) plugin.saveResource(fileName+".yml", false);
         return YamlConfiguration.loadConfiguration(file);
@@ -108,7 +107,7 @@ public abstract class YamlService {
      * @param str 文本
      * @return 拼接
      */
-    protected String toLowerCase(String str){
+    protected String toLowerCase(@Nonnull String str){
         StringBuilder sb = new StringBuilder();
         for(String word: str.split("_")){
             sb.append(word.charAt(0))
@@ -122,7 +121,7 @@ public abstract class YamlService {
      * @param str 文本
      * @return 首字母大写
      */
-    protected String toFirstUpCase(String str){
+    protected String toFirstUpCase(@Nonnull String str){
         return Character.toUpperCase(str.charAt(0)) + str.substring(1).toLowerCase();
     }
 
