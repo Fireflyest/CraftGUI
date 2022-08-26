@@ -36,7 +36,6 @@ public class ViewProtocol {
 
     private static final ItemStack AIR = new ItemStack(Material.AIR);
     private static final Map<String, PacketContainer> packets = new ConcurrentHashMap<>();
-    private static final Map<String, Integer> lastSend = new ConcurrentHashMap<>();
     private ViewProtocol(){
     }
 
@@ -54,14 +53,6 @@ public class ViewProtocol {
 
     /**
      * 创建一个数据包监听<br/>
-     * <br/>
-     * 打开普通容器(page+inv)-不处理<br/>
-     * 首次打开界面(page+inv)-放置固定按钮((page)+inv)-存包(page)-记录最后发送-发送异步包(page)<br/>
-     * 异步包(page)-不处理(1.19以下可以用isAsync判断)<br/>
-     * 异步包(page)-不处理(1.19以上用容器大小判断)<br/>
-     * 背包更新(page+inv)-放置固定按钮((page)+inv)-存包(page)-记录最后发送-发送异步包(page)<br/>
-     * 背包更新异步包(page+inv)-不处理(1.19以下可以用isAsync判断)<br/>
-     * 背包更新异步包(page+inv)-不处理(1.19以上可以用isAsync判断)<br/>
      */
     public static void createPacketListener(){
         // 打开界面监听
@@ -77,75 +68,20 @@ public class ViewProtocol {
                         // 获取数据包
                         String playerName = event.getPlayer().getName();
                         PacketContainer packet = event.getPacket();
-                        int id = event.getPacket().getIntegers().read(0);
-                        if (ViewGuideImpl.DEBUG) {
-                            List<ItemStack> iss = packet.getItemListModifier().read(0);
-                            ItemStack itr = null;
-                            if (CraftGUI.BUKKIT_VERSION > 16) itr = packet.getItemModifier().read(0);
-                            System.out.println("**************************************************************************************");
-                            System.out.println("id = " + id);
-                            System.out.println("isAsync = " + event.isAsync());
-                            System.out.println("Item = " + itr);
-                            StringBuilder sb = new StringBuilder();
-                            for (int i = 0; i < iss.size(); i++) {
-                                ItemStack is = iss.get(i);
-                                if (is == null) {
-                                    sb.append(i).append("{null}");
-                                }else {
-                                    sb.append(i).append(String.format("{%sx%s}", is.getType(), is.getAmount()));
-                                }
-                                if ((i+1) % 9 == 0){
-                                    plugin.getLogger().info(sb.toString());
-                                    sb = new StringBuilder();
-                                }
-                            }
-                            plugin.getLogger().info(sb.toString());
-                        }
 
-                        // 非浏览者不响应
-                        // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
+                        // 是否使用者
                         if (viewGuide.unUsed(playerName)) {
                             if (ViewGuideImpl.DEBUG) plugin.getLogger().info("viewGuide.unUsed(playerName) = " + viewGuide.unUsed(playerName));
                             return;
                         }
 
-                        // 获取页面
-                        ViewPage page = viewGuide.getUsingPage(playerName);
-                        // 浏览界面是否对应
-                        if (! page.getInventory().getViewers().contains(event.getPlayer())){
-                            if (ViewGuideImpl.DEBUG) plugin.getLogger().info("!page.getInventory().getViewers().contains(event.getPlayer())");
-                            viewGuide.closeView(playerName);
-                            return;
-                        }
-
-                        // 获取包的物品
+                        // 获取包里的物品列表和页面
                         List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
-                        // 获取页面的物品
+                        ViewPage page = viewGuide.getUsingPage(playerName);
                         int invSize = page.getInventory().getSize();
-                        if (ViewGuideImpl.DEBUG) System.out.println("receive pack = " + itemsToString(itemStacks, invSize));
-
-                        // 1.19以上判断是否异步包，第一次打开和背包更新都会比异步包大
-                        // 如果页面物品数量和包的物品数量一样，有可能是异步包
-                        if (packets.containsKey(playerName) && itemStacks.size() == invSize){
-                            if (ViewGuideImpl.DEBUG) plugin.getLogger().info("itemStacks.size() = invSize");
-                            return;
-                        }
-                        // 1.19以上判断是否背包更新的异步包
-                        if (lastSend.get(playerName) != null
-                                && itemsToString(itemStacks, invSize).hashCode() == lastSend.get(playerName)){
-                            lastSend.remove(playerName);
-                            if (ViewGuideImpl.DEBUG) plugin.getLogger().info("packet.equals(lastSend.get(playerName))");
-                            return;
-                        }
-                        // 填充空气
-                        while (itemStacks.size() < invSize) itemStacks.add(AIR);
-                        // 放置固定按钮
-                        for (Map.Entry<Integer, ItemStack> entry : page.getButtonMap().entrySet()) {
-                            itemStacks.set(entry.getKey(), entry.getValue());
-                        }
-                        // 如果还没存包，说明第一次打开，只发送界面内物品，所以删除背包物品
-                        // 如果已存包，应该是背包更新
-                        if (! packets.containsKey(playerName)){
+                        // 没有存包，是第一个打开而非更新背包，删掉背包物品
+                        if (! packets.containsKey(playerName)) {
+                            // 删掉背包物品
                             int size = page.getInventory().getSize();
                             Iterator<ItemStack> iterator = itemStacks.listIterator(size);
                             while (iterator.hasNext()) {
@@ -154,9 +90,13 @@ public class ViewProtocol {
                             }
                         }
 
-                        packet.getItemListModifier().write(0, itemStacks);
+                        // 填充空气，防止在设置按钮时越界
+                        while (itemStacks.size() < invSize) itemStacks.add(AIR);
 
-                        if (ViewGuideImpl.DEBUG) plugin.getLogger().info("itemSize = " + itemStacks.size());
+                        // 放置固定按钮
+                        for (Map.Entry<Integer, ItemStack> entry : page.getButtonMap().entrySet()) {
+                            itemStacks.set(entry.getKey(), entry.getValue());
+                        }
 
                         // 存包
                         packets.put(playerName, packet);
@@ -199,17 +139,12 @@ public class ViewProtocol {
 
                 // 写入
                 packet.getItemListModifier().write(0, itemStacks);
-                // 判断是否背包更新的异步包
-                if (itemStacks.size() > invSize) {
-                    lastSend.put(playerName, itemsToString(itemStacks, invSize).hashCode());
-                }
 
                 // 发送数据包
                 Player player = Bukkit.getPlayerExact(playerName);
                 if (player == null) return;
                 try {
-                    if (ViewGuideImpl.DEBUG) System.out.println("send asyn pack = " + itemsToString(itemStacks, invSize));
-                    protocolManager.sendServerPacket(player, packet);
+                    protocolManager.sendServerPacket(player, packet, false);
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
@@ -244,22 +179,4 @@ public class ViewProtocol {
         protocolManager.removePacketListeners(CraftGUI.getPlugin());
     }
 
-    /**
-     * 数据包内物品转化成字符串
-     * @param itemStacks 物品
-     * @param start 开头
-     * @return 字符串
-     */
-    private static String itemsToString(List<ItemStack> itemStacks, int start){
-        StringBuilder sb = new StringBuilder();
-        for (int i = start; i < itemStacks.size(); i++) {
-            ItemStack is = itemStacks.get(i);
-            if (is != null) {
-                String name = is.getType().name();
-                sb.append(i).append(name);
-                if (Material.AIR != is.getType()) sb.append(is.getAmount());
-            }
-        }
-        return sb.toString();
-    }
 }
