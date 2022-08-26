@@ -8,27 +8,23 @@ import org.fireflyest.craftgui.protocol.ViewProtocol;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 /**
+ * 切勿在主线程之外的线程打开容器
  * @author Fireflyest
  * 2022/2/15 12:04
  */
-
 public class ViewGuideImpl implements ViewGuide {
 
     // 所有界面
-    public final Map<String, View<? extends ViewPage>> viewMap = new ConcurrentHashMap<>();
+    public final Map<String, View<? extends ViewPage>> viewMap = new HashMap<>();
 
     // 玩家正在浏览的页面
-    public final Map<String, ViewPage> viewUsing = new ConcurrentHashMap<>();
+    public final Map<String, ViewPage> viewUsing = new HashMap<>();
 
     // 记录玩家浏览过的界面，方便返回
-    public final Map<String, Stack<ViewPage>> viewUsd = new ConcurrentHashMap<>();
+    public final Map<String, Stack<ViewPage>> viewUsd = new HashMap<>();
 
     // 跳转页面，玩家会先打开页面，再关闭原有页面，为了防止取消使用记录，这里记录重定向
     public final Set<String> viewRedirect = new HashSet<>();

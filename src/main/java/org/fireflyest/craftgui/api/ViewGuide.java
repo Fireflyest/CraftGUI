@@ -65,7 +65,7 @@ public interface ViewGuide {
     void jump(@Nonnull Player player, int page);
 
     /**
-     * 刷新玩家的页面
+     * 刷新玩家的页面，可能异步调用
      * @param playerNames 玩家名称
      */
     void refreshPage(String... playerNames);
