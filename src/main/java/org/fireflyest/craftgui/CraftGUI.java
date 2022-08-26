@@ -4,7 +4,6 @@ import com.cryptomorin.xseries.XMaterial;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.fireflyest.craftdatabase.jedis.JedisServiceFactory;
 import org.fireflyest.craftdatabase.sql.SQLConnector;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.core.ViewGuideImpl;
@@ -58,7 +57,5 @@ public final class CraftGUI extends JavaPlugin {
         ViewProtocol.close();
         // 关闭所有数据库连接
         SQLConnector.closeAll();
-        // 关闭jedis连接
-        JedisServiceFactory.close();
     }
 }

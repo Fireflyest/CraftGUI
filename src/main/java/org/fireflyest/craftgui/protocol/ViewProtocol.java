@@ -104,26 +104,28 @@ public class ViewProtocol {
 
                         // 非浏览者不响应
                         // 已经存包，说明已经发过，这个时候的异步包可能是动态按钮，不响应
-                        if (viewGuide.unUsed(playerName)
-                                || (packets.containsKey(playerName) && event.isAsync())) {
-                            if (ViewGuideImpl.DEBUG) {
-                                plugin.getLogger().info("viewGuide.unUsed(playerName) = " + viewGuide.unUsed(playerName));
-                                plugin.getLogger().info("packets.containsKey(playerName = " + packets.containsKey(playerName));
-                            }
+                        if (viewGuide.unUsed(playerName)) {
+                            if (ViewGuideImpl.DEBUG) plugin.getLogger().info("viewGuide.unUsed(playerName) = " + viewGuide.unUsed(playerName));
                             return;
                         }
 
+                        // 获取页面
                         ViewPage page = viewGuide.getUsingPage(playerName);
-                        // 是否页面的浏览者浏览者
+                        // 浏览界面是否对应
                         if (! page.getInventory().getViewers().contains(event.getPlayer())){
                             if (ViewGuideImpl.DEBUG) plugin.getLogger().info("!page.getInventory().getViewers().contains(event.getPlayer())");
                             viewGuide.closeView(playerName);
                             return;
                         }
 
+                        // 获取包的物品
                         List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
+                        // 获取页面的物品
                         int invSize = page.getInventory().getSize();
+                        if (ViewGuideImpl.DEBUG) System.out.println("receive pack = " + itemsToString(itemStacks, invSize));
+
                         // 1.19以上判断是否异步包，第一次打开和背包更新都会比异步包大
+                        // 如果页面物品数量和包的物品数量一样，有可能是异步包
                         if (packets.containsKey(playerName) && itemStacks.size() == invSize){
                             if (ViewGuideImpl.DEBUG) plugin.getLogger().info("itemStacks.size() = invSize");
                             return;
@@ -206,6 +208,7 @@ public class ViewProtocol {
                 Player player = Bukkit.getPlayerExact(playerName);
                 if (player == null) return;
                 try {
+                    if (ViewGuideImpl.DEBUG) System.out.println("send asyn pack = " + itemsToString(itemStacks, invSize));
                     protocolManager.sendServerPacket(player, packet);
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
@@ -241,6 +244,12 @@ public class ViewProtocol {
         protocolManager.removePacketListeners(CraftGUI.getPlugin());
     }
 
+    /**
+     * 数据包内物品转化成字符串
+     * @param itemStacks 物品
+     * @param start 开头
+     * @return 字符串
+     */
     private static String itemsToString(List<ItemStack> itemStacks, int start){
         StringBuilder sb = new StringBuilder();
         for (int i = start; i < itemStacks.size(); i++) {
