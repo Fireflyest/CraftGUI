@@ -5,6 +5,7 @@ import redis.clients.jedis.Jedis;
 import javax.annotation.Nonnull;
 
 /**
+ * 以后用
  * @author Fireflyest
  * @since 2022/8/25
  */
@@ -16,10 +17,10 @@ public class JedisServiceFactory {
     }
 
     public static void close(){
-        jedis.close();
+        if (jedis.isConnected())  jedis.close();
     }
 
-    public JedisService create(@Nonnull String pluginName){
+    public static JedisService create(@Nonnull String pluginName){
         return new JedisService(jedis, pluginName);
     }
 

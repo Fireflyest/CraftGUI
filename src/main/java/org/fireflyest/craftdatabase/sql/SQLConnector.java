@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Fireflyest
@@ -21,8 +22,8 @@ public class SQLConnector {
     public static final String SQLITE = "org.sqlite.JDBC";
 
     private static final Set<String> loadedClass = new HashSet<>();
-    private static final Map<String, ConnectInfo> connectInfoMap = new HashMap<>();
-    private static final Map<String, Connection> connectionMap = new HashMap<>();
+    private static final Map<String, ConnectInfo> connectInfoMap = new ConcurrentHashMap<>();
+    private static final Map<String, Connection> connectionMap = new ConcurrentHashMap<>();
 
     private SQLConnector() {
     }
