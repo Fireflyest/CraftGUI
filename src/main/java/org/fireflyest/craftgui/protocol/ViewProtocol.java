@@ -20,6 +20,7 @@ import org.fireflyest.craftgui.core.ViewGuideImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 玩家打开容器时，服务端发送物品数据包。如果玩家打开的是视图，本类先将数据包内物品更改为固定按钮，<br/>
@@ -34,8 +35,8 @@ public class ViewProtocol {
     private static ViewGuide viewGuide;
 
     private static final ItemStack AIR = new ItemStack(Material.AIR);
-    private static final HashMap<String, PacketContainer> packets = new HashMap<>();
-    private static final HashMap<String, Integer> lastSend = new HashMap<>();
+    private static final Map<String, PacketContainer> packets = new ConcurrentHashMap<>();
+    private static final Map<String, Integer> lastSend = new ConcurrentHashMap<>();
     private ViewProtocol(){
     }
 

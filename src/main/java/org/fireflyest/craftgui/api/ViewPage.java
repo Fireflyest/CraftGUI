@@ -81,7 +81,7 @@ public interface ViewPage {
     void setPre(@Nullable ViewPage pre);
 
     /**
-     * 刷新
+     * 刷新，可能异步
      */
     void refreshPage();
 

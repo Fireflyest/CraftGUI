@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Fireflyest
@@ -17,9 +18,9 @@ import java.util.Map;
 public abstract class TemplatePage implements ViewPage {
 
     // 固定按钮，快速显示
-    protected final Map<Integer, ItemStack> itemMap = new HashMap<>();
+    protected final Map<Integer, ItemStack> itemMap = new ConcurrentHashMap<>();
     // 全部按钮的缓存，点击时返回被点击物品
-    protected Map<Integer, ItemStack> crashMap = new HashMap<>();
+    protected Map<Integer, ItemStack> crashMap = new ConcurrentHashMap<>();
 
     // 界面载体
     protected Inventory inventory;
@@ -58,6 +59,10 @@ public abstract class TemplatePage implements ViewPage {
         return inventory;
     }
 
+    /**
+     * 由异步线程调用
+     * @return 容器物品
+     */
     @Override
     public abstract @Nonnull Map<Integer, ItemStack> getItemMap();
 
@@ -101,6 +106,9 @@ public abstract class TemplatePage implements ViewPage {
         this.next = next;
     }
 
+    /**
+     * 可能异步
+     */
     @Override
     public abstract void refreshPage();
 
