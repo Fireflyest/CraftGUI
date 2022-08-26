@@ -1,6 +1,6 @@
 package org.fireflyest.craftdatabase.jedis;
 
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Nonnull;
 
@@ -10,17 +10,17 @@ import javax.annotation.Nonnull;
  */
 public class JedisServiceFactory {
 
-    private static final JedisPooled jedisPooled = new JedisPooled("localhost", 6379);
+    private static final Jedis jedis = new Jedis("localhost", 6379);
 
     private JedisServiceFactory() {
     }
 
     public static void close(){
-        jedisPooled.close();
+        jedis.close();
     }
 
     public JedisService create(@Nonnull String pluginName){
-        return new JedisService(jedisPooled, pluginName);
+        return new JedisService(jedis, pluginName);
     }
 
 }

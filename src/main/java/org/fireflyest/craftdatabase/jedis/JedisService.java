@@ -1,6 +1,6 @@
 package org.fireflyest.craftdatabase.jedis;
 
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Nonnull;
 
@@ -10,20 +10,20 @@ import javax.annotation.Nonnull;
  */
 public class JedisService {
 
-    private final JedisPooled jedisPooled;
+    private final Jedis jedis;
     private final String keyOutset;
 
-    public JedisService(JedisPooled jedisPooled, String pluginName) {
-        this.jedisPooled = jedisPooled;
+    public JedisService(Jedis jedis, String pluginName) {
+        this.jedis = jedis;
         this.keyOutset = String.format("minecraft.plugin.%s.", pluginName);
     }
 
     public void set(@Nonnull String key, String value){
-        jedisPooled.set(keyOutset + key, value);
+        jedis.set(keyOutset + key, value);
     }
 
     public String get(@Nonnull String key){
-        return jedisPooled.get(keyOutset + key);
+        return jedis.get(keyOutset + key);
     }
 
 }
