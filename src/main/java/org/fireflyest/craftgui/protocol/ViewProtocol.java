@@ -52,9 +52,9 @@ public class ViewProtocol {
     }
 
     /**
-     * 创建一个数据包监听<br/>
+     * 创建一个数据包监听
      */
-    public static void createPacketListener(){
+    private static void createPacketListener(){
         // 打开界面监听
         protocolManager.addPacketListener(
                 new PacketAdapter(plugin,
