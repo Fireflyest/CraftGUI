@@ -27,7 +27,8 @@ public class TimeUtils {
      * @return 时间字符串
      */
     public static String getLocalTime(){
-        return LocalTime.now().toString();
+        String string =LocalTime.now().toString();
+        return string.substring(0, string.lastIndexOf("."));
     }
 
     /**
@@ -36,7 +37,8 @@ public class TimeUtils {
      * @return 时间字符串
      */
     public static String getLocalTime(long time){
-        return LocalTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()).toString();
+        String string =  LocalTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()).toString();
+        return string.substring(0, string.lastIndexOf("."));
     }
 
     /**
