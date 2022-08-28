@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 跳过
+ * 跳过列
  * @author Fireflyest
  * @since 2022/8/17
  */

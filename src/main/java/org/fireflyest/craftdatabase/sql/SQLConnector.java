@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 类连接池
  * @author Fireflyest
  * @since 2022/8/17
  */

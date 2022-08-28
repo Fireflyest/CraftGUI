@@ -3,6 +3,7 @@ package org.fireflyest.craftdatabase.builder;
 import javax.annotation.Nonnull;
 
 /**
+ * 插入语句
  * @author Fireflyest
  * @since 2022/8/14
  */

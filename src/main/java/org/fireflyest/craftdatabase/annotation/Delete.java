@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 删除
  * @author Fireflyest
  * @since 2022/8/18
  */

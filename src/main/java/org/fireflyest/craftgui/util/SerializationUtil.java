@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 物品析构与解析
  * @author Fireflyest
  * @since 2022/8/21
  */

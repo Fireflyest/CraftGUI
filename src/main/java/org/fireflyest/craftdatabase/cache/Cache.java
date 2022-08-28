@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 /**
+ * 数据缓存
  * @author Fireflyest
  * @since 2022/8/27
  */

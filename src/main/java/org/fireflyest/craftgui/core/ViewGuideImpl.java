@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
- * 切勿在主线程之外的线程打开容器
+ * 导航实现类，切勿在主线程之外的线程打开容器
  * @author Fireflyest
  * 2022/2/15 12:04
  */
