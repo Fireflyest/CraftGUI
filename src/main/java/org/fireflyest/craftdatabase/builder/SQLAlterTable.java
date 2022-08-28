@@ -26,6 +26,7 @@ public class SQLAlterTable {
      * 添加列
      * ADD COLUMN `{column}` {type}
      * @param column 列名
+     * @param type 数据类型
      * @return 修改指令
      */
     public AlterTable add(@Nonnull String column, @Nonnull String type){

@@ -34,13 +34,13 @@ public class CacheService<T> {
     }
 
     /**
-     * 判断某个键是否存在<br/>
+     * 判断某个键是否存在，
      * 只要其中一种存在就是存在
      * @param key 键
      * @return 存在
      */
     public boolean exist(@Nonnull String key){
-        return this.existString(key) || this.existStringSet(key);
+        return this.existValue(key) || this.existValueSet(key);
     }
 
     /**
@@ -48,7 +48,7 @@ public class CacheService<T> {
      * @param key 键
      * @return 是否存在
      */
-    private boolean existString(@Nonnull String key){
+    private boolean existValue(@Nonnull String key){
         if (!cacheMap.containsKey(key)) return false;
         return cacheMap.get(key).get() != null;
     }
@@ -58,7 +58,7 @@ public class CacheService<T> {
      * @param key 键
      * @return 是否存在
      */
-    private boolean existStringSet(@Nonnull String key){
+    private boolean existValueSet(@Nonnull String key){
         if (!cacheSetMap.containsKey(key)) return false;
         return cacheSetMap.get(key).get() != null;
     }
@@ -82,10 +82,10 @@ public class CacheService<T> {
     public long ttl(@Nonnull String key){
         Cache<T> stringCache;
         Cache<Set<T>> stringSetCache;
-        if (existString(key) && (stringCache = cacheMap.get(key)) != null){
+        if (existValue(key) && (stringCache = cacheMap.get(key)) != null){
             return stringCache.ttl();
         }
-        if (existStringSet(key) && (stringSetCache = cacheSetMap.get(key)) != null) {
+        if (existValueSet(key) && (stringSetCache = cacheSetMap.get(key)) != null) {
             return stringSetCache.ttl();
         }
         return 0;

@@ -35,6 +35,7 @@ public abstract class SQLLimit {
 
     /**
      * LIMIT {num}
+     * @param num 数量
      * @return 限量语句
      */
     public Limit limit(int num){
@@ -44,6 +45,8 @@ public abstract class SQLLimit {
 
     /**
      * LIMIT {start},{num}
+     * @param start 起始
+     * @param num 数量
      * @return 限量语句
      */
     public Limit limit(int start, int num){
