@@ -18,6 +18,7 @@ public abstract class SQLWhere{
 
     /**
      * WHERE
+     * @param outsetBuilder 开端
      */
     public SQLWhere(StringBuilder outsetBuilder) {
         this.outsetBuilder = outsetBuilder;
@@ -33,12 +34,12 @@ public abstract class SQLWhere{
     }
 
     /**
-     * `{column}`={number} <br/>
-     * `{column}`>{number} <br/>
-     * `{column}`<{number} <br/>
-     * `{column}`>={number} <br/>
-     * `{column}`<={number} <br/>
-     * `{column}`<>{number} <br/>
+     * `{column}`={number} ，
+     * `{column}`>{number} ，
+     * `{column}`<{number} ，
+     * `{column}`>={number} ，
+     * `{column}`<={number} ，
+     * `{column}`<>{number} ，
      * @param column 键
      * @param symbol 比较符号
      * @param number 数值
@@ -116,6 +117,7 @@ public abstract class SQLWhere{
      * `{column}` IN ('{var1}','{var2}')
      * 通配符 % _ []
      * @param column 键
+     * @param values 值
      * @return 条件语句
      */
     public Where in(@Nonnull String column, @Nonnull String... values){

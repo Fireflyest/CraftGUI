@@ -1,4 +1,4 @@
-package org.fireflyest.craft.util;
+package org.fireflyest.util;
 
 import java.time.Instant;
 import java.time.LocalDate;

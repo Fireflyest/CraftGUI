@@ -87,6 +87,7 @@ public interface ViewPage {
 
     /**
      * 更新容器标题
+     * @param title 标题
      */
     void updateTitle(String title);
 }

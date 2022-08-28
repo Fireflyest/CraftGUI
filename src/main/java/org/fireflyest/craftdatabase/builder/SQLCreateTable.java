@@ -61,6 +61,7 @@ public class SQLCreateTable implements SQLBuildable {
      * 添加一列数字类型或者布尔类型
      * @param column 列名
      * @param type 数据类型
+     * @param defaultValue 默认值
      * @return 建表语句
      */
     public SQLCreateTable columns(@Nonnull String column, @Nonnull String type, @Nonnull Number defaultValue){

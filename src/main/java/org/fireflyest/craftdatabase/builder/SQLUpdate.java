@@ -23,6 +23,7 @@ public class SQLUpdate {
 
     /**
      * UPDATE `{table}` SET `{column}`=`{column}`{symbol}{number}
+     * @param column 键
      * @param symbol 运算符号
      * @param number 运算数字
      * @return 更新语句

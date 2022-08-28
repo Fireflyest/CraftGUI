@@ -9,8 +9,8 @@ import javax.annotation.Nullable;
 public interface View<T extends ViewPage> {
 
     /**
-     * 获取某个标签的界面的首页<br/>
-     * 标签一般指向一个ViewPage链表的头部<br/>
+     * 获取某个标签的界面的首页，
+     * 标签一般指向一个ViewPage链表的头部
      * @param target 页面标签
      * @return 展示页面
      */
