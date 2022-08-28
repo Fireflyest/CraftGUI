@@ -1,6 +1,4 @@
-package org.fireflyest.craftdatabase.service;
-
-import org.fireflyest.craftdatabase.sql.SQLConnector;
+package org.fireflyest.craftdatabase.sql;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;

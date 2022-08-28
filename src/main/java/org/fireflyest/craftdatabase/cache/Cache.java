@@ -1,6 +1,7 @@
 package org.fireflyest.craftdatabase.cache;
 
 import javax.annotation.Nullable;
+import java.time.Duration;
 import java.time.Instant;
 
 /**
@@ -9,7 +10,7 @@ import java.time.Instant;
  */
 public class Cache<T> {
 
-    private final T value;
+    private T value;
     private Instant deadline;
 
     public Cache(T value) {
@@ -32,12 +33,32 @@ public class Cache<T> {
         return null;
     }
 
-    /**
-     * 延长数据保留时间
-     * @param second 延长秒数
-     */
-    public void prolong(long second){
-         deadline = deadline.plusSeconds(second);
+    public void set(T value){
+        this.value = value;
     }
 
+    /**
+     * 数据剩余保留时间<br/>如果没有限制，返回-1；如果到期，返回0
+     * @return 剩余时间
+     */
+    public long ttl(){
+        if (deadline == null) return -1;
+        long second = Duration.between(Instant.now(), deadline).toSeconds();
+        return Math.max(second, 0);
+    }
+
+    /**
+     * 设置数据保留时间
+     * @param second 时间
+     */
+    public void expire(long second){
+         deadline = Instant.now().plusSeconds(second);
+    }
+
+    /**
+     * 设置为无限
+     */
+    public void persist(){
+        deadline = null;
+    }
 }

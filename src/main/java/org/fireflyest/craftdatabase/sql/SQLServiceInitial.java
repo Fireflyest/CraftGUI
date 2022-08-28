@@ -1,4 +1,4 @@
-package org.fireflyest.craftdatabase.service;
+package org.fireflyest.craftdatabase.sql;
 
 import org.fireflyest.craftdatabase.annotation.Auto;
 import org.fireflyest.craftdatabase.annotation.Service;
