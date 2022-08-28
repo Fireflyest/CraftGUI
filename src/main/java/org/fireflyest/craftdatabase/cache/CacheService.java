@@ -1,7 +1,5 @@
 package org.fireflyest.craftdatabase.cache;
 
-import org.bukkit.util.NumberConversions;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
@@ -11,10 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Fireflyest
  * @since 2022/8/26
  */
-public class CacheService {
+public class CacheService<T> {
 
-    private final Map<String, Cache<String>> cacheMap = new ConcurrentHashMap<>();
-    private final Map<String, Cache<Set<String>>> cacheSetMap = new ConcurrentHashMap<>();
+    protected final Map<String, Cache<T>> cacheMap = new ConcurrentHashMap<>();
+    protected final Map<String, Cache<Set<T>>> cacheSetMap = new ConcurrentHashMap<>();
 
     public CacheService() {
     }
@@ -29,8 +27,8 @@ public class CacheService {
     }
 
     public void expire(@Nonnull String key, int second){
-        Cache<String> stringCache;
-        Cache<Set<String>> stringSetCache;
+        Cache<T> stringCache;
+        Cache<Set<T>> stringSetCache;
         if ((stringCache = cacheMap.get(key)) != null) stringCache.expire(second);
         if ((stringSetCache = cacheSetMap.get(key)) != null) stringSetCache.expire(second);
     }
@@ -70,8 +68,8 @@ public class CacheService {
      * @param key 键
      */
     public void persist(@Nonnull String key){
-        Cache<String> stringCache;
-        Cache<Set<String>> stringSetCache;
+        Cache<T> stringCache;
+        Cache<Set<T>> stringSetCache;
         if ((stringCache = cacheMap.get(key)) != null) stringCache.persist();
         if ((stringSetCache = cacheSetMap.get(key)) != null) stringSetCache.persist();
     }
@@ -82,8 +80,8 @@ public class CacheService {
      * @return 剩余时间
      */
     public long ttl(@Nonnull String key){
-        Cache<String> stringCache;
-        Cache<Set<String>> stringSetCache;
+        Cache<T> stringCache;
+        Cache<Set<T>> stringSetCache;
         if (existString(key) && (stringCache = cacheMap.get(key)) != null){
             return stringCache.ttl();
         }
@@ -98,7 +96,7 @@ public class CacheService {
      * @param key 键
      * @param value 值
      */
-    public void set(@Nonnull String key, String value){
+    public void set(@Nonnull String key, T value){
         cacheMap.put(key, new Cache<>(value));
     }
 
@@ -108,24 +106,8 @@ public class CacheService {
      * @param second 期限
      * @param value 值
      */
-    public void setex(@Nonnull String key, int second, String value){
+    public void setex(@Nonnull String key, int second, T value){
         cacheMap.put(key, new Cache<>(value, second));
-    }
-
-    /**
-     * 扩展字符串
-     * @param key 键
-     * @param value 扩展值
-     */
-    public void append(@Nonnull String key, String value){
-        Cache<String> cache;
-        if ((cache = cacheMap.get(key)) != null){
-            String cacheValue = cache.get();
-            cacheValue = (cacheValue == null ? value : cacheValue.concat(value));
-            cache.set(cacheValue);
-        } else {
-            set(key, value);
-        }
     }
 
     /**
@@ -134,7 +116,7 @@ public class CacheService {
      * @return 值
      */
     @Nullable
-    public String get(@Nonnull String key){
+    public T get(@Nonnull String key){
         return cacheMap.containsKey(key) ? cacheMap.get(key).get() : null;
     }
 
@@ -144,8 +126,8 @@ public class CacheService {
      * @param value 新值
      * @return 旧值
      */
-    public String getSet(@Nonnull String key, String value){
-        String cacheValue = get(key);
+    public T getSet(@Nonnull String key, T value){
+        T cacheValue = get(key);
         set(key, value);
         return cacheValue;
     }
@@ -155,9 +137,10 @@ public class CacheService {
      * @param key 键
      * @param value 值
      */
-    public void sadd(@Nonnull String key, String... value){
+    @SafeVarargs
+    public final void sadd(@Nonnull String key, T... value){
         if (!cacheSetMap.containsKey(key)) cacheSetMap.put(key, new Cache<>(new HashSet<>()));
-        Set<String> stringSet;
+        Set<T> stringSet;
         if ((stringSet = cacheSetMap.get(key).get()) != null){
             stringSet.addAll(Set.of(value));
         }
@@ -168,7 +151,7 @@ public class CacheService {
      * @param key 键
      * @return 数据集
      */
-    public Set<String> smembers(@Nonnull String key){
+    public Set<T> smembers(@Nonnull String key){
         return cacheSetMap.containsKey(key) ? cacheSetMap.get(key).get() : Collections.emptySet();
     }
 
@@ -177,8 +160,31 @@ public class CacheService {
      * @param key 键
      * @param value 值
      */
-    public void srem(@Nonnull String key, String... value){
+    @SafeVarargs
+    public final void srem(@Nonnull String key, T... value){
         smembers(key).removeAll(Set.of(value));
+    }
+
+    /**
+     * 随机出栈一个值
+     * @param key 键
+     * @return 值
+     */
+    @Nullable
+    public T spop(@Nonnull String key){
+        Set<T> smembers = smembers(key);
+        int size;
+        if ((size = smembers.size()) == 0) return null;
+        int random = new Random().nextInt(size);
+        Iterator<T> iterator = smembers.iterator();
+        while (iterator.hasNext()){
+            T value = iterator.next();
+            if (random-- == 0){
+                iterator.remove();
+                return value;
+            }
+        }
+        return null;
     }
 
     /**
