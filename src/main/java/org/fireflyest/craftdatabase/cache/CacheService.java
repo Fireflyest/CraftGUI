@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 带泛型的缓存服务
  * @author Fireflyest
  * @since 2022/8/26
  */

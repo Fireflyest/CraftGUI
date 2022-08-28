@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 附加在Column上
+ * ID附加在Column上
  * @author Fireflyest
  * @since 2022/8/17
  */

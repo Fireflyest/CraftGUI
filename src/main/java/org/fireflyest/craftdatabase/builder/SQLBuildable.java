@@ -1,6 +1,7 @@
 package org.fireflyest.craftdatabase.builder;
 
 /**
+ * SQL语句构建
  * @author Fireflyest
  * @since 2022/8/14
  */

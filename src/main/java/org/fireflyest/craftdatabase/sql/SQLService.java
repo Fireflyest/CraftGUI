@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
+ * 数据库服务
  * @author Fireflyest
  * @since 2022/8/22
  */

@@ -12,6 +12,9 @@ import org.fireflyest.craftgui.listener.ViewEventListener;
 import org.fireflyest.craftgui.protocol.ViewProtocol;
 import org.fireflyest.craftgui.view.SimpleView;
 
+/**
+ * 插件加载入口
+ */
 public final class CraftGUI extends JavaPlugin {
 
     private static JavaPlugin plugin;

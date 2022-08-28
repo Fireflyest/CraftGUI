@@ -1,6 +1,7 @@
 package org.fireflyest.craftdatabase.builder;
 
 /**
+ * 数量限制语句
  * @author Fireflyest
  * @since 2022/8/14
  */

@@ -3,6 +3,7 @@ package org.fireflyest.craftdatabase.cache;
 import javax.annotation.Nonnull;
 
 /**
+ * 数字类型的缓存服务
  * @author Fireflyest
  * @since 2022/8/28
  */

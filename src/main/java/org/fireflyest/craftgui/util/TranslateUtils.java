@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * 材料翻译
+ */
 public class TranslateUtils {
 
     private static final Map<String, MaterialName> langMap = new HashMap<>(){

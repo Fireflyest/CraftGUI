@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 自动赋值Dao
  * @author Fireflyest
  * @since 2022/8/19
  */
