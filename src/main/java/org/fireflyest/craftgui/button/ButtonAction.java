@@ -1,15 +1,13 @@
-package org.fireflyest.craftgui.item;
+package org.fireflyest.craftgui.button;
 
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.NamespacedKey;
+import org.fireflyest.craftgui.CraftGUI;
 
 /**
- * data of view item
- *
  * @author Fireflyest
- * @since 2022/7/30
+ * @since 2022/8/29
  */
-@Deprecated
-public abstract class ViewItem {
+public class ButtonAction {
 
     // nbt数据键，存储的值是String类型
     public static final String NBT_VALUE_KEY = "craft-gui-value";
@@ -38,22 +36,7 @@ public abstract class ViewItem {
     // 未知
     public static final int ACTION_UNKNOWN = 10;
 
-    protected int action = ACTION_NONE;
-    protected String value = "";
+    public ButtonAction() {
 
-    public ViewItem(){
     }
-
-    public ViewItem action(int action){
-        this.action = action;
-        return this;
-    }
-
-    public ViewItem value(String value){
-        this.value = value;
-        return this;
-    }
-
-    public abstract ItemStack build();
-
 }

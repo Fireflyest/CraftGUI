@@ -1,4 +1,4 @@
-package org.fireflyest.craftgui.util;
+package org.fireflyest.util;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -1,6 +1,7 @@
 package org.fireflyest.craftgui.util;
 
 import org.bukkit.inventory.ItemStack;
+import org.fireflyest.util.SerializationUtil;
 
 @Deprecated
 public class SerializeUtil {

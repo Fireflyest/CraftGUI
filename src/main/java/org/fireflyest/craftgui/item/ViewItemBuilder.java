@@ -17,6 +17,7 @@ import java.util.Optional;
 /**
  * 用于构建一个物品用来做按钮
  */
+@Deprecated
 public class ViewItemBuilder extends ViewItem implements Listener {
 
     // 材料
