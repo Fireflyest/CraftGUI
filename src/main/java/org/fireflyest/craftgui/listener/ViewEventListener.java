@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.fireflyest.craftgui.CraftGUI;
+import org.fireflyest.CraftGUI;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.api.ViewPage;
 import org.fireflyest.craftgui.core.ViewGuideImpl;
@@ -61,6 +61,7 @@ public class ViewEventListener implements Listener {
             ItemStack cursor = event.getCursor();
             // 判断操作行为
             if (InventoryAction.PLACE_ALL == action || InventoryAction.PLACE_ONE == action || InventoryAction.PLACE_SOME == action){
+
                 // 在容器内放置东西
                 if (cursor == null) return;
                 ViewPlaceEvent placeEvent = new ViewPlaceEvent(event.getView(), event.getClick(), event.getSlot(), clickItem, cursor.clone());
@@ -72,6 +73,9 @@ public class ViewEventListener implements Listener {
                 }
                 // 刷新页面
                 guide.refreshPage(playerName);
+
+
+
             }else if(ClickType.NUMBER_KEY == type || ClickType.SWAP_OFFHAND == type) {
                 // 试图和页面中的物品交换，给出一个事件
                 ViewHotbarEvent hotbarEvent = null;
@@ -116,6 +120,9 @@ public class ViewEventListener implements Listener {
                         if (clickItem != null && clickItem.getType() != Material.AIR) guide.refreshPage(playerName);
                     }
                 }.runTaskLater(CraftGUI.getPlugin(), 2);
+
+
+
             }else {
                 // 点空格不起作用
                 if (clickItem == null || clickItem.getType() == Material.AIR) return;

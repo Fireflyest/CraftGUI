@@ -1,4 +1,4 @@
-package org.fireflyest.craftgui;
+package org.fireflyest;
 
 import com.cryptomorin.xseries.XMaterial;
 import org.bstats.bukkit.Metrics;
