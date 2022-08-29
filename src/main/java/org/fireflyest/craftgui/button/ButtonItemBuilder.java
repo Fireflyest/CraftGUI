@@ -14,15 +14,19 @@ public class ButtonItemBuilder extends ItemBuilder {
 
     public ButtonItemBuilder(@Nullable Material material) {
         super(material);
-//        nbt.put();
+        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_NONE);
+        nbt.put(ButtonAction.NBT_VALUE_KEY, "");
     }
 
     public ButtonItemBuilder(@Nonnull String material) {
         super(material);
+        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_NONE);
+        nbt.put(ButtonAction.NBT_VALUE_KEY, "");
     }
 
-    public void actionClose(){
-
+    public ButtonItemBuilder actionClose(){
+        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_CLOSE);
+        return this;
     }
 
 }

@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
-import org.fireflyest.craftgui.CraftGUI;
+import org.fireflyest.CraftGUI;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.core.ViewGuideImpl;
 import org.fireflyest.craftgui.event.ViewClickEvent;
@@ -34,7 +34,6 @@ public class SimpleEventListener implements Listener {
         Player player = event.getPlayer();
         if (player.isOp() && event.getMessage().contains("gui debug")){
             ViewGuideImpl.DEBUG = !ViewGuideImpl.DEBUG;
-            player.sendMessage(String.format("[CraftGUI] debug -> %s", ViewGuideImpl.DEBUG));
         }
     }
 

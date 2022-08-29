@@ -1,6 +1,6 @@
 package org.fireflyest.craftgui.core;
 
-import org.fireflyest.craftgui.CraftGUI;
+import org.fireflyest.CraftGUI;
 import org.fireflyest.craftgui.api.View;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.api.ViewPage;
