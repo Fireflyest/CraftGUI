@@ -21,7 +21,10 @@ public class ViewGuideImpl implements ViewGuide {
     public final Map<String, View<? extends ViewPage>> viewMap = new HashMap<>();
 
     // 玩家正在浏览的页面
-    public final Map<String, ViewPage> viewUsing = new HashMap<>();
+    public final Map<String, ViewPage> viewPageUsing = new HashMap<>();
+
+    // 玩家正在浏览的界面名称
+    public final Map<String, String> viewUsing = new HashMap<>();
 
     // 记录玩家浏览过的界面，方便返回
     public final Map<String, Stack<ViewPage>> viewUsd = new HashMap<>();
@@ -46,11 +49,17 @@ public class ViewGuideImpl implements ViewGuide {
         }else {
             if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s close", playerName));
             viewUsing.remove(playerName);
+            viewPageUsing.remove(playerName);
         }
     }
 
     @Override
     public ViewPage getUsingPage(@Nonnull String playerName) {
+        return viewPageUsing.get(playerName);
+    }
+
+    @Override
+    public String getUsingView(@Nonnull String playerName) {
         return viewUsing.get(playerName);
     }
 
@@ -59,10 +68,12 @@ public class ViewGuideImpl implements ViewGuide {
         if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s next", player.getName()));
         String playerName = player.getName();
         if (this.unUsed(playerName)) return;
-        ViewPage next = this.getUsingPage(playerName).getNext();
-        if (next != null) {
+        ViewPage next, page = this.getUsingPage(playerName);
+        if (page != null) {
+            next = page.getNext();
+            if (next == null) return;
             viewRedirect.add(playerName);
-            viewUsing.put(playerName, next);
+            viewPageUsing.put(playerName, next);
             player.openInventory(next.getInventory());
         }
     }
@@ -72,10 +83,12 @@ public class ViewGuideImpl implements ViewGuide {
         if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s pre", player.getName()));
         String playerName = player.getName();
         if (this.unUsed(playerName)) return;
-        ViewPage pre = this.getUsingPage(playerName).getPre();
-        if (pre != null) {
+        ViewPage pre, page = this.getUsingPage(playerName);
+        if (page != null) {
+            pre = page.getPre();
+            if (pre == null) return;
             viewRedirect.add(playerName);
-            viewUsing.put(playerName, pre);
+            viewPageUsing.put(playerName, pre);
             player.openInventory(pre.getInventory());
         }
     }
@@ -98,7 +111,7 @@ public class ViewGuideImpl implements ViewGuide {
         }
         // 设置玩家正在浏览的视图
         viewRedirect.add(playerName);
-        viewUsing.put(playerName, page);
+        viewPageUsing.put(playerName, page);
         // 打开容器
         if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s back to %s", player.getName(), page.getTarget()));
         player.openInventory(page.getInventory());
@@ -109,6 +122,7 @@ public class ViewGuideImpl implements ViewGuide {
         String playerName = player.getName();
         if (this.unUsed(playerName)) return;
         ViewPage viewPage = this.getUsingPage(playerName), targetPage = viewPage;
+        if (viewPage == null) return;
         // 找到目标页面
         int delta = page - viewPage.getPage();
         if (delta > 0){
@@ -126,7 +140,7 @@ public class ViewGuideImpl implements ViewGuide {
         }
         // 打开目标页面
         viewRedirect.add(playerName);
-        viewUsing.put(playerName, targetPage);
+        viewPageUsing.put(playerName, targetPage);
         if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s jump", playerName));
         player.openInventory(targetPage.getInventory());
     }
@@ -142,7 +156,7 @@ public class ViewGuideImpl implements ViewGuide {
         } else {
             // 转存可以返回
             usingPage = this.getUsingPage(playerName);
-            if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s store back %s", playerName, usingPage.getTarget()));
+            if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s store back", playerName));
         }
         // 添加返回
         if (usingPage != null) {
@@ -162,7 +176,8 @@ public class ViewGuideImpl implements ViewGuide {
             return;
         }
         // 设置玩家正在浏览的视图
-        viewUsing.put(playerName, page);
+        viewUsing.put(playerName, viewName);
+        viewPageUsing.put(playerName, page);
         // 打开容器
         if (DEBUG) CraftGUI.getPlugin().getLogger().info(String.format("%s open", playerName));
         player.openInventory(page.getInventory());
@@ -185,11 +200,11 @@ public class ViewGuideImpl implements ViewGuide {
 
     @Override
     public Set<String> getViewers() {
-        return viewUsing.keySet();
+        return viewPageUsing.keySet();
     }
 
     @Override
     public boolean unUsed(@Nonnull String playerName) {
-        return !viewUsing.containsKey(playerName);
+        return !viewPageUsing.containsKey(playerName);
     }
 }
