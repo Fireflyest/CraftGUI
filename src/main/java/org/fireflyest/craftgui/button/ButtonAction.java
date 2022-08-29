@@ -11,8 +11,8 @@ public class ButtonAction {
     // nbt行为键，存储int类型值，让插件开发者在监听点击事件的时候判断按钮是用来干嘛
     public static final String NBT_ACTION_KEY = "craft-gui-action";
 
-    // 以下七个不触发事件，由导航直接执行
     public static final int ACTION_NONE = 0;
+
     // 返回
     public static final int ACTION_BACK = 1;
     // 关闭
