@@ -27,6 +27,11 @@ public class CacheService<T> {
         cacheSetMap.remove(key);
     }
 
+    /**
+     * 设置数据期限
+     * @param key 键
+     * @param second 限制秒数
+     */
     public void expire(@Nonnull String key, int second){
         Cache<T> stringCache;
         Cache<Set<T>> stringSetCache;
