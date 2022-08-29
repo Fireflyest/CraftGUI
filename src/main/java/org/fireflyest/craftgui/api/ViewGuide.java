@@ -33,11 +33,20 @@ public interface ViewGuide {
     void openView(@Nonnull Player player, @Nonnull String viewName, @Nullable String target);
 
     /**
-     * 获取某个玩家正在浏览的界面
+     * 获取某个玩家正在浏览的页面
      * @param playerName 玩家名称
      * @return 页面
      */
+    @Nullable
     ViewPage getUsingPage(@Nonnull String playerName);
+
+    /**
+     * 获取某个玩家正在浏览的界面
+     * @param playerName 玩家名称
+     * @return 界面
+     */
+    @Nullable
+    String getUsingView(@Nonnull String playerName);
 
     /**
      * 玩家切换到下一页
