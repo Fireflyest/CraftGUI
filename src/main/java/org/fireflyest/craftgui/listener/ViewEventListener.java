@@ -5,6 +5,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.NumberConversions;
@@ -38,6 +39,18 @@ public class ViewEventListener implements Listener {
 
     public ViewEventListener(){
         this.guide = CraftGUI.getViewGuide();
+    }
+
+    /**
+     * 用于控制调试
+     * @param event 聊天事件
+     */
+    @EventHandler
+    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+        if (player.isOp() && event.getMessage().contains("gui debug")){
+            ViewGuideImpl.DEBUG = !ViewGuideImpl.DEBUG;
+        }
     }
 
     /**
