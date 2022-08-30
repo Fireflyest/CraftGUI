@@ -168,16 +168,26 @@ public class DaoProcessor extends AbstractProcessor {
     }
 
     private void appendInsert(StringBuilder javaFileBuilder){
-        javaFileBuilder.append("\n\t\tlong num = 0;");
+        javaFileBuilder.append("\n\t\tlong insertId = 0;");
         javaFileBuilder.append("\n\t\t");
         javaFileBuilder.append("\n\t\tConnection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
-        javaFileBuilder.append("\n\t\ttry (PreparedStatement preparedStatement =connection.prepareStatement(sql)){");
-        javaFileBuilder.append("\n\t\t\tnum = preparedStatement.executeUpdate();");
-        javaFileBuilder.append("\n\t\t\treturn num;");
+        javaFileBuilder.append("\n\t\tResultSet resultSet = null;");
+        javaFileBuilder.append("\n\t\ttry (PreparedStatement preparedStatement =connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){");
+        javaFileBuilder.append("\n\t\t\tpreparedStatement.executeUpdate();");
+        javaFileBuilder.append("\n\t\t\tresultSet = preparedStatement.getGeneratedKeys();");
+        javaFileBuilder.append("\n\t\t\tif (resultSet.next()) insertId = resultSet.getInt(1);");
+        javaFileBuilder.append("\n\t\t\treturn insertId;");
         javaFileBuilder.append("\n\t\t} catch (SQLException e) {");
         javaFileBuilder.append("\n\t\t\te.printStackTrace();");
+        javaFileBuilder.append("\n\t\t} finally {");
+        javaFileBuilder.append("\n\t\t\tif (resultSet != null) {");
+        javaFileBuilder.append("\n\t\t\t\ttry {");
+        javaFileBuilder.append("\n\t\t\t\t\tresultSet.close();");
+        javaFileBuilder.append("\n\t\t\t\t} catch (SQLException ignored) {");
+        javaFileBuilder.append("\n\t\t\t\t}");
+        javaFileBuilder.append("\n\t\t\t}");
         javaFileBuilder.append("\n\t\t}");
-        javaFileBuilder.append("\n\t\treturn num;\n\t}\n");
+        javaFileBuilder.append("\n\t\treturn insertId;\n\t}\n");
     }
 
     private void appendSelect(StringBuilder javaFileBuilder, String sql , String returnType){

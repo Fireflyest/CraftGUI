@@ -1,7 +1,6 @@
 # User-specific stuff
 .idea/
 javadoc
-src/main/java/org/fireflyest/test
 
 *.iml
 *.ipr
