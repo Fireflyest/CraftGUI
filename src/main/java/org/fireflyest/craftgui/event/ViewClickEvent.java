@@ -26,12 +26,26 @@ public class ViewClickEvent extends InventoryInteractEvent {
 
     private boolean refresh;
 
-    public ViewClickEvent(@Nonnull InventoryView view, @Nonnull ClickType click, int slot, ItemStack current, boolean refresh) {
+    private final String viewName;
+    private final String value;
+    private final int action;
+
+    public ViewClickEvent(@Nonnull InventoryView view,
+                          @Nonnull ClickType click,
+                          int slot,
+                          ItemStack current,
+                          String viewName,
+                          String value,
+                          int action,
+                          boolean refresh) {
         super(view);
         this.click = click;
         this.rawSlot = slot;
         this.whichSlot = view.convertSlot(slot);
         this.current = current;
+        this.viewName = viewName;
+        this.value = value;
+        this.action = action;
         this.refresh = refresh;
     }
 
@@ -64,6 +78,18 @@ public class ViewClickEvent extends InventoryInteractEvent {
 
     public void setCurrent(ItemStack current) {
         this.current = current;
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public int getAction() {
+        return action;
     }
 
     @Nullable

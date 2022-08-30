@@ -1,4 +1,4 @@
-package org.fireflyest.craftgui.util;
+package org.fireflyest.util;
 
 import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -16,34 +16,21 @@ import java.util.List;
  * 物品工具类
  * @author Fireflyest
  */
-@Deprecated
 public class ItemUtils {
 
     private ItemUtils(){
     }
 
-    public static void setItemValue(@Nonnull ItemStack item, String value) {
+    public static void setItemNbt(@Nonnull ItemStack item, String key, Object value) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return;
         NBTItem nbtItem = new NBTItem(item, true);
-        nbtItem.setString(ViewItem.NBT_VALUE_KEY, value);
+        nbtItem.setObject(key, value);
     }
 
-    public static String getItemValue(@Nonnull ItemStack item) {
+    public static String getItemNbt(@Nonnull ItemStack item, String key) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return null;
         NBTItem nbtItem = new NBTItem(item);
-        return nbtItem.getString(ViewItem.NBT_VALUE_KEY);
-    }
-
-    public static void setItemAction(@Nonnull ItemStack item, int action) {
-        if (item.getType() == XMaterial.AIR.parseMaterial()) return;
-        NBTItem nbtItem = new NBTItem(item, true);
-        nbtItem.setInteger(ViewItem.NBT_ACTION_KEY, action);
-    }
-
-    public static int getItemAction(@Nonnull ItemStack item) {
-        if (item.getType() == XMaterial.AIR.parseMaterial()) return 0;
-        NBTItem nbtItem = new NBTItem(item);
-        return nbtItem.getInteger(ViewItem.NBT_ACTION_KEY);
+        return nbtItem.getString(key);
     }
 
     public static void setItemModel(@Nonnull ItemStack item, int model) {

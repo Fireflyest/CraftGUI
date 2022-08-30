@@ -22,15 +22,29 @@ public class ViewHotbarEvent extends InventoryInteractEvent {
     private final int rawSlot;
     private ItemStack current;
 
-    private int hotbarKey;
+    private final int hotbarKey;
 
-    public ViewHotbarEvent(@Nonnull InventoryView view, @Nonnull ClickType click, int slot, ItemStack current, int key) {
+    private final String viewName;
+    private final String value;
+    private final int action;
+
+    public ViewHotbarEvent(@Nonnull InventoryView view,
+                           @Nonnull ClickType click,
+                           int slot,
+                           ItemStack current,
+                           int key,
+                           String viewName,
+                           String value,
+                           int action) {
         super(view);
         this.click = click;
         this.rawSlot = slot;
         this.whichSlot = view.convertSlot(slot);
         this.current = current;
         this.hotbarKey = key;
+        this.viewName = viewName;
+        this.value = value;
+        this.action = action;
     }
 
     @Override
@@ -62,6 +76,18 @@ public class ViewHotbarEvent extends InventoryInteractEvent {
 
     public void setCurrent(ItemStack current) {
         this.current = current;
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public int getAction() {
+        return action;
     }
 
     @Nullable
