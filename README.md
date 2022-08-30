@@ -249,55 +249,23 @@ guide.openView(player, CUSTOM_VIEW, "target");
 ```java 
 @EventHandler
 public void onViewClick(ViewClickEvent event) {
+    int action = event.getAction();
+    String view = event.getViewName(), value = event.getValue();
+
     // 判断是否本插件相关的事件
-    if(!event.getView().getTitle().contains("[CraftGUI]")) return;
-    // 是否点击到物品，一般来说是有物品
+    if(view == null || !view.startsWith("craftgui")) return;
+
+    // 获取点击到的物品，一般来说是有物品
     ItemStack item = event.getCurrentItem();
     if(item == null) return;
+
     // 获取点击的玩家
     Player player = (Player)event.getWhoClicked();
-    // 获取行为和值
-    int action = ItemUtils.getItemAction(item);
-    String value = ItemUtils.getItemValue(item);
-    // 根据行为做反应，如果是页面跳转，请取消刷新，防止不必要算力消耗
-    switch (action){
-        case ViewItem.ACTION_CLOSE: // 关闭页面
-            event.setRefresh(event.isShiftClick());
-            player.closeInventory();
-            break;
-        case ViewItem.ACTION_PAGE: // 页面跳转
-            event.setRefresh(event.isShiftClick());
-            if ("pre".equals(value)){
-                guide.prePage(player);
-            } else if ("next".equals(value)) {
-                guide.nextPage(player);
-            } else {
-                guide.jump(player, NumberUtils.toInt(value));
-            }
-            break;
-        case ViewItem.ACTION_BACK: // 返回上一个界面
-            event.setRefresh(event.isShiftClick());
-            guide.back(player);
-            break;
-        case ViewItem.ACTION_OPEN: // 打开一个界面
-            event.setRefresh(event.isShiftClick());
-            guide.openView(player, CraftGUI.SIMPLE_VIEW, value);
-            break;
-        case ViewItem.ACTION_PLAYER_COMMAND: // 玩家指令
-            if (value != null) player.performCommand(value);
-            break;
-        case ViewItem.ACTION_CONSOLE_COMMAND: // 控制台指令
-            if (value == null) break;
-            String command = value.replace("%player%", player.getName());
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
-            break;
-        case ViewItem.ACTION_PLUGIN:
-            // do something
-            break;
-        case ViewItem.ACTION_UNKNOWN:
-        case ViewItem.ACTION_EDIT:
-        case ViewItem.ACTION_NONE:
-        default:
+
+    // 根据行为做反应
+    if (action == ButtonAction.ACTION_PLUGIN) {
+        // do something
+        player.sendMessage("is " + value);
     }
 }
 ```
