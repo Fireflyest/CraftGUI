@@ -1,11 +1,15 @@
 package org.fireflyest.craftitem.builder;
 
 import com.cryptomorin.xseries.XMaterial;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBTList;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.fireflyest.CraftGUI;
+import org.fireflyest.crafttext.formal.TextColorful;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,11 +25,11 @@ public class ItemBuilder {
     protected String displayName;
     protected String localName;
     protected ItemFlag[] itemFlags;
-    protected int model = -1;
     protected final List<String> lore = new ArrayList<>();
     protected final Map<String, Object> nbt = new HashMap<>();
-
+    protected boolean colorful = false;
     protected int amount = 1;
+    protected int model = -1;
 
     public ItemBuilder(@Nullable Material material) {
         this.material = material;
@@ -65,6 +69,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder colorful(){
+        this.colorful = CraftGUI.BUKKIT_VERSION >= 16;
+        return this;
+    }
+
     public ItemBuilder amount(int amount){
         this.amount = amount;
         return this;
@@ -89,8 +98,24 @@ public class ItemBuilder {
         if (model != -1) meta.setCustomModelData(model);
         item.setItemMeta(meta);
         // 特殊数据
+        NBTItem nbtItem = new NBTItem(item, true);
+        // 颜色
+        if (colorful){
+            NBTCompound display = nbtItem.getCompound("display");
+            if (display != null) {
+                // name
+                display.setString("Name", new TextColorful(display.getString("Name")).toString());
+                // lore
+                NBTList<String> loreList = display.getStringList("Lore");
+                if (loreList != null) {
+                    int lorePos = 0;
+                    for (String loreString : loreList) {
+                        loreList.set(lorePos++, new TextColorful(loreString).toString());
+                    }
+                }
+            }
+        }
         if (nbt.size() > 0){
-            NBTItem nbtItem = new NBTItem(item, true);
             for (Map.Entry<String, Object> entry : nbt.entrySet()) {
                 nbtItem.setObject(entry.getKey(), entry.getValue());
             }

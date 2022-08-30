@@ -51,6 +51,12 @@ public class ViewEventListener implements Listener {
         if (player.isOp() && event.getMessage().contains("gui debug")){
             ViewGuideImpl.DEBUG = !ViewGuideImpl.DEBUG;
         }
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                guide.openView(player, CraftGUI.SIMPLE_VIEW, player.getName());
+            }
+        }.runTask(CraftGUI.getPlugin());
     }
 
     /**
