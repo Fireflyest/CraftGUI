@@ -1,6 +1,8 @@
 package org.fireflyest.craftgui.listener;
 
+import com.cryptomorin.xseries.XSound;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
@@ -36,9 +38,13 @@ import java.util.stream.Collectors;
 public class ViewEventListener implements Listener {
 
     private final ViewGuide guide;
+    private final Sound clickSound;
+    private final Sound pageSound;
 
     public ViewEventListener(){
         this.guide = CraftGUI.getViewGuide();
+        this.clickSound = XSound.BLOCK_STONE_BUTTON_CLICK_OFF.parseSound();
+        this.pageSound = XSound.ITEM_BOOK_PAGE_TURN.parseSound();
     }
 
     /**
@@ -66,7 +72,7 @@ public class ViewEventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event){
         // 判断是否浏览者
-        HumanEntity human = event.getWhoClicked();
+        Player human = ((Player) event.getWhoClicked());
         String playerName = human.getName();
         if (guide.unUsed(playerName)) return;
 
@@ -217,42 +223,50 @@ public class ViewEventListener implements Listener {
                         if (clickEvent.needRefresh()) guide.refreshPage(playerName);
                         break;
                     case ButtonAction.ACTION_BACK:
-                        guide.back(((Player) human));
+                        guide.back(human);
+                        human.playSound(human.getLocation(), clickSound, 1F, 1F);
                         if (event.isShiftClick()) guide.refreshPage(playerName);
                         break;
                     case ButtonAction.ACTION_CLOSE:
                         human.closeInventory();
+                        human.playSound(human.getLocation(), clickSound, 1F, 1F);
                         if (event.isShiftClick()) guide.refreshPage(playerName);
                         break;
                     case ButtonAction.ACTION_PAGE_NEXT:
-                        guide.nextPage(((Player) human));
+                        guide.nextPage(human);
+                        human.playSound(human.getLocation(), pageSound, 1F, 1F);
                         if (event.isShiftClick()) guide.refreshPage(playerName);
                         break;
                     case ButtonAction.ACTION_PAGE_PRE:
-                        guide.prePage(((Player) human));
+                        guide.prePage(human);
+                        human.playSound(human.getLocation(), pageSound, 1F, 1F);
                         if (event.isShiftClick()) guide.refreshPage(playerName);
                         break;
                     case ButtonAction.ACTION_PAGE_JUMP:
-                        guide.jump(((Player) human), NumberConversions.toInt(buttonValue));
+                        guide.jump(human, NumberConversions.toInt(buttonValue));
+                        human.playSound(human.getLocation(), pageSound, 1F, 1F);
                         if (event.isShiftClick()) guide.refreshPage(playerName);
                         break;
                     case ButtonAction.ACTION_CONSOLE_COMMAND_SEND:
                         if (buttonValue == null || "".equals(buttonValue)) break;
                         String command = buttonValue.replace("%player%", playerName);
                         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+                        human.playSound(human.getLocation(), clickSound, 1F, 1F);
                         if (event.isShiftClick()) guide.refreshPage(playerName);
                         break;
                     case ButtonAction.ACTION_PLAYER_COMMAND_SEND:
                         if (buttonValue == null || "".equals(buttonValue)) break;
                         String playerCommand = buttonValue.replace("%player%", playerName);
-                        ((Player) human).performCommand(playerCommand);
+                        human.performCommand(playerCommand);
+                        human.playSound(human.getLocation(), clickSound, 1F, 1F);
                         if (event.isShiftClick()) guide.refreshPage(playerName);
                         break;
                     case ButtonAction.ACTION_PAGE_OPEN:
                         if (buttonValue == null || !buttonValue.contains(".")) break;
                         String view = buttonValue.substring(0, buttonValue.lastIndexOf("."));
                         String pageTarget = buttonValue.substring(buttonValue.lastIndexOf(".")+1);
-                        guide.openView(((Player) human), view, pageTarget);
+                        human.playSound(human.getLocation(), clickSound, 1F, 1F);
+                        guide.openView(human, view, pageTarget);
                         if (event.isShiftClick()) guide.refreshPage(playerName);
                         break;
                     default:
