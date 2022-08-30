@@ -8,7 +8,7 @@ public class ButtonAction {
 
     // nbt数据键，存储的值是String类型
     public static final String NBT_VALUE_KEY = "craft-gui-value";
-    // nbt行为键，存储int类型值，让插件开发者在监听点击事件的时候判断按钮是用来干嘛
+    // nbt行为键，存储int类型值，让插件开发者在监听点击事件的时候判断按钮点击行为
     public static final String NBT_ACTION_KEY = "craft-gui-action";
 
     public static final int ACTION_NONE = 0;
@@ -22,7 +22,12 @@ public class ButtonAction {
     // 翻页，值一般是pre或next
     public static final int ACTION_PAGE_PRE = 11;
     public static final int ACTION_PAGE_NEXT = 12;
-    public static final int ACTION_PAGE_JUMP = 12;
+    public static final int ACTION_PAGE_JUMP = 13;
+    public static final int ACTION_PAGE_OPEN = 14;
+    // 执行指令，值一般是要执行的指令
+    public static final int ACTION_PLAYER_COMMAND_SEND = 15;
+    // 控制台指令
+    public static final int ACTION_CONSOLE_COMMAND_SEND = 16;
 
     // 以下行为调用事件，由插件处理
     // 打开某个界面

@@ -24,60 +24,100 @@ public class ButtonItemBuilder extends ItemBuilder {
         nbt.put(ButtonAction.NBT_VALUE_KEY, "");
     }
 
+    /**
+     * 关闭，由导航直接处理
+     * @return this
+     */
     public ButtonItemBuilder actionClose(){
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_CLOSE);
         return this;
     }
 
+    /**
+     * 向后翻页，由导航直接处理
+     * @return this
+     */
     public ButtonItemBuilder actionPageNext(){
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PAGE_NEXT);
         return this;
     }
 
+    /**
+     * 向前翻页，由导航直接处理
+     * @return this
+     */
     public ButtonItemBuilder actionPagePre(){
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PAGE_PRE);
         return this;
     }
 
+    /**
+     * 跳转页面，由导航直接处理
+     * @param num 页码
+     * @return this
+     */
     public ButtonItemBuilder actionPageJump(int num){
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PAGE_JUMP);
         nbt.put(ButtonAction.NBT_VALUE_KEY, num);
         return this;
     }
 
+    /**
+     * 返回上个界面
+     * @return this
+     */
     public ButtonItemBuilder actionBack(){
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_BACK);
         return this;
     }
 
+    /**
+     * 修改页面内容，由页面处理
+     * @return this
+     */
     public ButtonItemBuilder actionEdit(){
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_EDIT);
         return this;
     }
 
-    public ButtonItemBuilder actionOpen(){
-        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_OPEN);
-        return this;
-    }
-
-    public ButtonItemBuilder actionPlayerCommand(String command){
-        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PLAYER_COMMAND);
-        nbt.put(ButtonAction.NBT_VALUE_KEY, command);
-        return this;
-    }
-
-    public ButtonItemBuilder actionConsoleCommand(String command){
-        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_CONSOLE_COMMAND);
-        nbt.put(ButtonAction.NBT_VALUE_KEY, command);
-        return this;
-    }
-
-    public ButtonItemBuilder actionConsoleCommand(int page){
-        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PAGE);
+    /**
+     * 打开页面，由导航直接处理
+     * @param page 页面格式为viewName.pageTarget
+     * @return this
+     */
+    public ButtonItemBuilder actionOpenPage(String page){
+        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PAGE_OPEN);
         nbt.put(ButtonAction.NBT_VALUE_KEY, page);
         return this;
     }
 
+    /**
+     * 玩家指令，由导航直接处理
+     * @param command 指令
+     * @return this
+     */
+    public ButtonItemBuilder actionPlayerCommand(String command){
+        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PLAYER_COMMAND_SEND);
+        nbt.put(ButtonAction.NBT_VALUE_KEY, command);
+        return this;
+    }
+
+    /**
+     * 控制台指令，由导航直接处理
+     * @param command 指令
+     * @return this
+     */
+    public ButtonItemBuilder actionConsoleCommand(String command){
+        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_CONSOLE_COMMAND_SEND);
+        nbt.put(ButtonAction.NBT_VALUE_KEY, command);
+        return this;
+    }
+
+    /**
+     * 插件自定义行为，给插件处理
+     * @param value 行为值
+     * @return this
+     */
     public ButtonItemBuilder actionPlugin(String value){
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PLUGIN);
         nbt.put(ButtonAction.NBT_VALUE_KEY, value);

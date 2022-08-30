@@ -26,7 +26,18 @@ public class ViewPlaceEvent extends InventoryInteractEvent {
 
     private boolean handBack;
 
-    public ViewPlaceEvent(@Nonnull InventoryView view, @Nonnull ClickType click, int slot, ItemStack current, ItemStack cursor) {
+    private final String viewName;
+    private final String value;
+    private final int action;
+
+    public ViewPlaceEvent(@Nonnull InventoryView view,
+                          @Nonnull ClickType click,
+                          int slot,
+                          ItemStack current,
+                          ItemStack cursor,
+                          String viewName,
+                          String value,
+                          int action) {
         super(view);
         this.click = click;
         this.rawSlot = slot;
@@ -34,6 +45,9 @@ public class ViewPlaceEvent extends InventoryInteractEvent {
         this.current = current;
         this.cursor = cursor;
         this.handBack = true;
+        this.viewName = viewName;
+        this.value = value;
+        this.action = action;
     }
 
     public boolean handBack() {
@@ -81,6 +95,18 @@ public class ViewPlaceEvent extends InventoryInteractEvent {
 
     public void setCursor(ItemStack cursor) {
         this.cursor = cursor;
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public int getAction() {
+        return action;
     }
 
     @Nullable

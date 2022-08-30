@@ -2,13 +2,16 @@ package org.fireflyest.craftgui.listener;
 
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.NumberConversions;
 import org.fireflyest.CraftGUI;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.api.ViewPage;
+import org.fireflyest.craftgui.button.ButtonAction;
 import org.fireflyest.craftgui.core.ViewGuideImpl;
 import org.fireflyest.craftgui.event.ViewClickEvent;
 import org.fireflyest.craftgui.event.ViewHotbarEvent;
@@ -18,6 +21,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.fireflyest.craftgui.util.ViewItemUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,6 +53,7 @@ public class ViewEventListener implements Listener {
 
         // 获取点击页面
         ViewPage page = guide.getUsingPage(playerName);
+        if (page == null) return;
         // 获取点击信息
         Inventory inventory = page.getInventory();
         InventoryAction action = event.getAction();
@@ -59,28 +64,71 @@ public class ViewEventListener implements Listener {
             // 获取点击的物品
             ItemStack clickItem = page.getItem(event.getRawSlot());
             ItemStack cursor = event.getCursor();
+            // 按钮行为
+            int buttonAction = ButtonAction.ACTION_NONE;
+            String buttonValue = "";
             // 判断操作行为
             if (InventoryAction.PLACE_ALL == action || InventoryAction.PLACE_ONE == action || InventoryAction.PLACE_SOME == action){
 
                 // 在容器内放置东西
                 if (cursor == null) return;
-                ViewPlaceEvent placeEvent = new ViewPlaceEvent(event.getView(), event.getClick(), event.getSlot(), clickItem, cursor.clone());
+                if (clickItem != null) {
+                    buttonAction = ViewItemUtils.getItemAction(clickItem);
+                    buttonValue = ViewItemUtils.getItemValue(clickItem);
+                }
+                ViewPlaceEvent placeEvent = null;
+                switch (buttonAction){
+                    case ButtonAction.ACTION_NONE:
+                    case ButtonAction.ACTION_OPEN:
+                    case ButtonAction.ACTION_CONSOLE_COMMAND:
+                    case ButtonAction.ACTION_PAGE:
+                    case ButtonAction.ACTION_PLAYER_COMMAND:
+                    case ButtonAction.ACTION_PLUGIN:
+                    case ButtonAction.ACTION_UNKNOWN:
+                        placeEvent = new ViewPlaceEvent(event.getView(),
+                                event.getClick(),
+                                event.getSlot(),
+                                clickItem,
+                                cursor.clone(),
+                                guide.getUsingView(playerName),
+                                buttonValue,
+                                buttonAction);
+                        break;
+                    default:
+                }
                 cursor.setAmount(0);
-                Bukkit.getPluginManager().callEvent(placeEvent);
-                // 还给玩家
-                if (placeEvent.handBack()){
-                    human.getInventory().addItem(placeEvent.getCursorItem());
+                if (placeEvent != null) {
+                    Bukkit.getPluginManager().callEvent(placeEvent);
+                    // 还给玩家
+                    if (placeEvent.handBack()){
+                        human.getInventory().addItem(placeEvent.getCursorItem());
+                    }
                 }
                 // 刷新页面
                 guide.refreshPage(playerName);
-
-
 
             }else if(ClickType.NUMBER_KEY == type || ClickType.SWAP_OFFHAND == type) {
                 // 试图和页面中的物品交换，给出一个事件
                 ViewHotbarEvent hotbarEvent = null;
                 if (clickItem != null && clickItem.getType() != Material.AIR) {
-                    hotbarEvent = new ViewHotbarEvent(event.getView(), event.getClick(), event.getSlot(), clickItem, event.getHotbarButton());
+                    buttonAction = ViewItemUtils.getItemAction(clickItem);
+                    buttonValue = ViewItemUtils.getItemValue(clickItem);
+                    switch (buttonAction){
+                        case ButtonAction.ACTION_NONE:
+                        case ButtonAction.ACTION_PAGE:
+                        case ButtonAction.ACTION_PLUGIN:
+                        case ButtonAction.ACTION_UNKNOWN:
+                            hotbarEvent = new ViewHotbarEvent(event.getView(),
+                                    event.getClick(),
+                                    event.getSlot(),
+                                    clickItem,
+                                    event.getHotbarButton(),
+                                    guide.getUsingView(playerName),
+                                    buttonValue,
+                                    buttonAction);
+                            break;
+                        default:
+                    }
                 }
                 // 防止卡物品出来，把物品放进去的一瞬间按数字键或副手有几率卡物品出来
                 if (event.getCurrentItem() != null) event.getCurrentItem().setAmount(0);
@@ -126,13 +174,70 @@ public class ViewEventListener implements Listener {
             }else {
                 // 点空格不起作用
                 if (clickItem == null || clickItem.getType() == Material.AIR) return;
-
-                // 发布事件
-                ViewClickEvent clickEvent = new ViewClickEvent(event.getView(), event.getClick(), event.getSlot(), clickItem, true);
-                Bukkit.getPluginManager().callEvent(clickEvent);
-
-                // 刷新页面
-                if (clickEvent.needRefresh()) guide.refreshPage(playerName);
+                buttonAction = ViewItemUtils.getItemAction(clickItem);
+                buttonValue = ViewItemUtils.getItemValue(clickItem);
+                switch (buttonAction){
+                    case ButtonAction.ACTION_NONE:
+                    case ButtonAction.ACTION_OPEN:
+                    case ButtonAction.ACTION_PAGE:
+                    case ButtonAction.ACTION_PLUGIN:
+                    case ButtonAction.ACTION_UNKNOWN:
+                    case ButtonAction.ACTION_PLAYER_COMMAND:
+                    case ButtonAction.ACTION_CONSOLE_COMMAND:
+                        // 发布事件
+                        ViewClickEvent clickEvent = new ViewClickEvent(event.getView(),
+                                event.getClick(),
+                                event.getSlot(),
+                                clickItem,
+                                guide.getUsingView(playerName),
+                                buttonValue,
+                                buttonAction,
+                                true);
+                        Bukkit.getPluginManager().callEvent(clickEvent);
+                        // 刷新页面
+                        if (clickEvent.needRefresh()) guide.refreshPage(playerName);
+                        break;
+                    case ButtonAction.ACTION_BACK:
+                        guide.back(((Player) human));
+                        if (event.isShiftClick()) guide.refreshPage(playerName);
+                        break;
+                    case ButtonAction.ACTION_CLOSE:
+                        human.closeInventory();
+                        if (event.isShiftClick()) guide.refreshPage(playerName);
+                        break;
+                    case ButtonAction.ACTION_PAGE_NEXT:
+                        guide.nextPage(((Player) human));
+                        if (event.isShiftClick()) guide.refreshPage(playerName);
+                        break;
+                    case ButtonAction.ACTION_PAGE_PRE:
+                        guide.prePage(((Player) human));
+                        if (event.isShiftClick()) guide.refreshPage(playerName);
+                        break;
+                    case ButtonAction.ACTION_PAGE_JUMP:
+                        guide.jump(((Player) human), NumberConversions.toInt(buttonValue));
+                        if (event.isShiftClick()) guide.refreshPage(playerName);
+                        break;
+                    case ButtonAction.ACTION_CONSOLE_COMMAND_SEND:
+                        if (buttonValue == null || "".equals(buttonValue)) break;
+                        String command = buttonValue.replace("%player%", playerName);
+                        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+                        if (event.isShiftClick()) guide.refreshPage(playerName);
+                        break;
+                    case ButtonAction.ACTION_PLAYER_COMMAND_SEND:
+                        if (buttonValue == null || "".equals(buttonValue)) break;
+                        String playerCommand = buttonValue.replace("%player%", playerName);
+                        ((Player) human).performCommand(playerCommand);
+                        if (event.isShiftClick()) guide.refreshPage(playerName);
+                        break;
+                    case ButtonAction.ACTION_PAGE_OPEN:
+                        if (buttonValue == null || !buttonValue.contains(".")) break;
+                        String view = buttonValue.substring(0, buttonValue.lastIndexOf("."));
+                        String pageTarget = buttonValue.substring(buttonValue.lastIndexOf(".")+1);
+                        guide.openView(((Player) human), view, pageTarget);
+                        if (event.isShiftClick()) guide.refreshPage(playerName);
+                        break;
+                    default:
+                }
             }
         }else {
             // 防止移动东西进入
@@ -158,6 +263,7 @@ public class ViewEventListener implements Listener {
 
         // 获取点击页面
         ViewPage page = guide.getUsingPage(playerName);
+        if (page == null) return;
         // 获取点击信息
         final Inventory inventory = page.getInventory();
         // 是否有拖到容器里
