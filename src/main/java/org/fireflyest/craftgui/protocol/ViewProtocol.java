@@ -78,6 +78,7 @@ public class ViewProtocol {
                         // 获取包里的物品列表和页面
                         List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
                         ViewPage page = viewGuide.getUsingPage(playerName);
+                        if (page == null) return;
                         int invSize = page.getInventory().getSize();
                         // 没有存包，是第一个打开而非更新背包，删掉背包物品
                         if (! packets.containsKey(playerName)) {
@@ -170,11 +171,6 @@ public class ViewProtocol {
      */
     public static void removePacket(String playerName) {
         packets.remove(playerName);
-    }
-
-
-    public static void close(){
-        protocolManager.removePacketListeners(CraftGUI.getPlugin());
     }
 
 }

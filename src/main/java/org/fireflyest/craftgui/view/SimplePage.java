@@ -1,6 +1,7 @@
 package org.fireflyest.craftgui.view;
 
 import org.fireflyest.craftgui.api.ViewPage;
+import org.fireflyest.craftgui.button.ButtonItemBuilder;
 import org.fireflyest.craftgui.item.ViewItem;
 import org.fireflyest.craftgui.item.ViewItemBuilder;
 import org.bukkit.Material;
@@ -87,10 +88,13 @@ public class SimplePage extends TemplatePage {
                 .build();
         itemMap.put(25, backButton);
         // 关闭
-        ItemStack closeButton = new ViewItemBuilder(Material.REDSTONE)
-                .name("§c关闭")
-                .lore("§f关闭界面")
-                .action(ViewItem.ACTION_CLOSE)
+        ItemStack closeButton = new ButtonItemBuilder(Material.REDSTONE)
+                .actionClose()
+                .name("$<colors=#feabac:#9283fe>关闭关闭关闭关$<colors=#feabac:#9283fe>闭aaaaaaaaaaaaaaaa")
+                .lore("$<colors=#feabac:#9283fe>关闭界面关闭界面关闭界面关闭界面")
+                .lore("$<color=#9283fe>关闭界面关闭界面关闭界面关闭界面")
+                .lore("§m$<color=#9283fe>关闭界面关闭界面关闭界面关闭界面")
+                .colorful()
                 .build();
         itemMap.put(26, closeButton);
     }

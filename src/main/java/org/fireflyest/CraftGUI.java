@@ -1,5 +1,6 @@
 package org.fireflyest;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import com.cryptomorin.xseries.XMaterial;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.ServicePriority;
@@ -55,7 +56,8 @@ public final class CraftGUI extends JavaPlugin {
     @Override
     public void onDisable() {
         // 关闭协议监听
-        ViewProtocol.close();
+        ProtocolLibrary.getProtocolManager().removePacketListeners(CraftGUI.getPlugin());
+
         // 关闭所有数据库连接
         SQLConnector.closeAll();
     }
