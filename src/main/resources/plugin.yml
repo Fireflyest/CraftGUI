@@ -1,7 +1,0 @@
-name: CraftGUI
-version: '${project.version}'
-main: org.fireflyest.CraftGUI
-api-version: 1.14
-prefix: CraftGUI
-depend: [ProtocolLib]
-authors: [Fireflyest]

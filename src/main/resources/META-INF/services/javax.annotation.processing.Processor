@@ -1,0 +1,2 @@
+org.fireflyest.craftdatabase.annotation.TableProcessor
+org.fireflyest.craftdatabase.annotation.DaoProcessor

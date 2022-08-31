@@ -8,7 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.fireflyest.CraftGUI;
 import org.fireflyest.crafttext.formal.TextColorful;
 
 import javax.annotation.Nonnull;
@@ -70,7 +69,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder colorful(){
-        this.colorful = CraftGUI.BUKKIT_VERSION >= 16;
+        this.colorful = true;
         return this;
     }
 

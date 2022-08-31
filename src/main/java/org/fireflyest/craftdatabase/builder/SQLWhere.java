@@ -34,12 +34,12 @@ public abstract class SQLWhere{
     }
 
     /**
-     * `{column}`={number} ，
-     * `{column}`>{number} ，
-     * `{column}`<{number} ，
-     * `{column}`>={number} ，
-     * `{column}`<={number} ，
-     * `{column}`<>{number} ，
+     * `{column}`＝{number} ，
+     * `{column}`＞{number} ，
+     * `{column}`＜{number} ，
+     * `{column}`＞＝{number} ，
+     * `{column}`＜＝{number} ，
+     * `{column}`＜＞{number} ，
      * @param column 键
      * @param symbol 比较符号
      * @param number 数值
@@ -72,7 +72,7 @@ public abstract class SQLWhere{
     }
 
     /**
-     * `{column}`='{value}'
+     * `{column}`＝'{value}'
      * @param column 键
      * @param value 值
      * @return 条件语句
@@ -87,7 +87,7 @@ public abstract class SQLWhere{
     }
 
     /**
-     * `{column}`<>'{value}'
+     * `{column}`＜＞'{value}'
      * @param column 键
      * @param value 值
      * @return 条件语句
