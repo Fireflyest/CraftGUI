@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Fireflyest
  * @since 2022/8/16
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @SupportedAnnotationTypes("org.fireflyest.craftdatabase.annotation.Table")
 public class TableProcessor extends AbstractProcessor {
 
