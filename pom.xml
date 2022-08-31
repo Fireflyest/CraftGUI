@@ -35,7 +35,7 @@
                     <relocations>
                         <relocation>
                             <pattern>com.cryptomorin.xseries</pattern>
-                            <shadedPattern>org.fireflyest.craftgui.xseries</shadedPattern>
+                            <shadedPattern>org.fireflyest.craftitem.xseries</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.bstats</pattern>
@@ -43,7 +43,7 @@
                         </relocation>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>org.fireflyest.craftgui.nbtapi</shadedPattern>
+                            <shadedPattern>org.fireflyest.craftitem.nbtapi</shadedPattern>
                         </relocation>
                     </relocations>
                     <artifactSet>
