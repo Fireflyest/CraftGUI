@@ -132,7 +132,7 @@ public class ViewEventListener implements Listener {
                 // 刷新页面
                 guide.refreshPage(playerName);
 
-            }else if(ClickType.NUMBER_KEY == type || ClickType.SWAP_OFFHAND == type) {
+            }else if(ClickType.NUMBER_KEY == type || (CraftGUI.BUKKIT_VERSION > 15 && ClickType.SWAP_OFFHAND == type)) {
                 // 试图和页面中的物品交换，给出一个事件
                 ViewHotbarEvent hotbarEvent = null;
                 if (clickItem != null && clickItem.getType() != Material.AIR) {
