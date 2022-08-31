@@ -29,6 +29,27 @@ public class SQLConnector {
     }
 
     /**
+     * 初始化的时连接数据库
+     * @param sqlClass 驱动类
+     * @param url 地址
+     * @param user 账户
+     * @param password 密码
+     * @throws ClassNotFoundException 驱动类无法找到
+     */
+    public static void setupConnect(@Nonnull String sqlClass,
+                                     @Nonnull String url,
+                                     @Nullable String user,
+                                     @Nullable String password) throws ClassNotFoundException {
+        // 加载驱动类
+        if (!loadedClass.contains(sqlClass)) {
+            Class.forName(sqlClass);
+            loadedClass.add(sqlClass);
+        }
+        // 存储连接密码
+        connectInfoMap.put(url, new ConnectInfo(url, user, password));
+    }
+
+    /**
      * 获取已有连接
      * @param url 地址
      * @return 连接
@@ -53,39 +74,12 @@ public class SQLConnector {
     }
 
     /**
-     * 初始化的时连接数据库
-     * @param sqlClass 驱动类
-     * @param url 地址
-     * @param user 账户
-     * @param password 密码
-     * @return 连接
-     * @throws SQLException 数据库连接错误
-     * @throws ClassNotFoundException 驱动类无法找到
-     */
-    public static Connection connect(@Nonnull String sqlClass,
-                                     @Nonnull String url,
-                                     @Nullable String user,
-                                     @Nullable String password) throws SQLException, ClassNotFoundException {
-        // 加载驱动类
-        if (!loadedClass.contains(sqlClass)) {
-            Class.forName(sqlClass);
-            loadedClass.add(sqlClass);
-        }
-        // 连接
-        ConnectInfo connectInfo = new ConnectInfo(url, user, password);
-        return connect(connectInfo);
-    }
-
-    /**
      * 获取连接并缓存
      * @param connectInfo 连接所需信息
      * @return 连接
      * @throws SQLException 数据库连接错误
      */
     public static Connection connect(@Nonnull ConnectInfo connectInfo) throws SQLException {
-        // 存储连接密码，可以重连
-        connectInfoMap.put(connectInfo.url, connectInfo);
-
         // 连接并存储
         Connection connection = DriverManager.getConnection(
                 connectInfo.url ,
