@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * @author Fireflyest
  * @since 2022/8/17
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @SupportedAnnotationTypes("org.fireflyest.craftdatabase.annotation.Dao")
 public class DaoProcessor extends AbstractProcessor {
 
