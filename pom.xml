@@ -60,7 +60,7 @@
                     <execution>
                         <id>attach-javadocs</id>
                         <goals>
-                            <goal>${project.packaging}</goal>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
