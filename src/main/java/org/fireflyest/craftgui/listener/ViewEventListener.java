@@ -60,7 +60,7 @@ public class ViewEventListener implements Listener {
         new BukkitRunnable(){
             @Override
             public void run() {
-                guide.openView(player, CraftGUI.SIMPLE_VIEW, player.getName());
+                if (ViewGuideImpl.DEBUG) guide.openView(player, CraftGUI.SIMPLE_VIEW, player.getName());
             }
         }.runTask(CraftGUI.getPlugin());
     }
