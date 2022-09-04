@@ -20,7 +20,7 @@ public abstract class TemplatePage implements ViewPage {
     // 固定按钮，快速显示
     protected final Map<Integer, ItemStack> itemMap = new ConcurrentHashMap<>();
     // 全部按钮的缓存，点击时返回被点击物品
-    protected Map<Integer, ItemStack> crashMap = new ConcurrentHashMap<>();
+    protected final Map<Integer, ItemStack> crashMap = new ConcurrentHashMap<>();
 
     // 界面载体
     protected Inventory inventory;
@@ -68,7 +68,7 @@ public abstract class TemplatePage implements ViewPage {
 
     @Override
     public @Nonnull Map<Integer, ItemStack> getButtonMap() {
-        return new HashMap<>(itemMap);
+        return itemMap;
     }
 
     @Override
