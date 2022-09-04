@@ -28,10 +28,9 @@ public class SimplePage extends TemplatePage {
         // 这里是需要异步加载的按钮
         // 例如需要先读取数据再放置的按钮
         for (int i = 0; i < 9; i++) {
-            ItemStack f = new ViewItemBuilder(Material.STONE)
+            ItemStack f = new ButtonItemBuilder(Material.STONE)
+                    .actionOpenPage(String.format("craftgui.simple.F%s", i))
                     .name(String.format("F%s", i))
-                    .action(ViewItem.ACTION_OPEN)
-                    .value(String.format("F%s", i))
                     .build();
             crashMap.put(i, f);
         }
@@ -51,7 +50,7 @@ public class SimplePage extends TemplatePage {
     @Override
     public void refreshPage() {
         for (int i = 9; i < 18; i++) {
-            ItemStack blankButton = new ViewItemBuilder(Material.WHITE_STAINED_GLASS_PANE)
+            ItemStack blankButton = new ButtonItemBuilder(Material.WHITE_STAINED_GLASS_PANE)
                     .name(" ")
                     .build();
             itemMap.put(i, blankButton);
@@ -60,31 +59,28 @@ public class SimplePage extends TemplatePage {
         for (int i = -2; i < 3; i++) {
             int p = page + i;
             if (p < 0 || p > 7) continue;
-            ItemStack pageButton = new ViewItemBuilder(p == page ? Material.MAP : Material.PAPER)
+            ItemStack pageButton = new ButtonItemBuilder(p == page ? Material.MAP : Material.PAPER)
+                    .actionPageJump(p)
                     .name(String.valueOf(p))
-                    .action(ViewItem.ACTION_PAGE)
-                    .value(String.valueOf(p))
                     .build();
             itemMap.put(20+i, pageButton);
         }
         // 左右翻页
-        ItemStack preButton = new ViewItemBuilder(Material.GRAY_DYE)
+        ItemStack preButton = new ButtonItemBuilder(Material.GRAY_DYE)
+                .actionPagePre()
                 .name("pre")
-                .action(ViewItem.ACTION_PAGE)
-                .value("pre")
                 .build();
         itemMap.put(23, preButton);
-        ItemStack nextButton = new ViewItemBuilder(Material.GRAY_DYE)
+        ItemStack nextButton = new ButtonItemBuilder(Material.GRAY_DYE)
+                .actionPageNext()
                 .name("next")
-                .action(ViewItem.ACTION_PAGE)
-                .value("next")
                 .build();
         itemMap.put(24, nextButton);
         // 返回
-        ItemStack backButton = new ViewItemBuilder(Material.REDSTONE)
+        ItemStack backButton = new ButtonItemBuilder(Material.REDSTONE)
+                .actionBack()
                 .name("§c返回")
                 .lore("§f上一页")
-                .action(ViewItem.ACTION_BACK)
                 .build();
         itemMap.put(25, backButton);
         // 关闭
