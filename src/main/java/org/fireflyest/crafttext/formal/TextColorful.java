@@ -25,16 +25,21 @@ public class TextColorful {
         this.text = gson.fromJson(string, Text.class);
         this.formalText = new Text(text.getText());
 
+        // 遍历每一行
         for (Text.ExtraDTO extraDTO : text.getExtra()) {
             String aText = extraDTO.getText();
             Matcher attributeMatcher = attributePattern.matcher(aText);
             String[] splitTexts = null;
             int pos = 0;
+
+            // 由属性分割字符串，然后给分割后的字符串附上属性
             while (attributeMatcher.find()){
                 if (splitTexts == null) splitTexts = aText.split("\\$<([^<]*)>");
                 String attribute = attributeMatcher.group();
                 String textValue = splitTexts[++pos];
                 Matcher varMatcher = varPattern.matcher(attribute);
+
+                // 获取属性中的全部变量键值对
                 while (varMatcher.find()){
                     String[] var = varMatcher.group().split("=");
                     String varKey = var[0], varValue = var[1];
