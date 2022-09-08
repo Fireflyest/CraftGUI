@@ -6,7 +6,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.fireflyest.craftgui.item.ViewItem;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
