@@ -3,7 +3,6 @@ package org.fireflyest.craftgui.lang;
 import org.bukkit.Material;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class MaterialChinese implements MaterialName{

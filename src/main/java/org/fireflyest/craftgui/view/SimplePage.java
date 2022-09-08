@@ -2,8 +2,6 @@ package org.fireflyest.craftgui.view;
 
 import org.fireflyest.craftgui.api.ViewPage;
 import org.fireflyest.craftgui.button.ButtonItemBuilder;
-import org.fireflyest.craftgui.item.ViewItem;
-import org.fireflyest.craftgui.item.ViewItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

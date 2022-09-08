@@ -28,7 +28,6 @@ public class SerializeCustomUtil {
     private static final Map<String, ItemMeta> metaStorage = new HashMap<>();
     private static final Map<String, ItemStack> stackStorage = new HashMap<>();
 
-    private static final java.util.regex.Pattern uniqueIdPattern = java.util.regex.Pattern.compile("uniqueId=[a-zA-Z0-9-]+");
     private static boolean debug = false;
 
     static {
