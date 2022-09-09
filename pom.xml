@@ -49,11 +49,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <version>3.2.0</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <aggregate>true</aggregate>
                     <charset>${project.build.sourceEncoding}</charset>
+                    <source>${java.version}</source>
                     <docencoding>UTF-8</docencoding>
                 </configuration>
                 <executions>
