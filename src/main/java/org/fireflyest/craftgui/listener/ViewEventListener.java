@@ -54,15 +54,14 @@ public class ViewEventListener implements Listener {
     @EventHandler
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        if (player.isOp() && event.getMessage().contains("gui debug")){
-            ViewGuideImpl.DEBUG = !ViewGuideImpl.DEBUG;
+        if (player.isOp() && event.getMessage().contains("open gui") && ViewGuideImpl.DEBUG){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    if (ViewGuideImpl.DEBUG) guide.openView(player, CraftGUI.SIMPLE_VIEW, player.getName());
+                }
+            }.runTask(CraftGUI.getPlugin());
         }
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                if (ViewGuideImpl.DEBUG) guide.openView(player, CraftGUI.SIMPLE_VIEW, player.getName());
-            }
-        }.runTask(CraftGUI.getPlugin());
     }
 
     /**
