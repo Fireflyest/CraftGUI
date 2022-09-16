@@ -31,7 +31,7 @@ public class ViewGuideImpl implements ViewGuide {
 
     // 跳转页面，玩家会先打开页面，再关闭原有页面，为了防止取消使用记录，这里记录重定向
     public final Set<String> viewRedirect = new HashSet<>();
-    public static boolean DEBUG = false;
+    public static final boolean DEBUG = false;
 
     public ViewGuideImpl() {
     }

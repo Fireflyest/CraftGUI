@@ -48,24 +48,6 @@ public class ViewEventListener implements Listener {
     }
 
     /**
-     * 用于控制调试
-     * @param event 聊天事件
-     */
-    @EventHandler
-    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-        if (player.isOp() && event.getMessage().contains("gui debug")){
-            ViewGuideImpl.DEBUG = !ViewGuideImpl.DEBUG;
-        }
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                if (ViewGuideImpl.DEBUG) guide.openView(player, CraftGUI.SIMPLE_VIEW, player.getName());
-            }
-        }.runTask(CraftGUI.getPlugin());
-    }
-
-    /**
      * 监听玩家点击容器时的事件
      * @param event 容器点击事件
      */
