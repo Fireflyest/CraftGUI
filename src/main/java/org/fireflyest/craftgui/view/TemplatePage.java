@@ -18,9 +18,9 @@ import org.fireflyest.craftgui.api.ViewPage;
 public abstract class TemplatePage implements ViewPage {
 
     // 固定按钮，快速显示
-    protected final Map<Integer, ItemStack> itemMap = new ConcurrentHashMap<>();
+    protected final Map<Integer, ItemStack> buttonMap = new ConcurrentHashMap<>();
     // 全部按钮的缓存，点击时返回被点击物品
-    protected final Map<Integer, ItemStack> crashMap = new ConcurrentHashMap<>();
+    protected final Map<Integer, ItemStack> asyncButtonMap = new ConcurrentHashMap<>();
 
     // 界面载体
     protected Inventory inventory;
@@ -63,12 +63,12 @@ public abstract class TemplatePage implements ViewPage {
 
     @Override
     public @Nonnull Map<Integer, ItemStack> getButtonMap() {
-        return itemMap;
+        return buttonMap;
     }
 
     @Override
     public @Nullable ItemStack getItem(int slot) {
-        return crashMap.get(slot);
+        return asyncButtonMap.get(slot);
     }
 
     @Override

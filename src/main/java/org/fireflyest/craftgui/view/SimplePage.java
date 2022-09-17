@@ -4,10 +4,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.fireflyest.craftgui.api.ViewPage;
-import org.fireflyest.craftgui.button.ButtonItemBuilder;
 
 /**
  * @author Fireflyest
@@ -26,10 +24,12 @@ public class SimplePage extends TemplatePage {
 
     @Override
     public @Nonnull Map<Integer, ItemStack> getItemMap() {
-        crashMap.clear();
-        crashMap.putAll(itemMap);
+        asyncButtonMap.clear();
+        asyncButtonMap.putAll(buttonMap);
+        
+        // 放置异步加载的按钮到asyncButtonMap
 
-        return crashMap;
+        return asyncButtonMap;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class SimplePage extends TemplatePage {
 
     @Override
     public void refreshPage() {
-        
+        // 放置按钮到buttonMap
     }
 
 }
