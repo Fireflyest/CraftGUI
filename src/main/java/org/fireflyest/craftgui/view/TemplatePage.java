@@ -24,6 +24,8 @@ public abstract class TemplatePage implements ViewPage {
 
     // 界面载体
     protected Inventory inventory;
+    // 标题
+    protected String title;
     // 目标
     protected final String target;
     // 页码
@@ -42,6 +44,7 @@ public abstract class TemplatePage implements ViewPage {
      * @param size 大小
      */
     protected TemplatePage(String title, String target, int page, int size) {
+        this.title = title;
         this.target = target;
         this.page = page;
         this.size = size;
@@ -100,6 +103,7 @@ public abstract class TemplatePage implements ViewPage {
 
     @Override
     public void updateTitle(String title) {
+        this.title = title;
         inventory = Bukkit.createInventory(null, size, title);
     }
 
