@@ -12,23 +12,23 @@ import java.util.Map;
  */
 public class TranslateUtils {
 
-    private static final Map<String, MaterialName> langMap = new HashMap<>(){
-        {
-            put("zh", MaterialChinese.getInstance()); // 简体中文
-            put("zh-CN", MaterialChinese.getInstance()); // 简体中文
-            put("zh-TW", MaterialChineseF.getInstance()); // 繁体中文
-            put("zh-HK", MaterialChineseF.getInstance()); // 繁体中文
-            put("de", MaterialGerman.getInstance()); // 德语 German
-            put("de-DE", MaterialGerman.getInstance()); // 德语 German
-            put("fr", MaterialFrench.getInstance()); // 法语 French
-            put("fr-FR", MaterialFrench.getInstance()); // 法语 French
-            put("ja", MaterialJapanese.getInstance()); // 日语 Japanese
-            put("ja-JA", MaterialJapanese.getInstance()); // 日语 Japanese
-            put("ru", MaterialRussian.getInstance()); // 俄语 Russian
-            put("ru-RU", MaterialRussian.getInstance()); // 俄语 Russian
-        }
-    };
+    private static final Map<String, MaterialName> langMap = new HashMap<>();
     private static String language = Locale.getDefault().toLanguageTag();
+
+    static{
+        langMap.put("zh", MaterialChinese.getInstance()); // 简体中文
+        langMap.put("zh-CN", MaterialChinese.getInstance()); // 简体中文
+        langMap.put("zh-TW", MaterialChineseF.getInstance()); // 繁体中文
+        langMap.put("zh-HK", MaterialChineseF.getInstance()); // 繁体中文
+        langMap.put("de", MaterialGerman.getInstance()); // 德语 German
+        langMap.put("de-DE", MaterialGerman.getInstance()); // 德语 German
+        langMap.put("fr", MaterialFrench.getInstance()); // 法语 French
+        langMap.put("fr-FR", MaterialFrench.getInstance()); // 法语 French
+        langMap.put("ja", MaterialJapanese.getInstance()); // 日语 Japanese
+        langMap.put("ja-JA", MaterialJapanese.getInstance()); // 日语 Japanese
+        langMap.put("ru", MaterialRussian.getInstance()); // 俄语 Russian
+        langMap.put("ru-RU", MaterialRussian.getInstance()); // 俄语 Russian
+    }
 
     private TranslateUtils(){
         // 工具类
