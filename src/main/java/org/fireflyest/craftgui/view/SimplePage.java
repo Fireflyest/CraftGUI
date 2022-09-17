@@ -1,25 +1,28 @@
 package org.fireflyest.craftgui.view;
 
-import org.fireflyest.craftgui.api.ViewPage;
-import org.fireflyest.craftgui.button.ButtonItemBuilder;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.fireflyest.craftgui.api.ViewPage;
+import org.fireflyest.craftgui.button.ButtonItemBuilder;
 
 /**
  * @author Fireflyest
- * 2022/2/15 0:00
  */
 public class SimplePage extends TemplatePage {
 
-    public SimplePage(String pluginName, String target, int page, int size) {
-        super(pluginName, target, page, size);
+    /**
+     * 示例页面
+     */
+    public SimplePage(String title, String target, int page, int size) {
+        super(title, target, page, size);
     }
 
     @Override
-    public @Nonnull Map<Integer, ItemStack> getItemMap(){
+    public @Nonnull Map<Integer, ItemStack> getItemMap() {
         crashMap.clear();
         crashMap.putAll(itemMap);
 
@@ -38,8 +41,8 @@ public class SimplePage extends TemplatePage {
 
     @Override
     public ViewPage getNext() {
-        if(next == null && page < 7){
-            next = new SimplePage(pluginName, target, page+1, size);
+        if (next == null && page < 7) {
+            next = new SimplePage(title, target, page + 1, size);
             next.setPre(this);
         }
         return next;
@@ -61,7 +64,7 @@ public class SimplePage extends TemplatePage {
                     .actionPageJump(p)
                     .name(String.valueOf(p))
                     .build();
-            itemMap.put(20+i, pageButton);
+            itemMap.put(20 + i, pageButton);
         }
         // 左右翻页
         ItemStack preButton = new ButtonItemBuilder(Material.GRAY_DYE)

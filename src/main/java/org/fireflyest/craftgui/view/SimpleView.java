@@ -1,31 +1,34 @@
 package org.fireflyest.craftgui.view;
 
-import org.fireflyest.craftgui.api.View;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.fireflyest.craftgui.api.View;
 
 public class SimpleView implements View<SimplePage> {
 
     // 插件名称用于在监听事件时判断点击的是否本插件的界面
-    protected final String pluginName;
+    protected final String title;
+    protected final int size;
     // 存储各个target的页面
     protected final Map<String, SimplePage> pageMap = new HashMap<>();
 
-    public SimpleView(String pluginName) {
-        this.pluginName = pluginName;
+    /**
+     * 示例界面
+     * @param title 标题
+     */
+    public SimpleView(String title, int size) {
+        this.title = title;
+        this.size = size;
     }
 
     @Override
-    public SimplePage getFirstPage(String target){
-        if (!pageMap.containsKey(target)){
-            pageMap.put(target, new SimplePage(pluginName, target, 0, 27));
-        }
-        return pageMap.get(target);
+    public SimplePage getFirstPage(String target) {
+        return pageMap.computeIfAbsent(target, k -> new SimplePage(title, target, 0, size));
     }
 
     @Override
     public void removePage(String target) {
-        pageMap.remove(target);
+        this.pageMap.remove(target);
     }
 }
