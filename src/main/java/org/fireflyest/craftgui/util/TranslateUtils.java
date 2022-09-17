@@ -28,10 +28,10 @@ public class TranslateUtils {
             put("ru-RU", MaterialRussian.getInstance()); // 俄语 Russian
         }
     };
-    private static String language;
+    private static String language = Locale.getDefault().toLanguageTag();
 
     private TranslateUtils(){
-        setLocale(Locale.getDefault());
+        // 工具类
     }
 
     /**
