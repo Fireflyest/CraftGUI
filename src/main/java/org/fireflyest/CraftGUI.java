@@ -33,7 +33,7 @@ public final class CraftGUI extends JavaPlugin {
         // 新建导航
         ViewGuideImpl viewGuideImpl = new ViewGuideImpl();
         this.getServer().getServicesManager().register(ViewGuide.class, viewGuideImpl, plugin, ServicePriority.Normal);
-        viewGuideImpl.addView(SIMPLE_VIEW, new SimpleView("[CraftGUI]", 27));
+        viewGuideImpl.addView(SIMPLE_VIEW, new SimpleView("[CraftGUI]", 27, 7));
         CraftGUI.setViewGuide(viewGuideImpl);
 
         // 注册监听
