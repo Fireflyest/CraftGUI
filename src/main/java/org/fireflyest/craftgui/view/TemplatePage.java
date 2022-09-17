@@ -11,15 +11,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.fireflyest.craftgui.api.ViewPage;
 
-<<<<<<< HEAD
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-=======
->>>>>>> 9d73041 (更新页模板)
 /**
  * 模板页面
  * @author Fireflyest
@@ -69,7 +60,7 @@ public abstract class TemplatePage implements ViewPage {
 
     @Override
     public @Nonnull Map<Integer, ItemStack> getButtonMap() {
-        return new HashMap<>(itemMap);
+        return itemMap;
     }
 
     @Override
