@@ -65,7 +65,7 @@ public class ViewGuideImpl implements ViewGuide {
      */
     public ViewGuideImpl() {
         // 数据包监听s
-        protocolManager = ProtocolLibrary.getProtocolManager();
+        this.protocolManager = ProtocolLibrary.getProtocolManager();
         this.createPacketListener();
     }
 

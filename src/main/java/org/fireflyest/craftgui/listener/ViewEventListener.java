@@ -151,7 +151,15 @@ public class ViewEventListener implements Listener {
         guide.removePacket(playerName);
     }
 
-
+    /**
+     * 放置物品操作
+     * @param clickItem 点击物品
+     * @param cursor 放置物品
+     * @param human 玩家
+     * @param clickType 点击类型
+     * @param slot 点击位置
+     * @param inventoryView 界面
+     */
     private void place(ItemStack clickItem, ItemStack cursor, Player human, ClickType clickType, int slot, InventoryView inventoryView) {
         String playerName = human.getName();
         // 按钮行为
