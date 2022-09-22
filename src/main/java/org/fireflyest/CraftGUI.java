@@ -24,12 +24,13 @@ public final class CraftGUI extends JavaPlugin {
         new Metrics(this, 15676);
 
         // 新建导航
+        this.getLogger().info("Try to add packet listener.");
         ViewGuideImpl viewGuideImpl = new ViewGuideImpl();
-        this.getLogger().info("Registering service of guide");
+        this.getLogger().info("Registering service of guide.");
         this.getServer().getServicesManager().register(ViewGuide.class, viewGuideImpl, this, ServicePriority.Normal);
 
         // 注册监听
-        this.getLogger().info("Registering listener for view event");
+        this.getLogger().info("Registering listener for view event.");
         this.getServer().getPluginManager().registerEvents(new ViewEventListener(viewGuideImpl), this);
     }
 
@@ -37,9 +38,12 @@ public final class CraftGUI extends JavaPlugin {
     public void onDisable() {
         // 关闭协议监听
         ProtocolLibrary.getProtocolManager().removePacketListeners(this);
+        this.getLogger().info("Removed packet listener.");
 
         // 关闭所有数据库连接
+        this.getLogger().info("Closing SQL connect.");
         SQLConnector.closeAll();
+        this.getLogger().info("Closed all SQL connect.");
     }
 
     /**
