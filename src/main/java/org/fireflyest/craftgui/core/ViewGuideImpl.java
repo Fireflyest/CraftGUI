@@ -56,7 +56,7 @@ public class ViewGuideImpl implements ViewGuide {
 
     private final Map<String, PacketContainer> packets = new ConcurrentHashMap<>();
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     private static final ItemStack AIR = new ItemStack(Material.AIR);
 
