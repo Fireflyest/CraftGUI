@@ -1,15 +1,18 @@
 package org.fireflyest.util;
 
 import com.cryptomorin.xseries.XMaterial;
+
 import de.tr7zw.changeme.nbtapi.NBTItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 物品工具类
@@ -20,28 +23,50 @@ public class ItemUtils {
     private ItemUtils(){
     }
 
+    /**
+     * 设置物品NBT
+     * @param item 物品
+     * @param key 键
+     * @param value 值
+     */
     public static void setItemNbt(@Nonnull ItemStack item, String key, Object value) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return;
         NBTItem nbtItem = new NBTItem(item, true);
         nbtItem.setObject(key, value);
     }
 
+    /**
+     * 获取物品NBT
+     * @param item 物品
+     * @param key 键
+     * @return 值
+     */
     public static String getItemNbt(@Nonnull ItemStack item, String key) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return null;
         NBTItem nbtItem = new NBTItem(item);
         return nbtItem.getString(key);
     }
 
+    /**
+     * 设置物品自定义模型
+     * @param item 物品
+     * @param model 模型
+     */
     public static void setItemModel(@Nonnull ItemStack item, int model) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return;
         ItemMeta meta = item.getItemMeta();
-        if(meta != null){
+        if (meta != null) {
             meta.setCustomModelData(model);
             item.setItemMeta(meta);
         }
     }
 
-    public static boolean hasCustomNBT(@Nonnull ItemStack item){
+    /**
+     * 物品是否有自定义NBT
+     * @param item 物品
+     * @return
+     */
+    public static boolean hasCustomNBT(@Nonnull ItemStack item) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return false;
         NBTItem nbtItem = new NBTItem(item);
         return nbtItem.hasCustomNbtData();
@@ -55,7 +80,7 @@ public class ItemUtils {
     public static void setDisplayName(@Nonnull ItemStack item, String name) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return;
         ItemMeta meta = item.getItemMeta();
-        if(meta != null){
+        if (meta != null) {
             meta.setDisplayName(name.replace("&", "§"));
             item.setItemMeta(meta);
         }
@@ -66,10 +91,10 @@ public class ItemUtils {
      * @param item 物品
      * @param lore 注释
      */
-    public static void addLore(@Nonnull ItemStack item, String lore){
+    public static void addLore(@Nonnull ItemStack item, String lore) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return;
         ItemMeta meta = item.getItemMeta();
-        if(meta != null){
+        if (meta != null) {
             List<String> lores = item.getItemMeta().getLore();
             if (lores == null) {
                 lores = new ArrayList<>();
@@ -86,15 +111,15 @@ public class ItemUtils {
      * @param lore 注释
      * @param line 行
      */
-    public static void setLore(@Nonnull ItemStack item, String lore, int line){
+    public static void setLore(@Nonnull ItemStack item, String lore, int line) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return;
         ItemMeta meta = item.getItemMeta();
-        if(meta != null){
+        if (meta != null) {
             List<String> lores = item.getItemMeta().getLore();
             if (lores == null) {
                 lores = new ArrayList<>();
             }
-            while (lores.size() <= line){
+            while (lores.size() <= line) {
                 lores.add("");
             }
             lores.set(line, lore);
@@ -108,7 +133,7 @@ public class ItemUtils {
      * @param item 物品
      * @param player 头颅
      */
-    public static void setSkullOwner(@Nonnull ItemStack item, OfflinePlayer player){
+    public static void setSkullOwner(@Nonnull ItemStack item, OfflinePlayer player) {
         if (item.getType() != XMaterial.PLAYER_HEAD.parseMaterial()) return;
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         if (meta != null) {
