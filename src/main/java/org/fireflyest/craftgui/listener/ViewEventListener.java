@@ -313,13 +313,11 @@ public class ViewEventListener implements Listener {
                         true);
                 Bukkit.getPluginManager().callEvent(clickEvent);
                 // 刷新页面
-                if (!clickEvent.needRefresh()) return;
-                if (isShiftClick) {
-                    guide.refreshPage(playerName);
-                } else {
+                if (clickEvent.needRefresh()) {
                     guide.updateButton(human, slot, clickItem);
+                    guide.updateButton(human, -1, ViewGuideImpl.AIR);
                 }
-                return;
+                break;
             case ButtonAction.ACTION_BACK:
                 guide.back(human);
                 human.playSound(human.getLocation(), clickSound, 1F, 1F);
