@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nonnull;
@@ -58,7 +59,7 @@ public class ViewGuideImpl implements ViewGuide {
 
     public static final boolean DEBUG = false;
 
-    private static final ItemStack AIR = new ItemStack(Material.AIR);
+    public static final ItemStack AIR = new ItemStack(Material.AIR);
 
     /**
      * 导航实现类
@@ -254,18 +255,54 @@ public class ViewGuideImpl implements ViewGuide {
     @Override
     public void refreshPage(String... playerNames) {
         for (String playerName : playerNames) {
-            // 获取刷新页面
-            ViewPage page = this.getUsingPage(playerName);
             // 是否浏览者
-            if (page == null) continue;
-            // 刷新物品
-            page.refreshPage();
+            if (unUsed(playerName)) continue;
             // 发包
             if (DEBUG) {
                 String info = String.format("%s refresh", playerName);
                 CraftGUI.getPlugin().getLogger().info(info);
             }
             this.sendItemsPacketAsynchronously(playerName);
+        }
+    }
+
+    //@Override
+    public void refreshPages(@Nonnull String viewName, @Nonnull String target) {
+        if (DEBUG) {
+            String info = String.format("view(%s) of target(%s) refresh", viewName, target);
+            CraftGUI.getPlugin().getLogger().info(info);
+        }
+        for (Entry<String, String> usingViewEntry : viewUsing.entrySet()) {
+            String playerName = usingViewEntry.getKey();
+            String usingViewName = usingViewEntry.getValue();
+            // 判断是否浏览要刷新的界面
+            if (!viewName.equals(usingViewName)) continue;
+            // 获取浏览的页面，如果目标符合就刷新
+            ViewPage page = viewPageUsing.get(playerName);
+            if (page != null && target.equals(page.getTarget())) {
+                this.refreshPage(playerName);
+            }
+        }
+    }
+
+    //@Override
+    public void updateButton(@Nonnull Player player, int slot, @Nonnull ItemStack buttonItem) {
+        int window = 0;
+        if (packets.containsKey(player.getName())) {
+            window = packets.get(player.getName()).getIntegers().read(0);
+        }
+        PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SET_SLOT);
+        packet.getIntegers().write(0, window);
+        packet.getIntegers().write(2, slot);
+        packet.getItemModifier().write(0, buttonItem);
+        try {
+            if (DEBUG) {
+                String info = String.format("button update %s on %s", buttonItem.getType().name(),  slot);
+                CraftGUI.getPlugin().getLogger().info(info);
+            }
+            protocolManager.sendServerPacket(player, packet);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
@@ -329,11 +366,20 @@ public class ViewGuideImpl implements ViewGuide {
                 // 写入
                 packetContainer.getItemListModifier().write(0, itemStacks);
                 // 1.17开始才会更新鼠标上的物品
+                // TODO: 改成发送单个物品
                 if (CraftGUI.BUKKIT_VERSION > 16) packetContainer.getItemModifier().write(0, AIR);
                 packets.put(playerName, packetContainer);
 
             }
         }.runTaskAsynchronously(CraftGUI.getPlugin());
+    }
+
+    /**
+     * 删除玩家存包
+     * @param playerName 玩家名称
+     */
+    public void removePacket(String playerName) {
+        packets.remove(playerName);
     }
 
     /**
@@ -388,14 +434,6 @@ public class ViewGuideImpl implements ViewGuide {
                         ViewGuideImpl.this.sendItemsPacketAsynchronously(playerName);
                     }
                 });
-    }
-
-    /**
-     * 删除玩家存包
-     * @param playerName 玩家名称
-     */
-    public void removePacket(String playerName) {
-        packets.remove(playerName);
     }
 
 }
