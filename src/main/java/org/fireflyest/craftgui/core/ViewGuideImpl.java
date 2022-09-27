@@ -288,7 +288,9 @@ public class ViewGuideImpl implements ViewGuide {
     //@Override
     public void updateButton(@Nonnull Player player, int slot, @Nonnull ItemStack buttonItem) {
         int window = 0;
-        if (packets.containsKey(player.getName())) {
+        if (slot == -1) {
+            window = -1;
+        } else if (packets.containsKey(player.getName())) {
             window = packets.get(player.getName()).getIntegers().read(0);
         }
         PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SET_SLOT);
@@ -366,7 +368,6 @@ public class ViewGuideImpl implements ViewGuide {
                 // 写入
                 packetContainer.getItemListModifier().write(0, itemStacks);
                 // 1.17开始才会更新鼠标上的物品
-                // TODO: 改成发送单个物品
                 if (CraftGUI.BUKKIT_VERSION > 16) packetContainer.getItemModifier().write(0, AIR);
                 packets.put(playerName, packetContainer);
 
