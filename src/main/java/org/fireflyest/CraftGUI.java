@@ -30,7 +30,7 @@ public final class CraftGUI extends JavaPlugin {
         this.getServer().getServicesManager().register(ViewGuide.class, viewGuideImpl, this, ServicePriority.Normal);
 
         // 注册监听
-        this.getLogger().info("Registering listener for view event.");
+        this.getLogger().info("Registering listener for view events.");
         this.getServer().getPluginManager().registerEvents(new ViewEventListener(viewGuideImpl), this);
     }
 
@@ -41,9 +41,9 @@ public final class CraftGUI extends JavaPlugin {
         this.getLogger().info("Removed packet listener.");
 
         // 关闭所有数据库连接
-        this.getLogger().info("Closing SQL connect.");
+        this.getLogger().info("Closing SQL connections.");
         SQLConnector.closeAll();
-        this.getLogger().info("Closed all SQL connect.");
+        this.getLogger().info("All SQL connections are closed.");
     }
 
     /**

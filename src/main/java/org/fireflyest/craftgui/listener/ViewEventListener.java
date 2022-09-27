@@ -313,7 +313,12 @@ public class ViewEventListener implements Listener {
                         true);
                 Bukkit.getPluginManager().callEvent(clickEvent);
                 // 刷新页面
-                if (clickEvent.needRefresh()) guide.refreshPage(playerName);
+                if (!clickEvent.needRefresh()) return;
+                if (isShiftClick) {
+                    guide.refreshPage(playerName);
+                } else {
+                    guide.updateButton(human, slot, clickItem);
+                }
                 return;
             case ButtonAction.ACTION_BACK:
                 guide.back(human);
@@ -335,6 +340,13 @@ public class ViewEventListener implements Listener {
                 guide.jump(human, NumberConversions.toInt(buttonValue));
                 human.playSound(human.getLocation(), pageSound, 1F, 1F);
                 break;
+            case ButtonAction.ACTION_PAGE_OPEN:
+                if (buttonValue == null || !buttonValue.contains(".")) break;
+                String view = buttonValue.substring(0, buttonValue.lastIndexOf("."));
+                String pageTarget = buttonValue.substring(buttonValue.lastIndexOf(".") + 1);
+                human.playSound(human.getLocation(), clickSound, 1F, 1F);
+                guide.openView(human, view, pageTarget);
+                break;
             case ButtonAction.ACTION_CONSOLE_COMMAND_SEND:
                 if (buttonValue == null || "".equals(buttonValue)) break;
                 String command = buttonValue.replace("%player%", playerName);
@@ -346,13 +358,6 @@ public class ViewEventListener implements Listener {
                 String playerCommand = buttonValue.replace("%player%", playerName);
                 human.performCommand(playerCommand);
                 human.playSound(human.getLocation(), clickSound, 1F, 1F);
-                break;
-            case ButtonAction.ACTION_PAGE_OPEN:
-                if (buttonValue == null || !buttonValue.contains(".")) break;
-                String view = buttonValue.substring(0, buttonValue.lastIndexOf("."));
-                String pageTarget = buttonValue.substring(buttonValue.lastIndexOf(".") + 1);
-                human.playSound(human.getLocation(), clickSound, 1F, 1F);
-                guide.openView(human, view, pageTarget);
                 break;
             default:
         }
