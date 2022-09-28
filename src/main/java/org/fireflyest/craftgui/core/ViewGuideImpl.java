@@ -266,7 +266,7 @@ public class ViewGuideImpl implements ViewGuide {
         }
     }
 
-    //@Override
+    @Override
     public void refreshPages(@Nonnull String viewName, @Nonnull String target) {
         if (DEBUG) {
             String info = String.format("view(%s) of target(%s) refresh", viewName, target);
@@ -285,7 +285,7 @@ public class ViewGuideImpl implements ViewGuide {
         }
     }
 
-    //@Override
+    @Override
     public void updateButton(@Nonnull Player player, int slot, @Nonnull ItemStack buttonItem) {
         int window = 0;
         if (slot == -1) {
