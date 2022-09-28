@@ -1,10 +1,12 @@
 package org.fireflyest.craftgui.api;
 
-import org.bukkit.entity.Player;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Set;
+
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * 视图导航
@@ -77,7 +79,22 @@ public interface ViewGuide {
      * 刷新玩家的页面，可能异步调用
      * @param playerNames 玩家名称
      */
-    void refreshPage(String... playerNames);
+    void refreshPage(@Nonnull String... playerNames);
+
+    /**
+     * 刷新指定的界面，所有正在浏览的玩家都会收到刷新
+     * @param viewName 界面名称
+     * @param target 页面
+     */
+    void refreshPages(@Nonnull String viewName, @Nonnull String target);
+
+    /**
+     * 更新玩家浏览界面中的某个按钮
+     * @param player 玩家
+     * @param slot 插槽
+     * @param buttonItem 按钮物品
+     */
+    void updateButton(@Nonnull Player player, int slot, @Nonnull ItemStack buttonItem);
 
     /**
      * 获取所有正在浏览的玩家
