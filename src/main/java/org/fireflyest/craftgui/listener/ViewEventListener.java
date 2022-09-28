@@ -313,10 +313,7 @@ public class ViewEventListener implements Listener {
                         true);
                 Bukkit.getPluginManager().callEvent(clickEvent);
                 // 刷新页面
-                if (clickEvent.needRefresh()) {
-                    guide.updateButton(human, slot, clickItem);
-                    guide.updateButton(human, -1, ViewGuideImpl.AIR);
-                }
+                if (clickEvent.needRefresh()) guide.updateButton(human, slot, clickItem);
                 break;
             case ButtonAction.ACTION_BACK:
                 guide.back(human);
@@ -350,12 +347,14 @@ public class ViewEventListener implements Listener {
                 String command = buttonValue.replace("%player%", playerName);
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
                 human.playSound(human.getLocation(), clickSound, 1F, 1F);
+                guide.updateButton(human, slot, clickItem);
                 break;
             case ButtonAction.ACTION_PLAYER_COMMAND_SEND:
                 if (buttonValue == null || "".equals(buttonValue)) break;
                 String playerCommand = buttonValue.replace("%player%", playerName);
                 human.performCommand(playerCommand);
                 human.playSound(human.getLocation(), clickSound, 1F, 1F);
+                guide.updateButton(human, slot, clickItem);
                 break;
             default:
         }
