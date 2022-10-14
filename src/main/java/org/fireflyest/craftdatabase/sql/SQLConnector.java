@@ -1,7 +1,5 @@
 package org.fireflyest.craftdatabase.sql;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,6 +7,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * 类连接池
@@ -60,15 +61,16 @@ public class SQLConnector {
         try {
             // 判断是否已连接
             if (connection != null && !connection.isClosed()) return connection;
-            if (connectInfoMap.containsKey(url)){
+            ConnectInfo connectInfo = connectInfoMap.get(url);
+            if (connectInfo != null) {
                 // 重新连接
-                connection = connect(connectInfoMap.get(url));
+                connection = connect(connectInfo);
             } else {
                 // 尝试建立连接
                 connection = connect(new ConnectInfo(url));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return connection;
     }
@@ -82,7 +84,7 @@ public class SQLConnector {
     public static Connection connect(@Nonnull ConnectInfo connectInfo) throws SQLException {
         // 连接并存储
         Connection connection = DriverManager.getConnection(
-                connectInfo.url ,
+                connectInfo.url,
                 connectInfo.user,
                 connectInfo.password);
         connectionMap.put(connectInfo.url, connection);
@@ -94,13 +96,13 @@ public class SQLConnector {
      * 关闭连接
      * @param url 连接地址
      */
-    public static void close(@Nonnull String url){
+    public static void close(@Nonnull String url) {
         Connection connection = connectionMap.get(url);
         if (connection == null) return;
         try {
             if (!connection.isClosed()) connection.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         connectionMap.remove(url);
     }
@@ -108,13 +110,13 @@ public class SQLConnector {
     /**
      * 关闭所有
      */
-    public static void closeAll(){
+    public static void closeAll() {
         for (Connection connection : connectionMap.values()) {
             try {
                 if (connection == null || connection.isClosed()) continue;
                 connection.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
     }
@@ -133,9 +135,9 @@ public class SQLConnector {
             this.password = null;
         }
 
-        public String url;
-        public String user;
-        public String password;
+        public final String url;
+        public final String user;
+        public final String password;
     }
 
 }
