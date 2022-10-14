@@ -40,7 +40,7 @@ public interface ViewGuide {
      * @return 页面
      */
     @Nullable
-    ViewPage getUsingPage(@Nonnull String playerName);
+    ViewPage getUsingPage(String playerName);
 
     /**
      * 获取某个玩家正在浏览的界面
@@ -48,7 +48,7 @@ public interface ViewGuide {
      * @return 界面
      */
     @Nullable
-    String getUsingView(@Nonnull String playerName);
+    String getUsingView(String playerName);
 
     /**
      * 玩家切换到下一页
@@ -79,7 +79,7 @@ public interface ViewGuide {
      * 刷新玩家的页面，可能异步调用
      * @param playerNames 玩家名称
      */
-    void refreshPage(@Nonnull String... playerNames);
+    void refreshPage(String... playerNames);
 
     /**
      * 刷新指定的界面，所有正在浏览的玩家都会收到刷新
@@ -107,6 +107,6 @@ public interface ViewGuide {
      * @param playerName 玩家名称
      * @return 是否浏览者
      */
-    boolean unUsed(@Nonnull String playerName);
+    boolean unUsed(String playerName);
 
 }
