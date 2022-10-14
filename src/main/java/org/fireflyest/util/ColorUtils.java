@@ -34,10 +34,11 @@ public class ColorUtils {
      * @param num 过渡颜色数量，不少于2
      * @return 过渡颜色
      */
-    public static Color[] gradient(@Nonnull String start, @Nonnull String end, int num) {
-        Color[] colors = new Color[num];
+    public static String[] gradient(@Nonnull String start, @Nonnull String end, int num) {
         // 判断格式是否正确
         if (num < 2) num = 2;
+        if (num > 255) num = 255;
+        String[] colors = new String[num];
         if (!colorPattern.matcher(start).matches() || !colorPattern.matcher(end).matches()) return colors;
         // 转化成整数计算
         int startColor = Integer.parseInt(start.substring(1), 16);
@@ -50,11 +51,10 @@ public class ColorUtils {
         float deltaG = (gg(endColor) - startG) / (num - 1F);
         float deltaB = (bb(endColor) - startB) / (num - 1F);
         for (int i = 0; i < num; i++) {
-            Color color = Color.fromRGB(
-                    startR + (int) (i * deltaR),
-                    startG + (int) (i * deltaG),
-                    startB + (int) (i * deltaB));
-            colors[i] = color;
+            colors[i] = "#" 
+                + Integer.toHexString(startR + (int) (i * deltaR))
+                + Integer.toHexString(startG + (int) (i * deltaG))
+                + Integer.toHexString(startB + (int) (i * deltaB));
         }
         return colors;
     }
@@ -65,7 +65,7 @@ public class ColorUtils {
      * @return 红色
      */
     public static int rr(int color) {
-        return color >>> 16;
+        return (color & 0xFF0000) >> 16;
     }
 
     /**
@@ -74,8 +74,7 @@ public class ColorUtils {
      * @return 绿色
      */
     public static int gg(int color) {
-        color <<= 16;
-        return color >>> 24;
+        return (color & 0x00FF00) >> 8;
     }
 
     /**
@@ -84,8 +83,7 @@ public class ColorUtils {
      * @return 蓝色
      */
     public static int bb(int color) {
-        color <<= 24;
-        return color >>> 24;
+        return color & 0x0000FF;
     }
 
 }
