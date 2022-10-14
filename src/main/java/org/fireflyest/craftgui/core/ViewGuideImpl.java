@@ -14,13 +14,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -94,12 +95,12 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public ViewPage getUsingPage(@Nonnull String playerName) {
+    public ViewPage getUsingPage(String playerName) {
         return viewPageUsing.get(playerName);
     }
 
     @Override
-    public String getUsingView(@Nonnull String playerName) {
+    public String getUsingView(String playerName) {
         return viewUsing.get(playerName);
     }
 
@@ -207,7 +208,7 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public void openView(@Nonnull Player player, @Nonnull String viewName, String target) {
+    public void openView(@Nonnull Player player, @Nonnull String viewName, @Nullable String target) {
         String playerName = player.getName();
         // 记录玩家返回界面
         viewUsd.computeIfAbsent(playerName, k -> new Stack<>());
@@ -314,7 +315,7 @@ public class ViewGuideImpl implements ViewGuide {
     }
 
     @Override
-    public boolean unUsed(@Nonnull String playerName) {
+    public boolean unUsed(String playerName) {
         return !viewPageUsing.containsKey(playerName);
     }
 
