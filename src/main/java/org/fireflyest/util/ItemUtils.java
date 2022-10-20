@@ -5,6 +5,7 @@ import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -91,15 +92,15 @@ public class ItemUtils {
      * @param item 物品
      * @param lore 注释
      */
-    public static void addLore(@Nonnull ItemStack item, String lore) {
+    public static void addLore(@Nonnull ItemStack item, String... lore) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return;
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            List<String> lores = item.getItemMeta().getLore();
+            List<String> lores = meta.getLore();
             if (lores == null) {
                 lores = new ArrayList<>();
             }
-            lores.add(lore);
+            lores.addAll(Arrays.asList(lore));
             meta.setLore(lores);
             item.setItemMeta(meta);
         }
@@ -118,6 +119,9 @@ public class ItemUtils {
             List<String> lores = item.getItemMeta().getLore();
             if (lores == null) {
                 lores = new ArrayList<>();
+            }
+            if (line > 31) {
+                line = 31;
             }
             while (lores.size() <= line) {
                 lores.add("");
