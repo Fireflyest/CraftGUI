@@ -303,6 +303,7 @@ public class ViewGuideImpl implements ViewGuide {
                 String info = String.format("button update %s on %s", buttonItem.getType().name(),  slot);
                 CraftGUI.getPlugin().getLogger().info(info);
             }
+            // BUG: 低版本报错
             protocolManager.sendServerPacket(player, packet);
         } catch (InvocationTargetException e) {
             e.printStackTrace();

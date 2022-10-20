@@ -16,7 +16,7 @@ import org.fireflyest.util.ColorUtils;
 public class TextColorful {
 
     private static final Pattern attributePattern = Pattern.compile("\\$<([^<]*)>");
-    private static final Pattern varPattern = Pattern.compile("[a-z]{0,}=[#:a-z0-9A-Z]{0,}");
+    private static final Pattern varPattern = Pattern.compile("[a-z]+=[#:a-z0-9A-Z]+");
     private final Gson gson;
     private final Text text;
     private final Text formalText;
@@ -121,9 +121,9 @@ public class TextColorful {
                 int num = NumberConversions.toInt(value.split(":")[2]);
                 String[] colors = ColorUtils.gradient(startColor, endColor, num);
                 // 获取对应的颜色
-                int level = NumberConversions.toInt(value.split(":")[3]);
-                if (level >= colors.length) level = colors.length - 1;
-                if (level < 0) level = 0;
+                int phase = NumberConversions.toInt(value.split(":")[3]);
+                if (phase >= colors.length) phase = colors.length - 1;
+                if (phase < 0) phase = 0;
                 partExtraDTO = new Text.ExtraDTO();
                 partExtraDTO.setBold(extraDTO.getBold());
                 partExtraDTO.setItalic(extraDTO.getItalic());
@@ -131,7 +131,7 @@ public class TextColorful {
                 partExtraDTO.setStrikethrough(extraDTO.getStrikethrough());
                 partExtraDTO.setUnderlined(extraDTO.getUnderlined());
                 partExtraDTO.setText(textValue);
-                partExtraDTO.setColor(colors[level]);
+                partExtraDTO.setColor(colors[phase]);
                 formalText.getExtra().add(partExtraDTO);
                 break;
             case "c": // 颜色 $<c=#FFFFFF>

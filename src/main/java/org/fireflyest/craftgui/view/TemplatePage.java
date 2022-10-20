@@ -50,14 +50,13 @@ public abstract class TemplatePage implements ViewPage {
         this.size = size;
 
         // 界面容器
-        this.updateTitle(title);
+        this.inventory = Bukkit.createInventory(null, size, title);
         // 界面固定按钮
         this.refreshPage();
     }
 
-    @Nonnull
     @Override
-    public Inventory getInventory() {
+    public @Nonnull Inventory getInventory() {
         return inventory;
     }
 
@@ -72,7 +71,7 @@ public abstract class TemplatePage implements ViewPage {
     }
 
     @Override
-    public String getTarget() {
+    public @Nullable String getTarget() {
         return target;
     }
 
@@ -82,22 +81,22 @@ public abstract class TemplatePage implements ViewPage {
     }
 
     @Override
-    public ViewPage getNext() {
+    public @Nullable ViewPage getNext() {
         return next;
     }
 
     @Override
-    public ViewPage getPre() {
+    public @Nullable ViewPage getPre() {
         return pre;
     }
 
     @Override
-    public void setPre(ViewPage pre) {
+    public void setPre(@Nullable ViewPage pre) {
         this.pre = pre;
     }
 
     @Override
-    public void setNext(ViewPage next) {
+    public void setNext(@Nullable ViewPage next) {
         this.next = next;
     }
 
