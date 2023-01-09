@@ -54,7 +54,6 @@ public class ReflectionUtils {
      * <p>In accordance with {@link Field#set(Object, Object)} semantics, the new value
      * is automatically unwrapped if the underlying field has a primitive type.
      * <p>This method does not support setting {@code static final} fields.
-     * <p>Thrown exceptions are handled via a call to {@link #handleReflectionException(Exception)}.
      * @param field the field to set
      * @param target the target object on which to set the field
      *      (or {@code null} for a static field)

@@ -65,7 +65,7 @@ public class ItemUtils {
     /**
      * 物品是否有自定义NBT
      * @param item 物品
-     * @return
+     * @return 是否有自定义NBT
      */
     public static boolean hasCustomNBT(@Nonnull ItemStack item) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return false;
