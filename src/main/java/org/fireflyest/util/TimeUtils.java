@@ -62,7 +62,7 @@ public class TimeUtils {
     /**
      * 转换时间为Instant对象
      * @param time 时间
-     * @return
+     * @return 转化为对象
      */
     public static Instant getInstant(long time) {
         return Instant.ofEpochMilli(time);
