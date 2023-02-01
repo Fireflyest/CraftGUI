@@ -291,6 +291,8 @@ public class DaoProcessor extends AbstractProcessor {
         if (!returnArray && !returnAll) {
             if ("boolean".equals(returnType)) {
                 javaFileBuilder.append("\n\t\tif (returnValue == null) return false;");
+            } else if (STRING.equals(returnType)) {
+                javaFileBuilder.append("\n\t\tif (returnValue == null) return \"\";");
             } else {
                 javaFileBuilder.append("\n\t\tif (returnValue == null) return 0;");
             }
