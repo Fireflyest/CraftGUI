@@ -19,6 +19,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -138,6 +139,25 @@ public class ViewEventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClose(InventoryCloseEvent event) {
+        String playerName = event.getPlayer().getName();
+        // 判断是否在浏览
+        if (guide.unUsed(playerName)) return;
+
+        // 关闭界面
+        if (guide.getUsingPage(playerName) != null) {
+            if (ViewGuideImpl.DEBUG) CraftGUI.getPlugin().getLogger().info("onInventoryClose");
+            guide.closeView(playerName);
+        }
+        // 删除数据包
+        guide.removePacket(playerName);
+    }
+
+    /**
+     * 玩家离线
+     * @param event 离线事件
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerQuit(PlayerQuitEvent event) {
         String playerName = event.getPlayer().getName();
         // 判断是否在浏览
         if (guide.unUsed(playerName)) return;
