@@ -260,12 +260,14 @@ public class DaoProcessor extends AbstractProcessor {
                         .append("(\"").append(columnInfo.columnName).append("\"));");
             }
         } else {
-            TableProcessor.ColumnInfo columnInfo = TableProcessor.getTableColumns(tableName).get(selectColumn);
+            TableProcessor.ColumnInfo columnInfo = TableProcessor.getTableColumns(tableName).get(selectColumn.replace("`", ""));
             javaFileBuilder.append("\n\t\t\t\t")
                     .append(objType)
                     .append(" obj = resultSet.get")
                     .append(this.toSqlDataType(columnInfo.dataType))
-                    .append("(\"").append(columnInfo.columnName).append("\");");
+                    .append("(\"")
+                    .append(columnInfo.columnName)
+                    .append("\");");
         }
         javaFileBuilder.append("\n\t\t\t\tobjList.add(obj);");
         javaFileBuilder.append("\n\t\t\t}");
