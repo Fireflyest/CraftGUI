@@ -3,6 +3,7 @@ package org.fireflyest.craftgui.util;
 import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.NumberConversions;
 import org.fireflyest.craftgui.button.ButtonAction;
 
 import javax.annotation.Nonnull;
@@ -37,7 +38,7 @@ public class ViewItemUtils {
     public static int getItemAction(@Nonnull ItemStack item) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return 0;
         NBTItem nbtItem = new NBTItem(item);
-        return nbtItem.getInteger(ButtonAction.NBT_ACTION_KEY);
+        return NumberConversions.toInt(nbtItem.getString(ButtonAction.NBT_ACTION_KEY));
     }
 
 }
