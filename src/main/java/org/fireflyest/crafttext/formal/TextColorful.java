@@ -65,15 +65,14 @@ public class TextColorful {
         for (Text.ExtraDTO extraDTO : text.getExtra()) {
             String sentence = extraDTO.getText();
             Matcher attributeMatcher = attributePattern.matcher(sentence);
-            String[] splitTexts = null;
-            int pos = 0;
+            String[] splitTexts = sentence.split("\\$<([^<]*)>");
+            int pos = 1;
 
             // 由属性分割字符串，然后给分割后的字符串附上属性
             while (attributeMatcher.find()) {
-                if (splitTexts == null) splitTexts = sentence.split("\\$<([^<]*)>");
-                if (pos >= splitTexts.length) break;
                 String attribute = attributeMatcher.group();
-                String textValue = splitTexts[++pos];
+                if (pos == splitTexts.length) break;
+                String textValue = splitTexts[pos++];
                 Matcher varMatcher = varPattern.matcher(attribute);
 
                 // 获取属性中的全部变量键值对
@@ -97,7 +96,7 @@ public class TextColorful {
         String startColor;
         String endColor;
         switch (key) {
-            case "hg": // 水平渐变 $<hg=#FFFFFF:#000000>
+            case "hg": // 水平渐变§r $<hg=#FFFFFF:#000000>
                 startColor = value.split(":")[0];
                 endColor = value.split(":")[1];
                 if (startColor == null || endColor == null) return;
@@ -114,7 +113,7 @@ public class TextColorful {
                     formalText.getExtra().add(partExtraDTO);
                 }
                 break;
-            case "vg": // 垂直渐变 $<vg=#FFFFFF:#000000:5:4>
+            case "vg": // 垂直渐变 §r$<vg=#FFFFFF:#000000:5:4>
                 startColor = value.split(":")[0];
                 endColor = value.split(":")[1];
                 if (startColor == null || endColor == null) return;
@@ -135,7 +134,7 @@ public class TextColorful {
                 partExtraDTO.setColor(colors[phase]);
                 formalText.getExtra().add(partExtraDTO);
                 break;
-            case "c": // 颜色 $<c=#FFFFFF>
+            case "c": // 颜色 §r$<c=#FFFFFF>
                 partExtraDTO = new Text.ExtraDTO();
                 partExtraDTO.setBold(extraDTO.getBold());
                 partExtraDTO.setItalic(extraDTO.getItalic());
