@@ -98,7 +98,7 @@ public class ItemBuilder {
         if (model != -1) meta.setCustomModelData(model);
         item.setItemMeta(meta);
         // 特殊数据
-        NBTItem nbtItem = new NBTItem(item, true);
+        NBTItem nbtItem = new NBTItem(item);
         // 颜色
         if (colorful){
             NBTCompound display = nbtItem.getCompound("display");
@@ -120,6 +120,7 @@ public class ItemBuilder {
                 nbtItem.setObject(entry.getKey(), entry.getValue());
             }
         }
+        item = nbtItem.getItem();
         return item;
     }
 
