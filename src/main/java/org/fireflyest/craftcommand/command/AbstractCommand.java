@@ -92,7 +92,7 @@ public abstract class AbstractCommand {
      */
     @Nullable
     protected List<String> firstArgumentTab(@Nonnull CommandSender sender, @Nonnull String arg) {
-        return this.getArgumentTab(0, arg);
+        return this.getArgumentTab(0, sender, arg);
     }
 
     /**
@@ -103,7 +103,7 @@ public abstract class AbstractCommand {
      */
     @Nullable
     protected List<String> secondArgumentTab(@Nonnull CommandSender sender, String arg) {
-        return this.getArgumentTab(1, arg);
+        return this.getArgumentTab(1, sender, arg);
     }
 
     /**
@@ -114,7 +114,7 @@ public abstract class AbstractCommand {
      */
     @Nullable
     protected List<String> thirdArgumentTab(@Nonnull CommandSender sender, String arg) {
-        return this.getArgumentTab(2, arg);
+        return this.getArgumentTab(2, sender, arg);
     }
 
     /**
@@ -124,8 +124,8 @@ public abstract class AbstractCommand {
      * @return 提示列表
      */
     @Nullable
-    private List<String> getArgumentTab(int argIndex, String arg) {
-        return arguments.get(argIndex).tab(arg);
+    private List<String> getArgumentTab(int argIndex, @Nonnull CommandSender sender, String arg) {
+        return arguments.get(argIndex).tab(sender, arg);
     }
 
 

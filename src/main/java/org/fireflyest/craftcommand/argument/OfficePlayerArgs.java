@@ -3,13 +3,16 @@ package org.fireflyest.craftcommand.argument;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 
 public class OfficePlayerArgs implements Argument {
 
     @Override
-    public List<String> tab(String arg) {
+    public List<String> tab(@Nonnull CommandSender sender, @Nonnull String arg) {
         List<String> argList = new ArrayList<>();
         this.putOfflinePlayer(argList, arg);
         return argList;

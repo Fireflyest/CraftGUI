@@ -99,7 +99,6 @@ public class TableProcessor extends AbstractProcessor {
 
                     tableInfoMap.get(tableName).put(columnName, columnInfo);
                 }
-                break;
             }
         }
         return true;
