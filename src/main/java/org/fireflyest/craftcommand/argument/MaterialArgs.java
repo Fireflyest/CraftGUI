@@ -3,12 +3,15 @@ package org.fireflyest.craftcommand.argument;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 
 public class MaterialArgs implements Argument {
 
     @Override
-    public List<String> tab(String arg) {
+    public List<String> tab(@Nonnull CommandSender sender, @Nonnull String arg) {
         List<String> argList = new ArrayList<>();
         this.putMaterial(argList, arg);
         return argList;
