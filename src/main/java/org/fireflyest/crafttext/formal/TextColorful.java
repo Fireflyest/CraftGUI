@@ -71,6 +71,7 @@ public class TextColorful {
             // 由属性分割字符串，然后给分割后的字符串附上属性
             while (attributeMatcher.find()) {
                 if (splitTexts == null) splitTexts = sentence.split("\\$<([^<]*)>");
+                if (pos >= splitTexts.length) break;
                 String attribute = attributeMatcher.group();
                 String textValue = splitTexts[++pos];
                 Matcher varMatcher = varPattern.matcher(attribute);
