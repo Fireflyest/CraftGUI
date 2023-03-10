@@ -339,6 +339,10 @@ public class ViewEventListener implements Listener {
                 guide.back(human);
                 human.playSound(human.getLocation(), clickSound, 1F, 1F);
                 break;
+            case ButtonAction.ACTION_EDIT:
+                guide.refreshPage(human.getName());
+                human.playSound(human.getLocation(), clickSound, 1F, 1F);
+                break;
             case ButtonAction.ACTION_CLOSE:
                 human.closeInventory();
                 human.playSound(human.getLocation(), clickSound, 1F, 1F);
