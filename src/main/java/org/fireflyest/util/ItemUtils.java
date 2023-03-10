@@ -146,4 +146,13 @@ public class ItemUtils {
         }
     }
 
+    /**
+     * 转化为nbt文本
+     * @param item 物品
+     * @return nbt文本
+     */
+    public static String toNbtString(@Nonnull ItemStack item) {
+        return new NBTItem(item).toString();
+    }
+
 }
