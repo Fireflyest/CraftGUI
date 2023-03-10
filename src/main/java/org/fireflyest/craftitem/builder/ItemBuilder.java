@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.fireflyest.CraftGUI;
-import org.fireflyest.crafttext.formal.TextColorful;
+import org.fireflyest.crafttext.formal.TextColorFormal;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -104,13 +104,13 @@ public class ItemBuilder {
             NBTCompound display = nbtItem.getCompound("display");
             if (display != null) {
                 // name
-                display.setString("Name", new TextColorful(display.getString("Name")).toString());
+                display.setString("Name", new TextColorFormal(display.getString("Name")).toString());
                 // lore
                 NBTList<String> loreList = display.getStringList("Lore");
                 if (loreList != null) {
                     int lorePos = 0;
                     for (String loreString : loreList) {
-                        loreList.set(lorePos++, new TextColorful(loreString).toString());
+                        loreList.set(lorePos++, new TextColorFormal(loreString).toString());
                     }
                 }
             }
