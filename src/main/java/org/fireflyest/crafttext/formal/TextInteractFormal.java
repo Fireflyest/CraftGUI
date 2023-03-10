@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.util.NumberConversions;
 import org.fireflyest.crafttext.data.ClickEventDTO;
+import org.fireflyest.crafttext.data.HoverEventContentsDTO;
 import org.fireflyest.crafttext.data.HoverEventDTO;
 import org.fireflyest.crafttext.data.InteractExtraDTO;
 import org.fireflyest.crafttext.data.InteractText;
@@ -14,7 +15,7 @@ import com.google.gson.Gson;
 
 public class TextInteractFormal {
     private static final Pattern attributePattern = Pattern.compile("\\$<([^<]*)>");
-    private static final Pattern varPattern = Pattern.compile("[a-z]+=[#:a-z0-9A-Z][^,>]+");
+    private static final Pattern varPattern = Pattern.compile("[a-z]+=[#:a-z0-9A-Z][^|>]+");
 
     private final Gson gson;
     private final InteractText originText;
@@ -105,9 +106,19 @@ public class TextInteractFormal {
                         clickEventDTO.setValue(kv[1]);
                     } else if ("he".equals(colorVar[0])) {
                         String[] kv = colorVar[1].split("•");
-                        hoverEventDTO = new HoverEventDTO();
-                        hoverEventDTO.setAction(kv[0]);
-                        hoverEventDTO.setValue(kv[1]);
+                        if (kv.length == 2) {
+                            hoverEventDTO = new HoverEventDTO();
+                            hoverEventDTO.setAction(kv[0]);
+                            hoverEventDTO.setValue(kv[1]);
+                        } else if (kv.length == 3) {
+                            hoverEventDTO = new HoverEventDTO();
+                            HoverEventContentsDTO hoverEventContentsDTO = new HoverEventContentsDTO();
+                            hoverEventContentsDTO.setId(kv[1]);
+                            hoverEventContentsDTO.setTag(kv[2]);
+                            hoverEventDTO.setAction(kv[0]);
+                            hoverEventDTO.setContents(hoverEventContentsDTO);
+                        }
+                        
                     } else {
                         this.formalSentence(extraDTO, clickEventDTO, hoverEventDTO, textValue, colorVar[0], colorVar[1]);
                     }
