@@ -8,6 +8,8 @@ public class HoverEventDTO {
         private String action;
         @SerializedName("value")
         private String value;
+        @SerializedName("contents")
+        private HoverEventContentsDTO contents;
 
         public String getAction() {
             return action;
@@ -20,5 +22,11 @@ public class HoverEventDTO {
         }
         public void setValue(String value) {
             this.value = value;
+        }
+        public HoverEventContentsDTO getContents() {
+            return contents;
+        }
+        public void setContents(HoverEventContentsDTO contents) {
+            this.contents = contents;
         }
 }

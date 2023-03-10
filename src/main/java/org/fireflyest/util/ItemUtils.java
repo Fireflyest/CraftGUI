@@ -152,7 +152,7 @@ public class ItemUtils {
      * @return nbt文本
      */
     public static String toNbtString(@Nonnull ItemStack item) {
-        return new NBTItem(item).toString();
+        return NBTItem.convertItemtoNBT(item).getCompound("tag").toString();
     }
 
 }
