@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 
 public class TextInteractFormal {
     private static final Pattern attributePattern = Pattern.compile("\\$<([^<]*)>");
-    private static final Pattern varPattern = Pattern.compile("[a-z]+=[#:a-z0-9A-Z]+");
+    private static final Pattern varPattern = Pattern.compile("[a-z]+=[#:a-z0-9A-Z][^,>]+");
 
     private final Gson gson;
     private final InteractText originText;
@@ -99,12 +99,12 @@ public class TextInteractFormal {
                 while (varMatcher.find()) {
                     String[] colorVar = varMatcher.group().split("=");
                     if ("ce".equals(colorVar[0])) {
-                        String[] kv = colorVar[1].split("=>");
+                        String[] kv = colorVar[1].split("•");
                         clickEventDTO = new ClickEventDTO();
                         clickEventDTO.setAction(kv[0]);
                         clickEventDTO.setValue(kv[1]);
                     } else if ("he".equals(colorVar[0])) {
-                        String[] kv = colorVar[1].split("=>");
+                        String[] kv = colorVar[1].split("•");
                         hoverEventDTO = new HoverEventDTO();
                         hoverEventDTO.setAction(kv[0]);
                         hoverEventDTO.setValue(kv[1]);
