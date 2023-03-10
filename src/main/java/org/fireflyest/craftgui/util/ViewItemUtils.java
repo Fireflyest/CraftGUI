@@ -25,7 +25,11 @@ public class ViewItemUtils {
     public static String getItemValue(@Nonnull ItemStack item) {
         if (item.getType() == XMaterial.AIR.parseMaterial()) return null;
         NBTItem nbtItem = new NBTItem(item);
-        return nbtItem.getString(ButtonAction.NBT_VALUE_KEY);
+        String value = nbtItem.getString(ButtonAction.NBT_VALUE_KEY);
+        if (value.length() > 2) {
+            return value.substring(1, value.length() - 1);
+        }
+        return value;
     }
 
     public static void setItemAction(@Nonnull ItemStack item, int action) {

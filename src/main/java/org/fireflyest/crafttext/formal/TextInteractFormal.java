@@ -1,34 +1,33 @@
 package org.fireflyest.crafttext.formal;
 
-import com.google.gson.Gson;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.util.NumberConversions;
-import org.fireflyest.crafttext.data.Text;
+import org.fireflyest.crafttext.data.ClickEventDTO;
+import org.fireflyest.crafttext.data.HoverEventDTO;
+import org.fireflyest.crafttext.data.InteractExtraDTO;
+import org.fireflyest.crafttext.data.InteractText;
 import org.fireflyest.util.ColorUtils;
 
-/**
- * @author Fireflyest
- * @since 2022/8/30
- */
-public class TextColorful {
+import com.google.gson.Gson;
 
+public class TextInteractFormal {
     private static final Pattern attributePattern = Pattern.compile("\\$<([^<]*)>");
     private static final Pattern varPattern = Pattern.compile("[a-z]+=[#:a-z0-9A-Z]+");
+
     private final Gson gson;
-    private final Text text;
-    private final Text formalText;
+    private final InteractText originText;
+    private final InteractText formalText;
 
     /**
      * 格式化文本
      * @param string 源文本
      */
-    public TextColorful(String string) {
+    public TextInteractFormal(String string) {
         this.gson = new Gson();
-        this.text = gson.fromJson(string, Text.class);
-        this.formalText = new Text(text.getText());
+        this.originText = gson.fromJson(string, InteractText.class);
+        this.formalText = new InteractText(originText.getText());
 
         this.formalText();
     }
@@ -37,15 +36,15 @@ public class TextColorful {
      * 获取源文本
      * @return 源文本
      */
-    public Text getText() {
-        return text;
+    public InteractText getOriginText() {
+        return originText;
     }
 
     /**
      * 获取格式化文本
      * @return 格式化文本
      */
-    public Text getFormalText() {
+    public InteractText getFormalText() {
         return formalText;
     }
 
@@ -62,23 +61,56 @@ public class TextColorful {
      */
     private void formalText() {
         // 遍历每一个句子
-        for (Text.ExtraDTO extraDTO : text.getExtra()) {
+        for (InteractExtraDTO extraDTO : originText.getExtra()) {
+
             String sentence = extraDTO.getText();
+            // 判断是否有参数
+            if (!sentence.contains("$")) {
+                formalText.getExtra().add(extraDTO);
+                continue;
+            }
+
             Matcher attributeMatcher = attributePattern.matcher(sentence);
             String[] splitTexts = sentence.split("\\$<([^<]*)>");
+
+            InteractExtraDTO startExtraDTO = new InteractExtraDTO();
+            startExtraDTO.setBold(extraDTO.getBold());
+            startExtraDTO.setItalic(extraDTO.getItalic());
+            startExtraDTO.setObfuscated(extraDTO.getObfuscated());
+            startExtraDTO.setStrikethrough(extraDTO.getStrikethrough());
+            startExtraDTO.setUnderlined(extraDTO.getUnderlined());
+            startExtraDTO.setText(splitTexts[0]);
+            startExtraDTO.setColor(extraDTO.getColor());
+            formalText.getExtra().add(startExtraDTO);
+
             int pos = 1;
 
             // 由属性分割字符串，然后给分割后的字符串附上属性
             while (attributeMatcher.find()) {
                 String attribute = attributeMatcher.group();
+                
                 if (pos == splitTexts.length) break;
                 String textValue = splitTexts[pos++];
                 Matcher varMatcher = varPattern.matcher(attribute);
 
+                ClickEventDTO clickEventDTO = null;
+                HoverEventDTO hoverEventDTO = null;
                 // 获取属性中的全部变量键值对
                 while (varMatcher.find()) {
                     String[] colorVar = varMatcher.group().split("=");
-                    this.formalSentence(extraDTO, textValue, colorVar[0], colorVar[1]);                    
+                    if ("ce".equals(colorVar[0])) {
+                        String[] kv = colorVar[1].split("=>");
+                        clickEventDTO = new ClickEventDTO();
+                        clickEventDTO.setAction(kv[0]);
+                        clickEventDTO.setValue(kv[1]);
+                    } else if ("he".equals(colorVar[0])) {
+                        String[] kv = colorVar[1].split("=>");
+                        hoverEventDTO = new HoverEventDTO();
+                        hoverEventDTO.setAction(kv[0]);
+                        hoverEventDTO.setValue(kv[1]);
+                    } else {
+                        this.formalSentence(extraDTO, clickEventDTO, hoverEventDTO, textValue, colorVar[0], colorVar[1]);
+                    }
                 }
             }
         }
@@ -91,8 +123,9 @@ public class TextColorful {
      * @param key 属性键
      * @param value 属性值
      */
-    private void formalSentence(Text.ExtraDTO extraDTO, String textValue, String key, String value) {
-        Text.ExtraDTO partExtraDTO;
+    private void formalSentence(InteractExtraDTO extraDTO, ClickEventDTO clickEventDTO, HoverEventDTO hoverEventDTO, 
+            String textValue, String key, String value) {
+        InteractExtraDTO partExtraDTO;
         String startColor;
         String endColor;
         switch (key) {
@@ -102,7 +135,7 @@ public class TextColorful {
                 if (startColor == null || endColor == null) return;
                 int charPos = 0;
                 for (String color : ColorUtils.gradient(startColor, endColor, textValue.length())) {
-                    partExtraDTO = new Text.ExtraDTO();
+                    partExtraDTO = new InteractExtraDTO();
                     partExtraDTO.setBold(extraDTO.getBold());
                     partExtraDTO.setItalic(extraDTO.getItalic());
                     partExtraDTO.setObfuscated(extraDTO.getObfuscated());
@@ -110,6 +143,8 @@ public class TextColorful {
                     partExtraDTO.setUnderlined(extraDTO.getUnderlined());
                     partExtraDTO.setText(String.valueOf(textValue.charAt(charPos++)));
                     partExtraDTO.setColor(color);
+                    partExtraDTO.setClickEvent(clickEventDTO);
+                    partExtraDTO.setHoverEvent(hoverEventDTO);
                     formalText.getExtra().add(partExtraDTO);
                 }
                 break;
@@ -124,7 +159,7 @@ public class TextColorful {
                 int phase = NumberConversions.toInt(value.split(":")[3]);
                 if (phase >= colors.length) phase = colors.length - 1;
                 if (phase < 0) phase = 0;
-                partExtraDTO = new Text.ExtraDTO();
+                partExtraDTO = new InteractExtraDTO();
                 partExtraDTO.setBold(extraDTO.getBold());
                 partExtraDTO.setItalic(extraDTO.getItalic());
                 partExtraDTO.setObfuscated(extraDTO.getObfuscated());
@@ -132,10 +167,12 @@ public class TextColorful {
                 partExtraDTO.setUnderlined(extraDTO.getUnderlined());
                 partExtraDTO.setText(textValue);
                 partExtraDTO.setColor(colors[phase]);
+                partExtraDTO.setClickEvent(clickEventDTO);
+                partExtraDTO.setHoverEvent(hoverEventDTO);
                 formalText.getExtra().add(partExtraDTO);
                 break;
             case "c": // 颜色 §r$<c=#FFFFFF>
-                partExtraDTO = new Text.ExtraDTO();
+                partExtraDTO = new InteractExtraDTO();
                 partExtraDTO.setBold(extraDTO.getBold());
                 partExtraDTO.setItalic(extraDTO.getItalic());
                 partExtraDTO.setObfuscated(extraDTO.getObfuscated());
@@ -143,6 +180,8 @@ public class TextColorful {
                 partExtraDTO.setUnderlined(extraDTO.getUnderlined());
                 partExtraDTO.setText(textValue);
                 partExtraDTO.setColor(value);
+                partExtraDTO.setClickEvent(clickEventDTO);
+                partExtraDTO.setHoverEvent(hoverEventDTO);
                 formalText.getExtra().add(partExtraDTO);
                 break;
             default:
