@@ -45,13 +45,13 @@ public abstract class ComplexCommand  extends AbstractCommand implements Command
                 }
                 return subCommand.firstArgumentTab(sender, args[1]);
             case 3:
-                subCommand = subCommands.get(args[1]);
+                subCommand = subCommands.get(args[0]);
                 if (subCommand == null) {
                     break;
                 }
                 return subCommand.secondArgumentTab(sender, args[2]);
             case 4:
-                subCommand = subCommands.get(args[2]);
+                subCommand = subCommands.get(args[0]);
                 if (subCommand == null) {
                     break;
                 }
@@ -71,9 +71,9 @@ public abstract class ComplexCommand  extends AbstractCommand implements Command
         if (args.length == 0) {
             // 无参
             return execute(sender);
-        } else if (subCommands.containsKey(args[1])) {
+        } else if (subCommands.containsKey(args[0])) {
             // 子指令执行
-            SubCommand subCommand = subCommands.get(args[1]);
+            SubCommand subCommand = subCommands.get(args[0]);
             switch (args.length) {
                 case 1:
                     return subCommand.execute(sender);
