@@ -27,6 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.fireflyest.CraftGUI;
 import org.fireflyest.craftgui.api.View;
@@ -336,7 +337,8 @@ public class ViewGuideImpl implements ViewGuide {
                 // 获取数据包
                 PacketContainer packet = packets.get(playerName);
 
-                if (packet == null || page == null) return;
+                Player player = Bukkit.getPlayerExact(playerName);
+                if (player == null || packet == null || page == null || player.getOpenInventory() instanceof PlayerInventory) return;
 
                 // 获取页面所有按钮并放置到容器中，如果空的，填充空气
                 List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
@@ -352,8 +354,6 @@ public class ViewGuideImpl implements ViewGuide {
                 packet.getItemListModifier().write(0, itemStacks);
 
                 // 发送数据包
-                Player player = Bukkit.getPlayerExact(playerName);
-                if (player == null) return;
                 try {
                     protocolManager.sendServerPacket(player, packet, false);
                 } catch (InvocationTargetException e) {
