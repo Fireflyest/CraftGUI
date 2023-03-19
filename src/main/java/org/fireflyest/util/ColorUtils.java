@@ -28,6 +28,15 @@ public class ColorUtils {
     }
 
     /**
+     * 文本转换为颜色
+     * @param color 颜色
+     * @return 颜色
+     */
+    public static Color toColor(@Nonnull String color) {
+        return Color.fromRGB(Integer.parseInt(color, 16));
+    }
+
+    /**
      * 渐变颜色
      * @param start 起始颜色
      * @param end 结束颜色
