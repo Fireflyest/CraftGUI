@@ -33,6 +33,7 @@ public class ColorUtils {
      * @return 颜色
      */
     public static Color toColor(@Nonnull String color) {
+        color = color.replace("#", "");
         return Color.fromRGB(Integer.parseInt(color, 16));
     }
 
@@ -66,6 +67,18 @@ public class ColorUtils {
                 + Integer.toHexString(startB + (int) (i * deltaB));
         }
         return colors;
+    }
+
+    /**
+     * 两种颜色的距离
+     * @param color1 颜色1
+     * @param color2 颜色2
+     * @return 距离
+     */
+    public static int distance(Color color1, Color color2) {
+        return (int)(Math.pow(color1.getRed() - (double)color2.getRed(), 2) 
+            + Math.pow(color1.getGreen() - (double)color2.getGreen(), 2) 
+            + Math.pow(color1.getBlue() - (double)color2.getBlue(), 2));
     }
 
     /**
