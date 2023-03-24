@@ -292,7 +292,7 @@ public class DaoProcessor extends AbstractProcessor {
             } else {
                 javaFileBuilder.append("\n        returnValue = new ")
                         .append(returnType, 0, returnType.length() - 1)
-                        .append("objList.size()];\n        int index = 0;\n        for (Long aValue : objList) returnValue[index++] = aValue;");
+                        .append("objList.size()];\n        int index = 0;\n        for (").append(objDataType).append(" aValue : objList) returnValue[index++] = aValue;");
             }
         } else {
             javaFileBuilder.append("\n        if (objList.size() != 0) {");
