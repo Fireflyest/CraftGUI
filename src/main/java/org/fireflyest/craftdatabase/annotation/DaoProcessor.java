@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
@@ -40,11 +39,6 @@ public class DaoProcessor extends AbstractProcessor {
     private static final String STRING = "java.lang.String";
 
     @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-    }
-
-    @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Messager messager = processingEnv.getMessager();
         messager.printMessage(Diagnostic.Kind.NOTE, "Processing database dao...");
@@ -53,109 +47,118 @@ public class DaoProcessor extends AbstractProcessor {
         for (TypeElement typeElement : annotations) {
             // 获得被该注解声明的元素
             for (Element element : roundEnv.getElementsAnnotatedWith(typeElement)) {
-                Dao dao = element.getAnnotation(Dao.class);
-
-                TypeElement interfaceElement = ((TypeElement) element);
-                String className = interfaceElement.getQualifiedName().toString();
-                String daoName = interfaceElement.getSimpleName().toString();
-                String pack = className.substring(0, className.lastIndexOf("."));
-
-                // 头部
-                StringBuilder javaFileBuilder = new StringBuilder()
-                        .append("package ")
-                        .append(pack)
-                        .append(";\n\nimport java.util.*;\nimport java.sql.*;\n\npublic class ")
-                        .append(daoName)
-                        .append("Impl implements ")
-                        .append(daoName)
-                        .append(" {\n\n\tprivate final String url;");
-
-                this.appendCreateTable(javaFileBuilder, dao.value());
-
-                // 构造函数
-                javaFileBuilder.append("\n\n\tpublic ")
-                        .append(daoName)
-                        .append("Impl(String url) {\n\t\tthis.url = url;\n\t}\n");
-
-                // 遍历所有方法
-                for (Element enclosedElement : interfaceElement.getEnclosedElements()) {
-                    if (enclosedElement.getKind() != ElementKind.METHOD) continue;
-
-                    javaFileBuilder.append("\n\t@Override\n\tpublic ");
-                    ExecutableElement executableElement = ((ExecutableElement) enclosedElement);
-                    // 返回的类型
-                    String returnType = executableElement.getReturnType().toString();
-
-                    javaFileBuilder.append(returnType)
-                            .append(" ")
-                            .append(executableElement.getSimpleName())
-                            .append("(");
-                    // 传递参数
-                    int varNum = 0;
-                    Set<String> stringParameter = new HashSet<>();
-                    for (VariableElement parameter : executableElement.getParameters()) {
-                        String parameterName = parameter.getSimpleName().toString();
-                        String parameterType = parameter.asType().toString();
-                        // 拼接
-                        if (varNum++ > 0) javaFileBuilder.append(", ");
-                        javaFileBuilder.append(parameterType)
-                                .append(" ")
-                                .append(parameterName);
-                        // 字符串需要转换单引号
-                        if (STRING.equals(parameterType)) stringParameter.add(parameterName);
-                    }
-                    // sql语句
-                    javaFileBuilder.append(") {\n\t\tString sql = \"");
-                    // 查询内容
-                    Select select;
-                    Insert insert;
-                    Delete delete;
-                    Update update;
-                    if ((select = executableElement.getAnnotation(Select.class)) != null) {
-                        String sqlVar = this.varReplace(select.value(), stringParameter);
-                        javaFileBuilder.append(sqlVar).append("\";");
-                        this.appendSelect(javaFileBuilder, select.value(), returnType);
-                    } else if ((insert = executableElement.getAnnotation(Insert.class)) != null) {
-                        String sqlVar = this.varReplace(insert.value(), stringParameter);
-                        javaFileBuilder.append(sqlVar).append("\";");
-                        this.appendInsert(javaFileBuilder);
-                    } else if ((delete = executableElement.getAnnotation(Delete.class)) != null) {
-                        String sqlVar = this.varReplace(delete.value(), stringParameter);
-                        javaFileBuilder.append(sqlVar).append("\";");
-                        this.appendUpdate(javaFileBuilder);
-                    } else if ((update = executableElement.getAnnotation(Update.class)) != null) {
-                        String sqlVar = this.varReplace(update.value(), stringParameter);
-                        javaFileBuilder.append(sqlVar).append("\";");
-                        this.appendUpdate(javaFileBuilder);
-                    }
-                }
-
-                javaFileBuilder.append("\n}");
-
-                // 写入
-                JavaFileObject source = null;
-                try {
-                    source = processingEnv.getFiler().createSourceFile(pack + "." + daoName + "Impl");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (source == null) {
-                    break;
-                }
-                try (Writer writer = source.openWriter()) {
-                    writer.write(javaFileBuilder.toString());
-                    writer.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                this.processElement(element);
             }
         }
         return true;
     }
 
+    private void processElement(Element element) {
+        Dao dao = element.getAnnotation(Dao.class);
+
+        TypeElement interfaceElement = ((TypeElement) element);
+        String className = interfaceElement.getQualifiedName().toString();
+        String daoName = interfaceElement.getSimpleName().toString();
+        String pack = className.substring(0, className.lastIndexOf("."));
+
+        // 头部
+        StringBuilder javaFileBuilder = new StringBuilder()
+                .append("package ").append(pack).append(";") // 包
+                .append("\n\nimport java.util.*;\nimport java.sql.*;") // 引用
+                .append("\n\npublic class ").append(daoName).append("Impl implements ").append(daoName)
+                .append(" {")
+                .append("\n\n    private final String url;"); // 全局变量
+
+        this.appendCreateTable(javaFileBuilder, dao.value()); // 建表指令
+
+        // 构造函数
+        javaFileBuilder.append("\n\n    public ")
+                .append(daoName)
+                .append("Impl(String url) {\n       this.url = url;\n   }\n");
+
+        // 遍历所有方法
+        for (Element enclosedElement : interfaceElement.getEnclosedElements()) {
+            if (enclosedElement.getKind() != ElementKind.METHOD) continue;
+            this.appendField(javaFileBuilder, enclosedElement);
+        }
+
+        javaFileBuilder.append("\n}");
+
+        // 写入
+        this.writeSource(javaFileBuilder, pack, daoName);
+    }
+
+    private void appendField(StringBuilder javaFileBuilder, Element enclosedElement) {
+        javaFileBuilder.append("\n    @Override\n    public ");
+        ExecutableElement executableElement = ((ExecutableElement) enclosedElement);
+        // 返回的类型
+        String returnType = executableElement.getReturnType().toString();
+
+        javaFileBuilder.append(returnType)
+                .append(" ")
+                .append(executableElement.getSimpleName())
+                .append("(");
+        // 传递参数
+        int varNum = 0;
+        Set<String> stringParameter = new HashSet<>();
+        for (VariableElement parameter : executableElement.getParameters()) {
+            String parameterName = parameter.getSimpleName().toString();
+            String parameterType = parameter.asType().toString();
+            // 拼接
+            if (varNum++ > 0) javaFileBuilder.append(", ");
+            javaFileBuilder.append(parameterType)
+                    .append(" ")
+                    .append(parameterName);
+            // 字符串需要转换单引号
+            if (STRING.equals(parameterType)) stringParameter.add(parameterName);
+        }
+        // sql语句
+        javaFileBuilder.append(") {\n        String sql = \"");
+        // 查询内容
+        Select select;
+        Insert insert;
+        Delete delete;
+        Update update;
+        if ((select = executableElement.getAnnotation(Select.class)) != null) {
+            String sqlVar = this.varReplace(select.value(), stringParameter);
+            javaFileBuilder.append(sqlVar).append("\";");
+            this.appendSelect(javaFileBuilder, select.value(), returnType);
+        } else if ((insert = executableElement.getAnnotation(Insert.class)) != null) {
+            String sqlVar = this.varReplace(insert.value(), stringParameter);
+            javaFileBuilder.append(sqlVar).append("\";");
+            this.appendInsert(javaFileBuilder);
+        } else if ((delete = executableElement.getAnnotation(Delete.class)) != null) {
+            String sqlVar = this.varReplace(delete.value(), stringParameter);
+            javaFileBuilder.append(sqlVar).append("\";");
+            this.appendUpdate(javaFileBuilder);
+        } else if ((update = executableElement.getAnnotation(Update.class)) != null) {
+            String sqlVar = this.varReplace(update.value(), stringParameter);
+            javaFileBuilder.append(sqlVar).append("\";");
+            this.appendUpdate(javaFileBuilder);
+        }
+    }
+
+    private void writeSource(StringBuilder javaFileBuilder, String pack, String daoName) {
+        JavaFileObject source = null;
+        try {
+            source = processingEnv.getFiler().createSourceFile(pack + "." + daoName + "Impl");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (source == null) {
+            return;
+        }
+        try (Writer writer = source.openWriter()) {
+            writer.write(javaFileBuilder.toString());
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void appendCreateTable(StringBuilder javaFileBuilder, String obj) {
         // 建表
-        javaFileBuilder.append("\n\n\tprivate static final String createTable = \"");
+        javaFileBuilder.append("\n\n    private static final String createTable = \"");
         if (!"".equals(obj)) {
             String tableClassName = obj;
             String tableName = TableProcessor.getTableName(tableClassName);
@@ -172,45 +175,45 @@ public class DaoProcessor extends AbstractProcessor {
             javaFileBuilder.append(createTableBuilder.build().replace("\n", ""));
         }
         javaFileBuilder.append("\";");
-        javaFileBuilder.append("\n\n\tpublic java.lang.String getCreateTableSQL(){ return createTable; }");
+        javaFileBuilder.append("\n\n    public java.lang.String getCreateTableSQL(){ return createTable; }");
     }
 
 
 
     private void appendUpdate(StringBuilder javaFileBuilder){
-        javaFileBuilder.append("\n\t\tlong num = 0;");
-        javaFileBuilder.append("\n\t\t");
-        javaFileBuilder.append("\n\t\tConnection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
-        javaFileBuilder.append("\n\t\ttry (PreparedStatement preparedStatement =connection.prepareStatement(sql)){");
-        javaFileBuilder.append("\n\t\t\tnum = preparedStatement.executeUpdate();");
-        javaFileBuilder.append("\n\t\t\treturn num;");
-        javaFileBuilder.append("\n\t\t} catch (SQLException e) {");
-        javaFileBuilder.append("\n\t\t\te.printStackTrace();");
-        javaFileBuilder.append("\n\t\t}");
-        javaFileBuilder.append("\n\t\treturn num;\n\t}\n");
+        javaFileBuilder.append("\n        long num = 0;");
+        javaFileBuilder.append("\n        ");
+        javaFileBuilder.append("\n        Connection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
+        javaFileBuilder.append("\n        try (PreparedStatement preparedStatement =connection.prepareStatement(sql)){");
+        javaFileBuilder.append("\n            num = preparedStatement.executeUpdate();");
+        javaFileBuilder.append("\n            return num;");
+        javaFileBuilder.append("\n        } catch (SQLException e) {");
+        javaFileBuilder.append("\n            e.printStackTrace();");
+        javaFileBuilder.append("\n        }");
+        javaFileBuilder.append("\n        return num;\n    }\n");
     }
 
     private void appendInsert(StringBuilder javaFileBuilder){
-        javaFileBuilder.append("\n\t\tlong insertId = 0;");
-        javaFileBuilder.append("\n\t\t");
-        javaFileBuilder.append("\n\t\tConnection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
-        javaFileBuilder.append("\n\t\tResultSet resultSet = null;");
-        javaFileBuilder.append("\n\t\ttry (PreparedStatement preparedStatement =connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){");
-        javaFileBuilder.append("\n\t\t\tpreparedStatement.executeUpdate();");
-        javaFileBuilder.append("\n\t\t\tresultSet = preparedStatement.getGeneratedKeys();");
-        javaFileBuilder.append("\n\t\t\tif (resultSet.next()) insertId = resultSet.getInt(1);");
-        javaFileBuilder.append("\n\t\t\treturn insertId;");
-        javaFileBuilder.append("\n\t\t} catch (SQLException e) {");
-        javaFileBuilder.append("\n\t\t\te.printStackTrace();");
-        javaFileBuilder.append("\n\t\t} finally {");
-        javaFileBuilder.append("\n\t\t\tif (resultSet != null) {");
-        javaFileBuilder.append("\n\t\t\t\ttry {");
-        javaFileBuilder.append("\n\t\t\t\t\tresultSet.close();");
-        javaFileBuilder.append("\n\t\t\t\t} catch (SQLException ignored) {");
-        javaFileBuilder.append("\n\t\t\t\t}");
-        javaFileBuilder.append("\n\t\t\t}");
-        javaFileBuilder.append("\n\t\t}");
-        javaFileBuilder.append("\n\t\treturn insertId;\n\t}\n");
+        javaFileBuilder.append("\n        long insertId = 0;");
+        javaFileBuilder.append("\n        ");
+        javaFileBuilder.append("\n        Connection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
+        javaFileBuilder.append("\n        ResultSet resultSet = null;");
+        javaFileBuilder.append("\n        try (PreparedStatement preparedStatement =connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){");
+        javaFileBuilder.append("\n            preparedStatement.executeUpdate();");
+        javaFileBuilder.append("\n            resultSet = preparedStatement.getGeneratedKeys();");
+        javaFileBuilder.append("\n            if (resultSet.next()) insertId = resultSet.getInt(1);");
+        javaFileBuilder.append("\n            return insertId;");
+        javaFileBuilder.append("\n        } catch (SQLException e) {");
+        javaFileBuilder.append("\n            e.printStackTrace();");
+        javaFileBuilder.append("\n        } finally {");
+        javaFileBuilder.append("\n            if (resultSet != null) {");
+        javaFileBuilder.append("\n                try {");
+        javaFileBuilder.append("\n                    resultSet.close();");
+        javaFileBuilder.append("\n                } catch (SQLException ignored) {");
+        javaFileBuilder.append("\n                }");
+        javaFileBuilder.append("\n            }");
+        javaFileBuilder.append("\n        }");
+        javaFileBuilder.append("\n        return insertId;\n    }\n");
     }
 
     private void appendSelect(StringBuilder javaFileBuilder, String sql, String returnType) {
@@ -236,24 +239,24 @@ public class DaoProcessor extends AbstractProcessor {
 
         // 新建返回对象列表
         if (returnArray) {
-            javaFileBuilder.append("\n\t\t").append(returnType).append(" returnValue;");
+            javaFileBuilder.append("\n        ").append(returnType).append(" returnValue;");
         } else {
-            javaFileBuilder.append("\n\t\t").append(objDataType).append(" returnValue = null;");
+            javaFileBuilder.append("\n        ").append(objDataType).append(" returnValue = null;");
         }
-        javaFileBuilder.append("\n\t\tList<").append(objDataType).append("> objList = new ArrayList<>();");
-        javaFileBuilder.append("\n\t\t");
-        javaFileBuilder.append("\n\t\tConnection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
-        javaFileBuilder.append("\n\t\ttry (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sql)){");
+        javaFileBuilder.append("\n        List<").append(objDataType).append("> objList = new ArrayList<>();");
+        javaFileBuilder.append("\n        ");
+        javaFileBuilder.append("\n        Connection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
+        javaFileBuilder.append("\n        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sql)){");
         if (returnArray){
-            javaFileBuilder.append("\n\t\t\twhile (resultSet.next()){");
+            javaFileBuilder.append("\n            while (resultSet.next()){");
         } else {
-            javaFileBuilder.append("\n\t\t\tif (resultSet.next()){");
+            javaFileBuilder.append("\n            if (resultSet.next()){");
         }
         if (returnAll) {
-            javaFileBuilder.append("\n\t\t\t\t").append(objType).append(" obj = new ").append(objType).append("();");
+            javaFileBuilder.append("\n                ").append(objType).append(" obj = new ").append(objType).append("();");
             for (Map.Entry<String, TableProcessor.ColumnInfo> columnInfoEntry : TableProcessor.getTableColumns(tableName).entrySet()) {
                 TableProcessor.ColumnInfo columnInfo = columnInfoEntry.getValue();
-                javaFileBuilder.append("\n\t\t\t\t")
+                javaFileBuilder.append("\n                ")
                         .append("obj.set").append(toFirstUpCase(columnInfo.varName))
                         .append("(resultSet.get")
                         .append(this.toSqlDataType(columnInfo.dataType))
@@ -261,7 +264,7 @@ public class DaoProcessor extends AbstractProcessor {
             }
         } else {
             TableProcessor.ColumnInfo columnInfo = TableProcessor.getTableColumns(tableName).get(selectColumn.replace("`", ""));
-            javaFileBuilder.append("\n\t\t\t\t")
+            javaFileBuilder.append("\n                ")
                     .append(objType)
                     .append(" obj = resultSet.get")
                     .append(this.toSqlDataType(columnInfo.dataType))
@@ -269,37 +272,37 @@ public class DaoProcessor extends AbstractProcessor {
                     .append(columnInfo.columnName)
                     .append("\");");
         }
-        javaFileBuilder.append("\n\t\t\t\tobjList.add(obj);");
-        javaFileBuilder.append("\n\t\t\t}");
-        javaFileBuilder.append("\n\t\t} catch (SQLException e) {");
-        javaFileBuilder.append("\n\t\t\te.printStackTrace();");
-        javaFileBuilder.append("\n\t\t}");
-        javaFileBuilder.append("\n\t\t");
+        javaFileBuilder.append("\n                objList.add(obj);");
+        javaFileBuilder.append("\n            }");
+        javaFileBuilder.append("\n        } catch (SQLException e) {");
+        javaFileBuilder.append("\n            e.printStackTrace();");
+        javaFileBuilder.append("\n        }");
+        javaFileBuilder.append("\n        ");
 
         // 构建返回对象
         if (returnArray) {
             if (returnAll) {
-                javaFileBuilder.append("\n\t\treturnValue = objList.toArray(new ").append(objType).append("[0]);");
+                javaFileBuilder.append("\n        returnValue = objList.toArray(new ").append(objType).append("[0]);");
             } else {
-                javaFileBuilder.append("\n\t\treturnValue = new ")
+                javaFileBuilder.append("\n        returnValue = new ")
                         .append(returnType, 0, returnType.length() - 1)
-                        .append("objList.size()];\n\t\tint index = 0;\n\t\tfor (Long aValue : objList) returnValue[index++] = aValue;");
+                        .append("objList.size()];\n        int index = 0;\n        for (Long aValue : objList) returnValue[index++] = aValue;");
             }
         } else {
-            javaFileBuilder.append("\n\t\tif (objList.size() != 0) returnValue = objList.get(0);");
+            javaFileBuilder.append("\n        if (objList.size() != 0) returnValue = objList.get(0);");
         }
 
         // 返回值
         if (!returnArray && !returnAll) {
             if ("boolean".equals(returnType)) {
-                javaFileBuilder.append("\n\t\tif (returnValue == null) return false;");
+                javaFileBuilder.append("\n        if (returnValue == null) return false;");
             } else if (STRING.equals(returnType)) {
-                javaFileBuilder.append("\n\t\tif (returnValue == null) return \"\";");
+                javaFileBuilder.append("\n        if (returnValue == null) return \"\";");
             } else {
-                javaFileBuilder.append("\n\t\tif (returnValue == null) return 0;");
+                javaFileBuilder.append("\n        if (returnValue == null) return 0;");
             }
         }
-        javaFileBuilder.append("\n\t\treturn returnValue;\n\t}\n");
+        javaFileBuilder.append("\n        return returnValue;\n    }\n");
     }
 
     /**
