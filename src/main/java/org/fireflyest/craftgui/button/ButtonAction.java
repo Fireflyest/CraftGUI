@@ -28,6 +28,8 @@ public class ButtonAction {
     public static final int ACTION_PLAYER_COMMAND_SEND = 15;
     // 控制台指令
     public static final int ACTION_CONSOLE_COMMAND_SEND = 16;
+    // Shift点击指令
+    public static final int ACTION_SHIFT_COMMAND_SEND = 17;
 
     // 以下行为调用事件，由插件处理
     // 打开某个界面
