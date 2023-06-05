@@ -11,8 +11,8 @@ import org.fireflyest.crafttask.exception.ExecuteException;
 
 public abstract class Task {
     
-    private final String playerName;
-    private final Player player;
+    protected final String playerName;
+    protected final Player player;
 
     protected Task(String playerName) {
         this.playerName = playerName;
