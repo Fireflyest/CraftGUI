@@ -124,4 +124,16 @@ public class ButtonItemBuilder extends ItemBuilder {
         return this;
     }
 
+    /**
+     * 按钮行为
+     * @param action 行为
+     * @param value 值
+     * @return this
+     */
+    public ButtonItemBuilder action(int action, String value) {
+        nbt.put(ButtonAction.NBT_ACTION_KEY, action);
+        nbt.put(ButtonAction.NBT_VALUE_KEY, value);
+        return this;
+    }
+
 }
