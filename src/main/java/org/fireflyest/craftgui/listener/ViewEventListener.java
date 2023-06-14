@@ -380,9 +380,10 @@ public class ViewEventListener implements Listener {
                 human.playSound(human.getLocation(), clickSound, 1F, 1F);
                 break;
             case ButtonAction.ACTION_SHIFT_COMMAND_SEND:
-                if (buttonValue == null || "".equals(buttonValue) || !isShiftClick) break;
+                if (buttonValue == null || "".equals(buttonValue)) break;
                 String shiftCommand = buttonValue.replace("%player%", playerName);
-                human.performCommand(shiftCommand);
+                String[] commands = shiftCommand.split(";");
+                human.performCommand(isShiftClick ? commands[1] : commands[0]);
                 human.playSound(human.getLocation(), clickSound, 1F, 1F);
                 break;
             default:

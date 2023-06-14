@@ -5,13 +5,18 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.fireflyest.craftgui.button.ButtonItemBuilder;
+import org.fireflyest.craftitem.builder.ItemBuilder;
 import org.fireflyest.util.ReflectionUtils;
 import org.fireflyest.util.StringUtils;
 
@@ -27,6 +32,7 @@ public abstract class YamlService {
     protected File dataFolder;
     protected FileConfiguration config;
     protected FileConfiguration lang;
+    protected FileConfiguration items;
 
     /**
      * 配置文件操作
@@ -54,6 +60,43 @@ public abstract class YamlService {
     protected void setupLanguage(@Nonnull Class<?> clazz, @Nullable String local) {
         this.lang = loadYamlFile(LANGUAGE_FOLDER + "/" + (local == null ? "default" : local));
         this.setupClass(lang, clazz);
+    }
+
+    /**
+     * 加载物品
+     * @param itemMap 物品
+     */
+    protected void setupItems(Map<String, ItemBuilder> itemMap) {
+        this.items = loadYamlFile("items");
+        for (String key : items.getKeys(false)) {
+            ItemBuilder itemBuilder = null;
+            String type = items.getString(key + ".type");
+            String material = items.getString(key + ".material");
+            String name = items.getString(key + ".name");
+            int amount = items.getInt(key + ".amount");
+            int model = items.getInt(key + ".model");
+            boolean colorful = items.getBoolean(key + ".colorful");
+            List<String> lore = items.getStringList(key + ".lore");
+            switch (type) {
+                case "button":
+                    itemBuilder = new ButtonItemBuilder(material);
+                    break;
+                case "interact":
+                    itemBuilder = new ButtonItemBuilder(material);
+                    break;
+                default:
+                    itemBuilder = new ButtonItemBuilder(Material.STONE);
+                    break;
+            }
+            itemBuilder.name(name).amount(amount).model(model);
+            if (colorful) {
+                itemBuilder.colorful();
+            }
+            for (String line : lore) {
+                itemBuilder.lore(line);
+            }
+            itemMap.put(key, itemBuilder);
+        }
     }
 
     /**
