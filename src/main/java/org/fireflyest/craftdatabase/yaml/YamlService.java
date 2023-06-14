@@ -71,11 +71,11 @@ public abstract class YamlService {
         for (String key : items.getKeys(false)) {
             ItemBuilder itemBuilder = null;
             String type = items.getString(key + ".type");
-            String material = items.getString(key + ".material");
-            String name = items.getString(key + ".name");
-            int amount = items.getInt(key + ".amount");
-            int model = items.getInt(key + ".model");
-            boolean colorful = items.getBoolean(key + ".colorful");
+            String material = items.getString(key + ".material", "STONE");
+            String name = items.getString(key + ".name", key);
+            int amount = items.getInt(key + ".amount", 1);
+            int model = items.getInt(key + ".model", -1);
+            boolean colorful = items.getBoolean(key + ".colorful", false);
             List<String> lore = items.getStringList(key + ".lore");
             switch (type) {
                 case "button":
@@ -85,7 +85,7 @@ public abstract class YamlService {
                     itemBuilder = new ButtonItemBuilder(material);
                     break;
                 default:
-                    itemBuilder = new ButtonItemBuilder(Material.STONE);
+                    itemBuilder = new ItemBuilder(Material.STONE);
                     break;
             }
             itemBuilder.name(name).amount(amount).model(model);
