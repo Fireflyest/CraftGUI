@@ -50,9 +50,8 @@ public abstract class TemplatePage implements ViewPage {
         this.size = size;
 
         // 界面容器
-        this.inventory = Bukkit.createInventory(null, size, title);
-        // 界面固定按钮
-        this.refreshPage();
+        String guiTitle = title.replace("%page%", String.valueOf(page)).replace("%target%", String.valueOf(page));
+        this.inventory = Bukkit.createInventory(null, size, guiTitle);
     }
 
     @Override
