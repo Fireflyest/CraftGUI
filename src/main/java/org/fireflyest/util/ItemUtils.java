@@ -107,6 +107,20 @@ public class ItemUtils {
     }
 
     /**
+     * 获取物品名称
+     * @param item 物品
+     * @return 名称
+     */
+    public static String getDisplayName(@Nonnull ItemStack item) {
+        if (item.getType() == XMaterial.AIR.parseMaterial()) return null;
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            return meta.getDisplayName();
+        }
+        return null;
+    }
+
+    /**
      * 设置物品注释
      * @param item 物品
      * @param lore 注释
