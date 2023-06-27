@@ -30,14 +30,19 @@ public class NetworkUtils {
         return t;
     }
 
-    private static String getRequest(String uri) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
-                .GET()
-                .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body();
+    /**
+     * 检查更新并返回新版本的下载地址，如果已是最新则返回null
+     * @param pluginName 插件名称
+     * @param version 现版本
+     * @return 新版本下载地址
+     */
+    public static String checkUpdate(String pluginName, String version) {
+        String updateUrl = null;
+        Latest latest = doGet("https://api.github.com/repos/Fireflyest/" +pluginName + "/releases/latest", Latest.class);
+        if (latest != null && StringUtils.compareVersion(latest.getName().substring(1), version) == 1) {
+            updateUrl = latest.getAssets().get(0).getBrowserDownloadUrl();
+        }
+        return updateUrl;
     }
 
     public static <T> T doPost(String uri, Map<String, String> values, Class<T> aClass) {
@@ -59,6 +64,16 @@ public class NetworkUtils {
         }
         return t;
     }
+    
+    private static String getRequest(String uri) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .GET()
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    }
 
     private static String postRequest(String uri, String values) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
@@ -69,5 +84,5 @@ public class NetworkUtils {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
     }
-    
+
 }
