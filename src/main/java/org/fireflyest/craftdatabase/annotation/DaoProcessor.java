@@ -21,6 +21,7 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
+import org.fireflyest.craftdatabase.annotation.TableProcessor.ColumnInfo;
 import org.fireflyest.craftdatabase.builder.SQLCreateTable;
 
 /**
@@ -270,13 +271,15 @@ public class DaoProcessor extends AbstractProcessor {
             }
         } else {
             TableProcessor.ColumnInfo columnInfo = TableProcessor.getTableColumns(tableName).get(selectColumn.replace("`", ""));
-            javaFileBuilder.append("\n                ")
+            if (columnInfo != null) {
+                javaFileBuilder.append("\n                ")
                     .append(objType)
                     .append(" obj = resultSet.get")
                     .append(this.toSqlDataType(columnInfo.dataType))
                     .append("(\"")
                     .append(columnInfo.columnName)
                     .append("\");");
+            }
         }
         javaFileBuilder.append("\n                objList.add(obj);");
         javaFileBuilder.append("\n            }");
