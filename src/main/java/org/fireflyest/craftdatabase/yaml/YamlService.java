@@ -88,7 +88,7 @@ public abstract class YamlService {
                     itemBuilder = new ButtonItemBuilder(material);
                     break;
                 default:
-                    itemBuilder = new ItemBuilder(Material.STONE);
+                    itemBuilder = new ItemBuilder(material);
                     break;
             }
             itemBuilder.name(name).amount(amount).model(model);
