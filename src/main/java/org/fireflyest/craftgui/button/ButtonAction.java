@@ -45,7 +45,7 @@ public class ButtonAction {
     // 未知
     public static final int ACTION_UNKNOWN = 10;
 
-    public ButtonAction() {
-
+    private ButtonAction() {
+        //
     }
 }
