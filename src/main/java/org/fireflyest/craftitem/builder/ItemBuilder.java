@@ -14,6 +14,7 @@ import org.fireflyest.crafttext.formal.TextColorFormal;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 构建自定义物品
@@ -28,7 +29,7 @@ public class ItemBuilder {
     protected String displayName;
     protected ItemFlag[] itemFlags;
     protected final List<String> lore = new ArrayList<>();
-    protected final Map<String, Object> nbt = new HashMap<>();
+    protected final Map<String, Object> nbt = new ConcurrentHashMap<>();
     protected boolean colorful = false;
     protected int amount = 1;
     protected int model = -1;
