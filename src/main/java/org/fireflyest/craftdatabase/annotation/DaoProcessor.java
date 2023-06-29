@@ -345,7 +345,7 @@ public class DaoProcessor extends AbstractProcessor {
      * @return 首字母大写
      */
     private String toFirstUpCase(String str) {
-        return Character.toUpperCase(str.charAt(0)) + str.substring(1).toLowerCase();
+        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
 
     /**
