@@ -71,7 +71,7 @@ public abstract class YamlService {
         this.items = loadYamlFile("items");
         for (String key : items.getKeys(false)) {
             ItemBuilder itemBuilder = null;
-            String type = items.getString(key + ".type");
+            String type = items.getString(key + ".type", "none");
             String material = items.getString(key + ".material", "STONE");
             String name = items.getString(key + ".name", key);
             int amount = items.getInt(key + ".amount", 1);
