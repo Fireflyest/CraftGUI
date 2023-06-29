@@ -28,7 +28,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * 关闭，由导航直接处理
      * @return this
      */
-    public ButtonItemBuilder actionClose(){
+    public ButtonItemBuilder actionClose() {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_CLOSE);
         return this;
     }
@@ -37,7 +38,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * 向后翻页，由导航直接处理
      * @return this
      */
-    public ButtonItemBuilder actionPageNext(){
+    public ButtonItemBuilder actionPageNext() {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PAGE_NEXT);
         return this;
     }
@@ -46,7 +48,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * 向前翻页，由导航直接处理
      * @return this
      */
-    public ButtonItemBuilder actionPagePre(){
+    public ButtonItemBuilder actionPagePre() {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PAGE_PRE);
         return this;
     }
@@ -56,7 +59,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * @param num 页码
      * @return this
      */
-    public ButtonItemBuilder actionPageJump(int num){
+    public ButtonItemBuilder actionPageJump(int num) {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PAGE_JUMP);
         nbt.put(ButtonAction.NBT_VALUE_KEY, num);
         return this;
@@ -66,7 +70,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * 返回上个界面
      * @return this
      */
-    public ButtonItemBuilder actionBack(){
+    public ButtonItemBuilder actionBack() {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_BACK);
         return this;
     }
@@ -75,7 +80,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * 修改页面内容，由页面处理
      * @return this
      */
-    public ButtonItemBuilder actionEdit(){
+    public ButtonItemBuilder actionEdit() {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_EDIT);
         return this;
     }
@@ -85,7 +91,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * @param page 页面格式为viewName.pageTarget
      * @return this
      */
-    public ButtonItemBuilder actionOpenPage(String page){
+    public ButtonItemBuilder actionOpenPage(String page) {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PAGE_OPEN);
         nbt.put(ButtonAction.NBT_VALUE_KEY, page);
         return this;
@@ -96,7 +103,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * @param command 指令
      * @return this
      */
-    public ButtonItemBuilder actionPlayerCommand(String command){
+    public ButtonItemBuilder actionPlayerCommand(String command) {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PLAYER_COMMAND_SEND);
         nbt.put(ButtonAction.NBT_VALUE_KEY, command);
         return this;
@@ -107,7 +115,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * @param command 指令
      * @return this
      */
-    public ButtonItemBuilder actionConsoleCommand(String command){
+    public ButtonItemBuilder actionConsoleCommand(String command) {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_CONSOLE_COMMAND_SEND);
         nbt.put(ButtonAction.NBT_VALUE_KEY, command);
         return this;
@@ -118,7 +127,8 @@ public class ButtonItemBuilder extends ItemBuilder {
      * @param value 行为值
      * @return this
      */
-    public ButtonItemBuilder actionPlugin(String value){
+    public ButtonItemBuilder actionPlugin(String value) {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_PLUGIN);
         nbt.put(ButtonAction.NBT_VALUE_KEY, value);
         return this;
@@ -131,6 +141,7 @@ public class ButtonItemBuilder extends ItemBuilder {
      * @return this
      */
     public ButtonItemBuilder action(int action, String value) {
+        update = true;
         nbt.put(ButtonAction.NBT_ACTION_KEY, action);
         nbt.put(ButtonAction.NBT_VALUE_KEY, value);
         return this;
