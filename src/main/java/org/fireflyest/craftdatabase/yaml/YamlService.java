@@ -72,7 +72,7 @@ public abstract class YamlService {
         for (String key : items.getKeys(false)) {
             ItemBuilder itemBuilder = null;
             String type = items.getString(key + ".type", "none");
-            String material = items.getString(key + ".material", "STONE");
+            String material = items.getString(key + ".material", "STONE").replace(" ", "_");
             String name = items.getString(key + ".name", key);
             int amount = items.getInt(key + ".amount", 1);
             int model = items.getInt(key + ".model", -1);
