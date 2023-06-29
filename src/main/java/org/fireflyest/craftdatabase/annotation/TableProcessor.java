@@ -69,15 +69,21 @@ public class TableProcessor extends AbstractProcessor {
         Table table = classElement.getAnnotation(Table.class);
         String className = classElement.getQualifiedName().toString();
         String tableName = "".equals(table.value()) ? classElement.getSimpleName().toString() : table.value();
-        tableNameMap.put(className, tableName);
-        tableInfoMap.put(tableName, new HashMap<>());
+        Map<String, ColumnInfo> columnInfoMap = new HashMap<>();
 
         // 遍历成员变量
         for (Element enclosedElement : classElement.getEnclosedElements()) {
-            if (enclosedElement.getKind() != ElementKind.FIELD ||  enclosedElement.getAnnotation(Skip.class) != null) continue;
+            // 是否需要跳过
+            if (enclosedElement.getKind() != ElementKind.FIELD ||  enclosedElement.getAnnotation(Skip.class) != null) {
+                continue;
+            }
+            // 获取注解信息
             ColumnInfo columnInfo = this.processEnclosedElement(enclosedElement);
-            tableInfoMap.get(tableName).put(columnInfo.columnName, columnInfo);
+            columnInfoMap.put(columnInfo.columnName, columnInfo);
         }
+
+        tableInfoMap.put(tableName, columnInfoMap);
+        tableNameMap.put(className, tableName);
     }
 
     /**
