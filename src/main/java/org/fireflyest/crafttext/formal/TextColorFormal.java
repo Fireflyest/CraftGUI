@@ -77,6 +77,9 @@ public class TextColorFormal {
 
             Matcher attributeMatcher = attributePattern.matcher(sentence);
             String[] splitTexts = sentence.split("\\$<([^<]*)>");
+            if (splitTexts.length == 0) {
+                return;
+            }
 
             ExtraDTO startExtraDTO = new ExtraDTO();
             startExtraDTO.setBold(extraDTO.getBold());
