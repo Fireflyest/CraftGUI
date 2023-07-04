@@ -2,6 +2,7 @@ package org.fireflyest.util;
 
 import com.cryptomorin.xseries.XMaterial;
 
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 
 import java.util.ArrayList;
@@ -166,7 +167,8 @@ public class ItemUtils {
      * @return nbt文本
      */
     public static String toNbtString(@Nonnull ItemStack item) {
-        return NBTItem.convertItemtoNBT(item).getCompound("tag").toString();
+        NBTCompound compound = NBTItem.convertItemtoNBT(item).getCompound("tag");
+        return compound == null ? "{}" : compound.toString();
     }
 
 }
