@@ -362,11 +362,14 @@ public class ViewGuideImpl implements ViewGuide {
 
                 PacketContainer packetContainer = packet.shallowClone();
                 // 删掉多余格，只有背包的异步更新需要删减
-                Iterator<ItemStack> iterator = itemStacks.listIterator(invSize);
-                while (iterator.hasNext()) {
-                    iterator.next();
-                    iterator.remove();
+                if (itemStacks.size() > invSize) {
+                    Iterator<ItemStack> iterator = itemStacks.listIterator(invSize);
+                    while (iterator.hasNext()) {
+                        iterator.next();
+                        iterator.remove();
+                    }       
                 }
+                
                 // 写入
                 packetContainer.getItemListModifier().write(0, itemStacks);
                 // 1.17开始才会更新鼠标上的物品
@@ -415,10 +418,12 @@ public class ViewGuideImpl implements ViewGuide {
                         if (! packets.containsKey(playerName)) {
                             // 删掉背包物品
                             int size = page.getInventory().getSize();
-                            Iterator<ItemStack> iterator = itemStacks.listIterator(size);
-                            while (iterator.hasNext()) {
-                                iterator.next();
-                                iterator.remove();
+                            if (itemStacks.size() > size) {
+                                Iterator<ItemStack> iterator = itemStacks.listIterator(size);
+                                while (iterator.hasNext()) {
+                                    iterator.next();
+                                    iterator.remove();
+                                }
                             }
                         }
 
