@@ -61,10 +61,10 @@ public class InteractEventListener implements Listener {
                 String useAction = ItemUtils.getItemNbt(item, InteractAction.TRIGGER_USE);
                 String blockAction = ItemUtils.getItemNbt(item, InteractAction.TRIGGER_BLOCK);
                 if (useAction != null) {
-                    
+                    this.trigger(event.getPlayer(), item, useAction);
                 }
                 if (blockAction != null && event.getClickedBlock() != null) {
-
+                    this.trigger(event.getPlayer(), item, blockAction);
                 }
                 break;
             case PHYSICAL:
