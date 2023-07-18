@@ -9,6 +9,7 @@ import org.fireflyest.craftdatabase.sql.SQLConnector;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.core.ViewGuideImpl;
 import org.fireflyest.craftgui.listener.ViewEventListener;
+import org.fireflyest.craftitem.listener.InteractEventListener;
 import org.fireflyest.crafttask.api.TaskHandler;
 import org.fireflyest.crafttask.core.TaskHandlerImpl;
 
@@ -47,6 +48,7 @@ public final class CraftGUI extends JavaPlugin {
         // 注册监听
         this.getLogger().info("Registering listener for view events.");
         this.getServer().getPluginManager().registerEvents(new ViewEventListener(viewGuideImpl), this);
+        this.getServer().getPluginManager().registerEvents(new InteractEventListener(), this);
     }
 
     @Override
