@@ -12,11 +12,17 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.NumberConversions;
+import org.fireflyest.craftdatabase.cache.CacheService;
 import org.fireflyest.craftitem.interact.InteractAction;
 import org.fireflyest.util.ItemUtils;
 
 public class InteractEventListener implements Listener {
     
+    public InteractEventListener() {
+
+    }
+
     @EventHandler
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
         
@@ -48,6 +54,7 @@ public class InteractEventListener implements Listener {
         if (item == null) {
             return;
         }
+        int cooldown = NumberConversions.toInt(ItemUtils.getItemNbt(item, InteractAction.INTERACT_COOLDOWN));
 
         switch (event.getAction()) {
             case LEFT_CLICK_BLOCK:
@@ -60,20 +67,17 @@ public class InteractEventListener implements Listener {
             case RIGHT_CLICK_AIR:
                 String useAction = ItemUtils.getItemNbt(item, InteractAction.TRIGGER_USE);
                 String blockAction = ItemUtils.getItemNbt(item, InteractAction.TRIGGER_BLOCK);
-                if (useAction != null) {
-                    this.trigger(event.getPlayer(), item, useAction);
-                }
-                if (blockAction != null && event.getClickedBlock() != null) {
-                    this.trigger(event.getPlayer(), item, blockAction);
+                if (useAction != null && !"".equals(useAction)) {
+                    this.trigger(event.getPlayer(), item, useAction, cooldown);
+                } else if (blockAction != null && !"".equals(blockAction) && event.getClickedBlock() != null) {
+                    this.trigger(event.getPlayer(), item, blockAction, cooldown);
                 }
                 break;
             case PHYSICAL:
-                
                 break;
             default:
                 break;
         }
-        String action = ItemUtils.getItemNbt(item, InteractAction.TRIGGER_USE);
     }
 
     @EventHandler
@@ -81,8 +85,12 @@ public class InteractEventListener implements Listener {
         
     }
 
-    private void trigger(Player player, ItemStack item, String action) {
-        String[] actionValue = action.split(":");
+    private void trigger(Player player, ItemStack item, String action, int cooldown) {
+        if (player.getCooldown(item.getType()) > 0) {
+            return;
+        }
+        System.out.println("action = " + action);
+        String[] actionValue = action.replace("\"", "").split(":");
         String value = actionValue[1];
         switch (actionValue[0]) {
             case InteractAction.ACTION_CUSTOM:
@@ -95,18 +103,22 @@ public class InteractEventListener implements Listener {
                 
                 break;
             case InteractAction.ACTION_COMMAND:
+                System.out.println("performCommand = " + value);
                 player.performCommand(value);
                 break;
             case InteractAction.ACTION_CONSOLE:
+                System.out.println("dispatchCommand = " + value);
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), value);
                 break;
             case InteractAction.ACTION_CONSOLE_DISPOSABLE:
+                System.out.println("dispatchCommand disposable = " + value);
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), value);
                 item.setAmount(item.getAmount() - 1);
                 break;
             default:
                 break;
         }
+        player.setCooldown(item.getType(), cooldown);
     }
 
 }
