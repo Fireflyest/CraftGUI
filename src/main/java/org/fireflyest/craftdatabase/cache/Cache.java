@@ -18,9 +18,9 @@ public class Cache<T> {
         this.value = value;
     }
 
-    public Cache(T value, long second) {
+    public Cache(T value, long ms) {
         this.value = value;
-        this.deadline = Instant.now().plusSeconds(second);
+        this.deadline = Instant.now().plusMillis(ms);
     }
 
     /**

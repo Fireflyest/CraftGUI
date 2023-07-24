@@ -17,9 +17,9 @@ public class InteractItemBuilder extends ItemBuilder {
         nbt.put(InteractAction.INTERACT_DURABILITY, -1);
     }
     
-    public InteractItemBuilder cooldown(int ms) {
+    public InteractItemBuilder cooldown(int tick) {
         update = true;
-        nbt.put(InteractAction.INTERACT_COOLDOWN, ms);
+        nbt.put(InteractAction.INTERACT_COOLDOWN, tick);
         return this;
     }
 
