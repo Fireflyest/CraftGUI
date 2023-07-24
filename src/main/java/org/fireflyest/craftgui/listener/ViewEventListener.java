@@ -191,6 +191,7 @@ public class ViewEventListener implements Listener {
             buttonAction = ViewItemUtils.getItemAction(clickItem);
             buttonValue = ViewItemUtils.getItemValue(clickItem);
         }
+        ItemStack cursorItem = cursor.clone();
         ViewPlaceEvent placeEvent = null;
         switch (buttonAction) {
             case ButtonAction.ACTION_NONE:
@@ -204,7 +205,7 @@ public class ViewEventListener implements Listener {
                         clickType,
                         slot,
                         clickItem,
-                        cursor.clone(),
+                        cursorItem,
                         guide.getUsingView(playerName),
                         buttonValue,
                         buttonAction);
@@ -212,12 +213,15 @@ public class ViewEventListener implements Listener {
             default:
         }
         cursor.setAmount(0);
+        
         if (placeEvent != null) {
             Bukkit.getPluginManager().callEvent(placeEvent);
             // 还给玩家
             if (placeEvent.handBack()) {
                 human.getInventory().addItem(placeEvent.getCursorItem());
             }
+        } else {
+            human.getInventory().addItem(cursorItem);
         }
         // 刷新页面
         guide.refreshPage(playerName);

@@ -113,7 +113,17 @@ public class CacheService<T> {
      * @param value 值
      */
     public void setex(@Nonnull String key, int second, T value){
-        cacheMap.put(key, new Cache<>(value, second));
+        cacheMap.put(key, new Cache<>(value, second * 1000L));
+    }
+
+    /**
+     * 设置限期数据
+     * @param key 键
+     * @param second 期限
+     * @param value 值
+     */
+    public void setexms(@Nonnull String key, int ms, T value){
+        cacheMap.put(key, new Cache<>(value, ms));
     }
 
     /**
