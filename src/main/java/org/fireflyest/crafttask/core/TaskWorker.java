@@ -1,6 +1,7 @@
 package org.fireflyest.crafttask.core;
 
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +22,7 @@ public class TaskWorker {
 
     private BukkitTask bukkitTask;
     private final JavaPlugin plugin;
-    private final ArrayBlockingQueue<Task> taskQueue = new ArrayBlockingQueue<>(512);
+    private final ArrayDeque<Task> taskQueue = new ArrayDeque<>();
 
     /**
      * 创建任务工作者
@@ -46,17 +47,9 @@ public class TaskWorker {
             plugin.getLogger().info(info);
             this.start();
         }
-        try {
-            synchronized (taskQueue) {
-                for (Task task : tasks) {
-                    taskQueue.put(task);
-                }
-                taskQueue.notifyAll();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            // Restore interrupted state...
-            Thread.currentThread().interrupt();
+        synchronized (taskQueue) {
+            taskQueue.addAll(Arrays.asList(tasks));
+            taskQueue.notifyAll();
         }
     }
 
@@ -104,7 +97,7 @@ public class TaskWorker {
                     }
                     continue;
                 }
-                Task task = taskQueue.take();
+                Task task = taskQueue.poll();
                 task.execute();
                 if (task.hasFollowTasks()) {
                     taskQueue.addAll(task.followTasks());
