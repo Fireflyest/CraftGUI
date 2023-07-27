@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.fireflyest.crafttask.api.Task;
+import org.fireflyest.crafttask.exception.ExecuteException;
 
 /**
  * 任务执行类
@@ -89,6 +90,7 @@ public class TaskWorker {
      */
     private void loop() {
         while (enable) {
+            String taskName = "?";
             try {
                 // 如果执行完，就锁住
                 if (taskQueue.isEmpty()) {
@@ -98,9 +100,12 @@ public class TaskWorker {
                     continue;
                 }
                 Task task = taskQueue.poll();
-                task.execute();
-                if (task.hasFollowTasks()) {
-                    taskQueue.addAll(task.followTasks());
+                if (task != null) {
+                    taskName = task.getClass().getSimpleName();
+                    task.execute();
+                    if (task.hasFollowTasks()) {
+                        taskQueue.addAll(task.followTasks());
+                    }
                 }
             } catch (InterruptedException e) {
                 String info = String.format("error on taskQueue take, '%s' stop working!", name);
@@ -109,8 +114,8 @@ public class TaskWorker {
                 // Restore interrupted state...
                 Thread.currentThread().interrupt();
                 this.stop();
-            } catch (Exception e) {
-                String info = String.format("error on task execute, '%s' stop working!", name);
+            } catch (ExecuteException e) {
+                String info = String.format("error on '%s' execute, '%s' stop working!", taskName, name);
                 plugin.getLogger().severe(info);
                 e.printStackTrace();
                 this.stop();
