@@ -66,7 +66,7 @@ public class TextInteractFormal {
 
             String sentence = extraDTO.getText();
             // 判断是否有参数
-            if (!sentence.contains("$")) {
+            if (sentence == null || !sentence.contains("$")) {
                 formalText.getExtra().add(extraDTO);
                 continue;
             }
