@@ -299,16 +299,13 @@ public class ViewGuideImpl implements ViewGuide {
         packet.getIntegers().write(0, window);
         packet.getIntegers().write(2, slot);
         packet.getItemModifier().write(0, buttonItem);
-        try {
-            if (DEBUG) {
-                String info = String.format("button update %s on %s", buttonItem.getType().name(),  slot);
-                CraftGUI.getPlugin().getLogger().info(info);
-            }
-            // BUG: 低版本报错
-            protocolManager.sendServerPacket(player, packet);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        
+        if (DEBUG) {
+            String info = String.format("button update %s on %s", buttonItem.getType().name(),  slot);
+            CraftGUI.getPlugin().getLogger().info(info);
         }
+        // BUG: 低版本报错
+        protocolManager.sendServerPacket(player, packet);
     }
 
     @Override
@@ -354,11 +351,7 @@ public class ViewGuideImpl implements ViewGuide {
                 packet.getItemListModifier().write(0, itemStacks);
 
                 // 发送数据包
-                try {
-                    protocolManager.sendServerPacket(player, packet, false);
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                protocolManager.sendServerPacket(player, packet, false);
 
                 PacketContainer packetContainer = packet.shallowClone();
                 // 删掉多余格，只有背包的异步更新需要删减
