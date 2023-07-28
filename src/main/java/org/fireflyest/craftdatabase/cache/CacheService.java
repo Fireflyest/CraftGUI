@@ -119,7 +119,7 @@ public class CacheService<T> {
     /**
      * 设置限期数据
      * @param key 键
-     * @param second 期限
+     * @param ms 期限
      * @param value 值
      */
     public void setexms(@Nonnull String key, int ms, T value){
