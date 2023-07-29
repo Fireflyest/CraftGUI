@@ -69,6 +69,15 @@ public class ScoreService {
 
     /**
      * 设置一个递减计分
+     * @param entry 名称
+     * @param second 秒
+     */
+    public void setExist(String entry, int second) {
+        this.setExist("sidebar", entry, second);
+    }
+
+    /**
+     * 设置一个递减计分
      * @param objective 对象
      * @param entry 名称
      * @param second 秒
@@ -78,6 +87,7 @@ public class ScoreService {
         if (score.getScore() > 0) {
             score.setScore(score.getScore() + second);
         } else {
+            score.setScore(second);
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -87,7 +97,7 @@ public class ScoreService {
                         cancel();
                     }
                 }
-            }.runTaskTimer(plugin, 0, 20L);
+            }.runTaskTimer(plugin, 20L, 20L);
         }
     }
 
