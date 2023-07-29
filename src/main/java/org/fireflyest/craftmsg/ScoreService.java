@@ -20,7 +20,7 @@ public class ScoreService {
     }
 
     /**
-     * 初始化数据版
+     * 初始化计分榜
      * @param displayName 展示名
      */
     public void intiScoreboard(String displayName) {
@@ -46,6 +46,15 @@ public class ScoreService {
                 .registerNewObjective(name, criteria, displayName, renderType);
         }
         objective.setDisplaySlot(displaySlot);
+    }
+
+    /**
+     * 设置一个计分
+     * @param entry 名称
+     * @param score 分数
+     */
+    public void set(String entry, int score) {
+        this.set("sidebar", entry, score);
     }
 
     /**
@@ -88,6 +97,13 @@ public class ScoreService {
      */
     public void remove(String entry) {
         scoreboard.resetScores(entry);
+    }
+
+    /**
+     * 获取计分榜
+     */
+    public Scoreboard getScoreboard() {
+        return scoreboard;
     }
 
 }
