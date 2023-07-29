@@ -49,6 +49,11 @@ public final class CraftGUI extends JavaPlugin {
         this.getLogger().info("Registering listener for view events.");
         this.getServer().getPluginManager().registerEvents(new ViewEventListener(viewGuideImpl), this);
         this.getServer().getPluginManager().registerEvents(new InteractEventListener(), this);
+
+        this.getLogger().info("  _____         _____  _______  ______            ");
+        this.getLogger().info(" / ___/______ _/ _/ /_/ ___/ / / /  _/            ");
+        this.getLogger().info("/ /__/ __/ _ `/ _/ __/ (_ / /_/ // /              ");
+        this.getLogger().info("\\___/_/  \\_,_/_/ \\__/\\___/\\____/___/              ");
     }
 
     @Override
