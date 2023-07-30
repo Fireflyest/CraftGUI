@@ -110,11 +110,16 @@ public class ScoreService {
         if (score.getScore() > 0) {
             score.setScore(score.getScore() + second);
         } else {
-            score.setScore(second);
             new BukkitRunnable() {
+                private boolean set = false;
                 @Override
                 public void run() {
-                    score.setScore(score.getScore() - 1);
+                    if (set) {
+                        score.setScore(score.getScore() - 1);
+                    } else {
+                        score.setScore(second);
+                        set = true;
+                    }
                     if (score.getScore() <= 0) {
                         scoreboard.resetScores(entry);
                         cancel();
