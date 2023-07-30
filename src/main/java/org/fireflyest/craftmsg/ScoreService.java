@@ -11,6 +11,8 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class ScoreService {
     
+    public static final String DEFAULT_OBJECTIVE = "sidebar";
+
     private final JavaPlugin plugin;
     private final Scoreboard scoreboard;
 
@@ -27,7 +29,7 @@ public class ScoreService {
         for (Objective objective : scoreboard.getObjectives()) {
             objective.unregister();
         }
-        this.registerObjective("sidebar", "none", displayName, RenderType.INTEGER, DisplaySlot.SIDEBAR);
+        this.registerObjective(DEFAULT_OBJECTIVE, "none", displayName, RenderType.INTEGER, DisplaySlot.SIDEBAR);
    }
 
    /**
@@ -54,7 +56,7 @@ public class ScoreService {
      * @param score 分数
      */
     public void set(String entry, int score) {
-        this.set("sidebar", entry, score);
+        this.set(DEFAULT_OBJECTIVE, entry, score);
     }
 
     /**
@@ -73,7 +75,7 @@ public class ScoreService {
      * @param second 秒
      */
     public void setExist(String entry, int second) {
-        this.setExist("sidebar", entry, second);
+        this.setExist(DEFAULT_OBJECTIVE, entry, second);
     }
 
     /**
@@ -83,6 +85,27 @@ public class ScoreService {
      * @param second 秒
      */
     public void setExist(String objective, String entry, int second) {
+        this.setExistDelay(objective, entry, second, 0);
+    }
+
+    /**
+     * 设置一个递减计分
+     * @param entry 名称
+     * @param second 秒
+     * @param delay 延迟秒
+     */
+    public void setExistDelay(String entry, int second, int delay) {
+        this.setExistDelay(DEFAULT_OBJECTIVE, entry, second, delay);
+    }
+
+    /**
+     * 设置一个递减计分
+     * @param objective 对象
+     * @param entry 名称
+     * @param second 存在秒
+     * @param delay 延迟秒
+     */
+    public void setExistDelay(String objective, String entry, int second, int delay) {
         final Score score = scoreboard.getObjective(objective).getScore(entry);
         if (score.getScore() > 0) {
             score.setScore(score.getScore() + second);
@@ -97,7 +120,7 @@ public class ScoreService {
                         cancel();
                     }
                 }
-            }.runTaskTimer(plugin, 20L, 20L);
+            }.runTaskTimer(plugin, (delay + 1) * 20L, 20L);
         }
     }
 
