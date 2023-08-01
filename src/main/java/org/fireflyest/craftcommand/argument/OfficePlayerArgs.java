@@ -29,7 +29,7 @@ public class OfficePlayerArgs implements Argument {
                 break;
             }
             String name = offlinePlayer.getName();
-            if (name.startsWith(arg)) {
+            if (name !=null && name.startsWith(arg)) {
                 argList.add(name);
             }
         }
