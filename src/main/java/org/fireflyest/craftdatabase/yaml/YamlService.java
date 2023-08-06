@@ -16,7 +16,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fireflyest.craftgui.button.ButtonAction;
 import org.fireflyest.craftgui.button.ButtonItemBuilder;
+import org.fireflyest.craftitem.builder.InteractItemBuilder;
 import org.fireflyest.craftitem.builder.ItemBuilder;
+import org.fireflyest.craftitem.interact.InteractAction;
 import org.fireflyest.util.ReflectionUtils;
 import org.fireflyest.util.StringUtils;
 
@@ -79,12 +81,15 @@ public abstract class YamlService {
             List<String> lore = items.getStringList(key + ".lore");
             switch (type) {
                 case "button":
-                    int action = items.getInt(key + ".action", ButtonAction.ACTION_NONE);
-                    String value = items.getString(key + ".value", "");
-                    itemBuilder = new ButtonItemBuilder(material).action(action, value);
+                    int buttonAction = items.getInt(key + ".action", ButtonAction.ACTION_NONE);
+                    String buttonValue = items.getString(key + ".value", "");
+                    itemBuilder = new ButtonItemBuilder(material).action(buttonAction, buttonValue);
                     break;
                 case "interact":
-                    itemBuilder = new ButtonItemBuilder(material);
+                    String triggerAction = items.getString(key + ".action", InteractAction.ACTION_COMMAND);
+                    String triggerValue = items.getString(key + ".value", "");
+                    String trigger = items.getString(key + ".trigger", InteractAction.TRIGGER_USE);
+                    itemBuilder = new InteractItemBuilder(material).trigger(trigger, triggerAction, triggerValue);
                     break;
                 default:
                     itemBuilder = new ItemBuilder(material);

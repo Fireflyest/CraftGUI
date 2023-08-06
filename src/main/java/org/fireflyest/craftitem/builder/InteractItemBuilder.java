@@ -29,6 +29,12 @@ public class InteractItemBuilder extends ItemBuilder {
         return this;
     }
 
+    public InteractItemBuilder trigger(String trigger, String action, String value){
+        update = true;
+        nbt.put(trigger, action + ":" + value);
+        return this;
+    }
+
     public InteractItemBuilder triggerEat(String action, String value) {
         update = true;
         nbt.put(InteractAction.TRIGGER_EAT, action + ":" + value);
