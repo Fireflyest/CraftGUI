@@ -91,7 +91,7 @@ public class InteractEventListener implements Listener {
         }
         System.out.println("action = " + action);
         String[] actionValue = action.replace("\"", "").split(":");
-        String value = actionValue[1];
+        String value = actionValue[1].replace("%player%", player.getName());
         switch (actionValue[0]) {
             case InteractAction.ACTION_CUSTOM:
                 
