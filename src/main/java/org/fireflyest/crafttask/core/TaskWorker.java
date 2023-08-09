@@ -1,7 +1,7 @@
 package org.fireflyest.crafttask.core;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.annotation.Nonnull;
 
@@ -23,7 +23,7 @@ public class TaskWorker {
 
     private BukkitTask bukkitTask;
     private final JavaPlugin plugin;
-    private final ArrayDeque<Task> taskQueue = new ArrayDeque<>();
+    private final ConcurrentLinkedQueue<Task> taskQueue = new ConcurrentLinkedQueue<>();
 
     /**
      * 创建任务工作者
@@ -100,12 +100,13 @@ public class TaskWorker {
                     continue;
                 }
                 Task task = taskQueue.poll();
-                if (task != null) {
-                    taskName = task.getClass().getSimpleName();
-                    task.execute();
-                    if (task.hasFollowTasks()) {
-                        taskQueue.addAll(task.followTasks());
-                    }
+                if (task == null) {
+                    throw new InterruptedException("Task is null, Queue size: " + taskQueue.size());
+                }
+                taskName = task.getClass().getSimpleName();
+                task.execute();
+                if (task.hasFollowTasks()) {
+                    taskQueue.addAll(task.followTasks());
                 }
             } catch (InterruptedException e) {
                 String info = String.format("error on taskQueue take, '%s' stop working!", name);
