@@ -6,7 +6,6 @@ import javax.annotation.Nonnull;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.fireflyest.CraftGUI;
 import org.fireflyest.crafttask.api.PrepareTask;
 import org.fireflyest.crafttask.api.Task;
 import org.fireflyest.crafttask.api.TaskFactory;
@@ -59,28 +58,28 @@ public class TaskHandlerImpl implements TaskHandler {
     }
 
     @Override
-    public void runTask(String key, String value) {
-        this.runTask(key, value, 0, 0, 1);
+    public void runTask(JavaPlugin plugin, String key, String value) {
+        this.runTask(plugin, key, value, 0, 0, 1);
     }
 
     @Override
-    public void runTask(String key, String value, long delay, long period, int count) {
-        BukkitRunnable runnable = this.runnable(key, value, count);
+    public void runTask(JavaPlugin plugin, String key, String value, long delay, long period, int count) {
+        BukkitRunnable runnable = this.runnable(plugin, key, value, count);
         if (runnable != null) {
-            runnable.runTaskTimer(CraftGUI.getPlugin(), delay, period);
+            runnable.runTaskTimer(plugin, delay, period);
         }
     }
 
     @Override
-    public void runTaskAsynchronously(String key, String value) {
-        this.runTaskAsynchronously(key, value, 0, 0, 1);
+    public void runTaskAsynchronously(JavaPlugin plugin, String key, String value) {
+        this.runTaskAsynchronously(plugin, key, value, 0, 0, 1);
     }
 
     @Override
-    public void runTaskAsynchronously(String key, String value, long delay, long period, int count) {
-        BukkitRunnable runnable = this.runnable(key, value, count);
+    public void runTaskAsynchronously(JavaPlugin plugin, String key, String value, long delay, long period, int count) {
+        BukkitRunnable runnable = this.runnable(plugin, key, value, count);
         if (runnable != null) {
-            runnable.runTaskTimerAsynchronously(CraftGUI.getPlugin(), delay, period);
+            runnable.runTaskTimerAsynchronously(plugin, delay, period);
         }
     }
     
@@ -91,7 +90,7 @@ public class TaskHandlerImpl implements TaskHandler {
         }
     }
 
-    private BukkitRunnable runnable(String key, String value, final int count) {
+    private BukkitRunnable runnable(JavaPlugin plugin, String key, String value, final int count) {
         TaskFactory<?> factory = factoryMap.get(key);
         if (factory != null) {
             return new BukkitRunnable() {
@@ -106,7 +105,7 @@ public class TaskHandlerImpl implements TaskHandler {
                         task.execute();
                     } catch (ExecuteException e) {
                         String info = String.format("error on '%s' execute!", taskName);
-                        CraftGUI.getPlugin().getLogger().severe(info);
+                        plugin.getLogger().severe(info);
                         e.printStackTrace();
                         cancel();
                     }
