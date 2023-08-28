@@ -1,6 +1,7 @@
 package org.fireflyest.crafttask.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,11 +26,26 @@ public interface TaskHandler {
     void removeWorker(@Nonnull String name);
 
     /**
-     * 布置任务
+     * 布置任务到工作线程
      * @param name 名称
      * @param tasks 任务
      */
-    void putTasks(@Nonnull String name, @Nonnull Task... tasks);
+    void putTasks(@Nonnull String worker, @Nonnull Task... tasks);
+
+    /**
+     * 准备任务
+     * @param key 名称
+     * @param task 任务
+     */
+    void prepareTask(@Nonnull String key, @Nonnull TaskFactory<?> factory);
+
+    void runTask(@Nonnull String key, @Nullable String value);
+
+    void runTask(@Nonnull String key, @Nullable String value, long delay, long period, int count);
+
+    void runTaskAsynchronously(@Nonnull String key, @Nullable String value);
+
+    void runTaskAsynchronously(@Nonnull String key, @Nullable String value, long delay, long period, int count);
 
     /**
      * 关闭

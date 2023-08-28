@@ -24,12 +24,12 @@ public class InteractAction {
 
 
 
-    public static final String ACTION_CUSTOM = "custom";
-    public static final String ACTION_CUSTOM_DISPOSABLE = "custom-disposable";
+    public static final String ACTION_CUSTOM = "custom"; // key,value
+    public static final String ACTION_CUSTOM_DISPOSABLE = "custom-disposable"; // key,value
     public static final String ACTION_POTION = "potion";
-    public static final String ACTION_COMMAND = "command";
-    public static final String ACTION_CONSOLE = "console";
-    public static final String ACTION_CONSOLE_DISPOSABLE = "console-disposable";
+    public static final String ACTION_COMMAND = "command"; // command
+    public static final String ACTION_CONSOLE = "console"; // command
+    public static final String ACTION_CONSOLE_DISPOSABLE = "console-disposable"; // command
 
 
 }
