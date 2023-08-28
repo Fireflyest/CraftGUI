@@ -39,13 +39,13 @@ public interface TaskHandler {
      */
     void prepareTask(@Nonnull String key, @Nonnull TaskFactory<?> factory);
 
-    void runTask(@Nonnull String key, @Nullable String value);
+    void runTask(@Nonnull JavaPlugin plugin, @Nonnull String key, @Nullable String value);
 
-    void runTask(@Nonnull String key, @Nullable String value, long delay, long period, int count);
+    void runTask(@Nonnull JavaPlugin plugin, @Nonnull String key, @Nullable String value, long delay, long period, int count);
 
-    void runTaskAsynchronously(@Nonnull String key, @Nullable String value);
+    void runTaskAsynchronously(@Nonnull JavaPlugin plugin, @Nonnull String key, @Nullable String value);
 
-    void runTaskAsynchronously(@Nonnull String key, @Nullable String value, long delay, long period, int count);
+    void runTaskAsynchronously(@Nonnull JavaPlugin plugin, @Nonnull String key, @Nullable String value, long delay, long period, int count);
 
     /**
      * 关闭
