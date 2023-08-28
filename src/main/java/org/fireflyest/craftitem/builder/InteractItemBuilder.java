@@ -7,13 +7,13 @@ public class InteractItemBuilder extends ItemBuilder {
 
     public InteractItemBuilder(Material material) {
         super(material);
-        nbt.put(InteractAction.INTERACT_COOLDOWN, 0);
+        nbt.put(InteractAction.INTERACT_COOLDOWN, 1);
         nbt.put(InteractAction.INTERACT_DURABILITY, -1);
     }
 
     public InteractItemBuilder(String material) {
         super(material);
-        nbt.put(InteractAction.INTERACT_COOLDOWN, 0);
+        nbt.put(InteractAction.INTERACT_COOLDOWN, 1);
         nbt.put(InteractAction.INTERACT_DURABILITY, -1);
     }
     

@@ -89,7 +89,9 @@ public abstract class YamlService {
                     String triggerAction = items.getString(key + ".action", InteractAction.ACTION_COMMAND);
                     String triggerValue = items.getString(key + ".value", "");
                     String trigger = items.getString(key + ".trigger", InteractAction.TRIGGER_USE);
-                    itemBuilder = new InteractItemBuilder(material).trigger(trigger, triggerAction, triggerValue);
+                    int cooldown = items.getInt(key + ".cooldown", 1);
+                    int durability = items.getInt(key + ".durability", -1);
+                    itemBuilder = new InteractItemBuilder(material).cooldown(cooldown).durability(durability).trigger(trigger, triggerAction, triggerValue);
                     break;
                 default:
                     itemBuilder = new ItemBuilder(material);
