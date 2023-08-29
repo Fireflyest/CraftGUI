@@ -139,6 +139,7 @@ public class ScoreService {
 
     /**
      * 获取计分榜
+     * @return 计分榜
      */
     public Scoreboard getScoreboard() {
         return scoreboard;

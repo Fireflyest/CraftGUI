@@ -27,7 +27,7 @@ public interface TaskHandler {
 
     /**
      * 布置任务到工作线程
-     * @param name 名称
+     * @param worker 工作线程名称
      * @param tasks 任务
      */
     void putTasks(@Nonnull String worker, @Nonnull Task... tasks);
@@ -35,7 +35,7 @@ public interface TaskHandler {
     /**
      * 准备任务
      * @param key 名称
-     * @param task 任务
+     * @param factory 任务工厂
      */
     void prepareTask(@Nonnull String key, @Nonnull TaskFactory<?> factory);
 
