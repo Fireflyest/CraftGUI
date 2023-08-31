@@ -71,8 +71,8 @@ public class ColorUtils {
 
     /**
      * 两种颜色的距离
-     * @param color1 颜色1
-     * @param color2 颜色2
+     * @param c1 颜色1
+     * @param c2 颜色2
      * @return 距离
      */
     public static int distance(@Nonnull Color c1, @Nonnull Color c2) {
