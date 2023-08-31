@@ -12,8 +12,11 @@ public class MapCanvasDrawer {
 
     /**
      * Bresenham算法
-     * @param x
-     * @param y
+     * @param x0 起始x
+     * @param y0 起始y
+     * @param x1 终点x
+     * @param y1 终点y
+     * @param color 颜色
      * @return
      */
     public MapCanvasDrawer drawLine(int x0, int y0, int x1, int y1,  byte color) {
