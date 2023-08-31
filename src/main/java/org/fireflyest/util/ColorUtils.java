@@ -75,10 +75,15 @@ public class ColorUtils {
      * @param color2 颜色2
      * @return 距离
      */
-    public static int distance(Color color1, Color color2) {
-        return (int)(Math.pow(color1.getRed() - (double)color2.getRed(), 2) 
-            + Math.pow(color1.getGreen() - (double)color2.getGreen(), 2) 
-            + Math.pow(color1.getBlue() - (double)color2.getBlue(), 2));
+    public static int distance(@Nonnull Color c1, @Nonnull Color c2) {
+        double rmean = (c1.getRed() + c2.getRed()) / 2.0;
+        int r = c1.getRed() - c2.getRed();
+        int g = c1.getGreen() - c2.getGreen();
+        int b = c1.getBlue() - c2.getBlue();
+        double weightR = 2 + rmean / 256.0;
+        double weightG = 4.0;
+        double weightB = 2 + (255 - rmean) / 256.0;
+        return (int)(weightR * r * r + weightG * g * g + weightB * b * b);
     }
 
     /**
