@@ -13,7 +13,6 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.NumberConversions;
-import org.fireflyest.craftdatabase.cache.CacheService;
 import org.fireflyest.craftitem.interact.InteractAction;
 import org.fireflyest.util.ItemUtils;
 
@@ -25,7 +24,16 @@ public class InteractEventListener implements Listener {
 
     @EventHandler
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
-        
+        ItemStack item = event.getItem();
+        if (item == null) {
+            return;
+        }
+        int cooldown = NumberConversions.toInt(ItemUtils.getItemNbt(item, InteractAction.INTERACT_COOLDOWN));
+
+        String consumeAction = ItemUtils.getItemNbt(item, InteractAction.TRIGGER_CONSUME);
+        if (consumeAction != null && !"".equals(consumeAction)) {
+            this.trigger(event.getPlayer(), item, consumeAction, cooldown);
+        }
     }
 
     @EventHandler
