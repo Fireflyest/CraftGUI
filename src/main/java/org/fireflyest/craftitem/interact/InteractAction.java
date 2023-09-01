@@ -2,6 +2,9 @@ package org.fireflyest.craftitem.interact;
 
 public class InteractAction {
     
+    private InteractAction() {
+    }
+    
     public static final String INTERACT_COOLDOWN = "craft-interact-cooldown";
     public static final String INTERACT_DURABILITY = "craft-interact-durability";
 
@@ -11,6 +14,7 @@ public class InteractAction {
     public static final String TRIGGER_EAT = "craft-interact-eat";
     // 消耗品 右键触发行为
     public static final String TRIGGER_USE = "craft-interact-use";
+    public static final String TRIGGER_CONSUME = "craft-interact-consume";
     // 武器 攻击到人后触发行为
     public static final String TRIGGER_ATTACK = "craft-interact-attack";
     public static final String TRIGGER_KILL = "craft-interact-kill";
