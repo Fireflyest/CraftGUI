@@ -123,6 +123,19 @@ public class ButtonItemBuilder extends ItemBuilder {
     }
 
     /**
+     * Shift点击指令
+     * @param command 指令
+     * @param shiftCommand 指令
+     * @return this
+     */
+    public ButtonItemBuilder actionShiftCommand(String command, String shiftCommand) {
+        update = true;
+        nbt.put(ButtonAction.NBT_ACTION_KEY, ButtonAction.ACTION_SHIFT_COMMAND_SEND);
+        nbt.put(ButtonAction.NBT_VALUE_KEY, command + ";" + shiftCommand);
+        return this;
+    }
+
+    /**
      * 插件自定义行为，给插件处理
      * @param value 行为值
      * @return this
