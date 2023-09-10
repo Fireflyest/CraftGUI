@@ -103,7 +103,6 @@ public class SQLServiceInitial {
                 return "bigint";
             case "boolean":
             case "java.lang.Boolean":
-                return "bit";
             case "short":
             case "java.lang.Short":
                 return "tinyint";
