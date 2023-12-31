@@ -21,7 +21,6 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-import org.fireflyest.craftdatabase.annotation.TableProcessor.ColumnInfo;
 import org.fireflyest.craftdatabase.builder.SQLCreateTable;
 
 /**
@@ -92,6 +91,11 @@ public class DaoProcessor extends AbstractProcessor {
         this.writeSource(javaFileBuilder, pack, daoName);
     }
 
+    /**
+     * 拼接方法
+     * @param javaFileBuilder builder
+     * @param enclosedElement 元素
+     */
     private void appendField(StringBuilder javaFileBuilder, Element enclosedElement) {
         javaFileBuilder.append("\n    @Override\n    public ");
         ExecutableElement executableElement = ((ExecutableElement) enclosedElement);
@@ -142,6 +146,12 @@ public class DaoProcessor extends AbstractProcessor {
         }
     }
 
+    /**
+     * 生成文件
+     * @param javaFileBuilder builder
+     * @param pack 包
+     * @param daoName 名称
+     */
     private void writeSource(StringBuilder javaFileBuilder, String pack, String daoName) {
         JavaFileObject source = null;
         try {
@@ -160,6 +170,11 @@ public class DaoProcessor extends AbstractProcessor {
         }
     }
 
+    /**
+     * 拼接建表指令和获取方法
+     * @param javaFileBuilder builder
+     * @param obj 表名
+     */
     private void appendCreateTable(StringBuilder javaFileBuilder, String obj) {
         // 建表
         javaFileBuilder.append("\n\n    private static final String createTable = \"");
@@ -183,10 +198,12 @@ public class DaoProcessor extends AbstractProcessor {
     }
 
 
-
+    /**
+     * 更新
+     * @param javaFileBuilder builder
+     */
     private void appendUpdate(StringBuilder javaFileBuilder){
         javaFileBuilder.append("\n        long num = 0;");
-        javaFileBuilder.append("\n        ");
         javaFileBuilder.append("\n        Connection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
         javaFileBuilder.append("\n        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {");
         javaFileBuilder.append("\n            num = preparedStatement.executeUpdate();");
@@ -197,9 +214,12 @@ public class DaoProcessor extends AbstractProcessor {
         javaFileBuilder.append("\n        return num;\n    }\n");
     }
 
+    /**
+     * 插入
+     * @param javaFileBuilder builder
+     */
     private void appendInsert(StringBuilder javaFileBuilder){
         javaFileBuilder.append("\n        long insertId = 0;");
-        javaFileBuilder.append("\n        ");
         javaFileBuilder.append("\n        Connection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
         javaFileBuilder.append("\n        ResultSet resultSet = null;");
         javaFileBuilder.append("\n        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){");
@@ -223,6 +243,12 @@ public class DaoProcessor extends AbstractProcessor {
         javaFileBuilder.append("\n        return insertId;\n    }\n");
     }
 
+    /**
+     * 查询
+     * @param javaFileBuilder builder
+     * @param sql 语句
+     * @param returnType 返回类型
+     */
     private void appendSelect(StringBuilder javaFileBuilder, String sql, String returnType) {
         boolean returnArray = returnType.contains("[]");
         // 对象的类型
