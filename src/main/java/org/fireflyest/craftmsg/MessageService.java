@@ -2,7 +2,9 @@ package org.fireflyest.craftmsg;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -19,8 +21,11 @@ public class MessageService {
     private final JavaPlugin plugin;
     private final Map<String, ScoreService> scoreMap = new HashMap<>();
     private final Map<String, Instant> timeMap = new HashMap<>();
+    private final List<Player> players = new ArrayList<>();
     private ScoreService shareScore;
     private String title;
+
+    private static final long POP_INTERVAL = 2500;
 
     /**
      * 使用单独的计分榜创建
@@ -53,6 +58,7 @@ public class MessageService {
         score.intiScoreboard(title);
         // 使用
         scoreMap.put(player.getName(), score);
+        players.add(player);
         player.setScoreboard(score.getScoreboard());
     }
 
@@ -66,10 +72,11 @@ public class MessageService {
             score.setEnable(false);
             scoreMap.remove(player.getName());
         }
+        players.remove(player);
     }
 
     /**
-     * 推送全服信息
+     * 推送全局信息
      * @param message 内容
      * @param second 持续时间
      * @param delay 延迟
@@ -90,7 +97,7 @@ public class MessageService {
     }
     
     /**
-     * 推送全服信息
+     * 推送全局信息
      * @param message 内容
      * @param second 持续时间
      */
@@ -124,19 +131,48 @@ public class MessageService {
     }
 
     /**
+     * 全局弹出消息
+     * @param message
+     */
+    public void popGlobalMessage(String message) {
+        this.popGlobalMessage(message, POP_INTERVAL);
+    }
+
+    /**
+     * 全局弹出消息
+     * @param message
+     * @param interval
+     */
+    public void popGlobalMessage(String message, long interval) {
+        for (Player player : players) {
+            this.popMessage(player, message, interval);
+        }
+    }
+
+    /**
      * 玩家弹出信息
      * @param player 玩家
      * @param message 信息
      */
     public void popMessage(Player player, String message) {
+        this.popMessage(player, message, POP_INTERVAL);
+    }
+
+        /**
+     * 玩家弹出信息
+     * @param player 玩家
+     * @param message 信息
+     * @param interval 消息持续时间
+     */
+    public void popMessage(Player player, String message, long interval) {
         final String playerName = player.getName();
         // 下次可弹出时间
         if (!timeMap.containsKey(playerName) || timeMap.get(playerName).isBefore(Instant.now())) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-            timeMap.put(playerName, Instant.now().plusSeconds(1));
+            timeMap.put(playerName, Instant.now().plusMillis(interval));
         } else {
             // 发送的时间点
-            long timePoint = ChronoUnit.SECONDS.between(timeMap.get(playerName), Instant.now()) * 20;
+            long timePoint = ChronoUnit.MILLIS.between(Instant.now(), timeMap.get(playerName)) / 50;
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -144,7 +180,7 @@ public class MessageService {
                 }
             }.runTaskLater(plugin, timePoint);
             // 可发送时间再推迟一秒
-            timeMap.put(playerName, timeMap.get(playerName).plusSeconds(1));
+            timeMap.put(playerName, timeMap.get(playerName).plusMillis(interval));
         }
     }
 
