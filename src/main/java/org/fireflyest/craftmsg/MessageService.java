@@ -1,6 +1,7 @@
 package org.fireflyest.craftmsg;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -135,10 +136,7 @@ public class MessageService {
             timeMap.put(playerName, Instant.now().plusSeconds(1));
         } else {
             // 发送的时间点
-            System.out.println("");
-            System.out.println((timeMap.get(playerName).compareTo(Instant.now())));
-            long timePoint = (long)(timeMap.get(playerName).compareTo(Instant.now()) / (50 * 1e6));
-            System.out.println(timePoint);
+            long timePoint = ChronoUnit.SECONDS.between(timeMap.get(playerName), Instant.now()) * 20;
             new BukkitRunnable() {
                 @Override
                 public void run() {
