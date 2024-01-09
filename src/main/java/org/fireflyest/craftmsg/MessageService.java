@@ -19,23 +19,27 @@ public class MessageService {
     private final Map<String, ScoreService> scoreMap = new HashMap<>();
     private final Map<String, Instant> timeMap = new HashMap<>();
     private ScoreService shareScore;
+    private String title;
 
     /**
      * 使用单独的计分榜创建
      * @param plugin 插件
      * @param shareBoard 计分榜
      */
-    public MessageService(JavaPlugin plugin, Scoreboard shareBoard) {
+    public MessageService(JavaPlugin plugin, String title, Scoreboard shareBoard) {
         this.plugin = plugin;
+        this.title = title;
         this.shareScore = new ScoreService(plugin, shareBoard);
+        shareScore.intiScoreboard(title);
     }
 
     /**
      * 各自独立计分榜创建
      * @param plugin 插件
      */
-    public MessageService(JavaPlugin plugin) {
+    public MessageService(JavaPlugin plugin, String title) {
         this.plugin = plugin;
+        this.title = title;
     }
 
     /**
@@ -43,7 +47,10 @@ public class MessageService {
      * @param player 玩家
      */
     public void playerJoin(Player player) {
+        // 新建
         ScoreService score = shareScore != null ? shareScore : new ScoreService(plugin, Bukkit.getScoreboardManager().getNewScoreboard());
+        score.intiScoreboard(title);
+        // 使用
         scoreMap.put(player.getName(), score);
         player.setScoreboard(score.getScoreboard());
     }
@@ -128,6 +135,8 @@ public class MessageService {
             timeMap.put(playerName, Instant.now().plusSeconds(1));
         } else {
             // 发送的时间点
+            System.out.println("");
+            System.out.println((timeMap.get(playerName).compareTo(Instant.now())));
             long timePoint = (long)(timeMap.get(playerName).compareTo(Instant.now()) / (50 * 1e6));
             System.out.println(timePoint);
             new BukkitRunnable() {
