@@ -15,10 +15,12 @@ public class ScoreService {
 
     private final JavaPlugin plugin;
     private final Scoreboard scoreboard;
+    private boolean enable;
 
     public ScoreService(JavaPlugin plugin, Scoreboard scoreboard) {
         this.plugin = plugin;
         this.scoreboard = scoreboard;
+        this.enable = true;
     }
 
     /**
@@ -108,7 +110,7 @@ public class ScoreService {
     public void setExistDelay(String objective, String entry, int second, int delay) {
         final Score score = scoreboard.getObjective(objective).getScore(entry);
         if (score.getScore() > 0) {
-            score.setScore(score.getScore() + second);
+            score.setScore(second);
         } else {
             new BukkitRunnable() {
                 private boolean set = false;
@@ -143,6 +145,22 @@ public class ScoreService {
      */
     public Scoreboard getScoreboard() {
         return scoreboard;
+    }
+
+    /**
+     * 是否启用
+     * @return 启用状态
+     */
+    public boolean isEnable() {
+        return enable;
+    }
+
+    /**
+     * 设置启用状态
+     * @param enable 启用状态
+     */
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
 }
