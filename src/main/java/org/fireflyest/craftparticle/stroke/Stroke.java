@@ -31,12 +31,7 @@ public abstract class Stroke<T> {
     }
 
     protected boolean canDraw() {
-        if (++count == drawSpacing) {
-            count = 0;
-            maxTime--;
-            return true;
-        }
-        return false;
+        return count++ % drawSpacing == 0;
     }
     
 
