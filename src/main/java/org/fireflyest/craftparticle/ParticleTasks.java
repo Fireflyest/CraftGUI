@@ -37,7 +37,7 @@ public class ParticleTasks {
     private void draw() {
         Set<Stroke<?>> drawnSet = new HashSet<>();
         taskSet.parallelStream().forEach(stroke -> {
-            if (stroke.draw()) drawnSet.add(stroke);
+            if (!stroke.draw()) drawnSet.add(stroke);
         });
         taskSet.removeAll(drawnSet);
     }
