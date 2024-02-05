@@ -26,7 +26,7 @@ public class ParticleUtils {
             }
             World world = loc.getWorld();
             world.spawnParticle(brush.getParticle(), 
-                loc, 
+                step, 
                 brush.getCount(), 
                 brush.getOffsetX(), 
                 brush.getOffsetY(), 
