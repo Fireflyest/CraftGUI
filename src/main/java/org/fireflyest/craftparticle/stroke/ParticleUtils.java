@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.fireflyest.craftparticle.Brush;
 
 
 public class ParticleUtils {
