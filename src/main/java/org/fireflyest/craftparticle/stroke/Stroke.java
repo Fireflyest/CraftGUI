@@ -2,6 +2,7 @@ package org.fireflyest.craftparticle.stroke;
 
 import javax.annotation.Nonnull;
 
+import org.fireflyest.craftparticle.Brush;
 import org.fireflyest.craftparticle.DynamicLocation;
 
 public abstract class Stroke<T> {
