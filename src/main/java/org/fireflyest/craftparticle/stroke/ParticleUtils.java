@@ -37,7 +37,7 @@ public class ParticleUtils {
     }
 
     public static <T> void line(@Nonnull Brush<T> brush, @Nullable List<Location> cache, @Nonnull Location loc1, @Nonnull Location loc2) {
-        line(brush, cache, loc2, new Vector(loc2.getX() - loc1.getX(), loc2.getY() - loc1.getY(), loc2.getZ() - loc1.getZ()));
+        line(brush, cache, loc1, new Vector(loc2.getX() - loc1.getX(), loc2.getY() - loc1.getY(), loc2.getZ() - loc1.getZ()));
     }
 
     public static <T> void rectangle(@Nonnull Brush<T> brush, @Nullable List<Location> cache, @Nonnull Location loc1, @Nonnull Location loc2) {
