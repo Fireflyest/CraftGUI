@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.fireflyest.craftparticle.Brush;
 import org.fireflyest.craftparticle.DynamicLocation;
 import org.fireflyest.craftparticle.DynamicVector;
 

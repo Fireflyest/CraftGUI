@@ -2,6 +2,7 @@ package org.fireflyest.craftparticle.stroke;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.fireflyest.craftparticle.Brush;
 import org.fireflyest.craftparticle.DynamicLocation;
 
 public class PointStroke<T> extends Stroke<T> {
