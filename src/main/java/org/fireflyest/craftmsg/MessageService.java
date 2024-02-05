@@ -30,6 +30,7 @@ public class MessageService {
     /**
      * 使用单独的计分榜创建
      * @param plugin 插件
+     * @param title 标题
      * @param shareBoard 计分榜
      */
     public MessageService(JavaPlugin plugin, String title, Scoreboard shareBoard) {
@@ -42,6 +43,7 @@ public class MessageService {
     /**
      * 各自独立计分榜创建
      * @param plugin 插件
+     * @param title 标题
      */
     public MessageService(JavaPlugin plugin, String title) {
         this.plugin = plugin;
@@ -132,7 +134,7 @@ public class MessageService {
 
     /**
      * 全局弹出消息
-     * @param message
+     * @param message 信息
      */
     public void popGlobalMessage(String message) {
         this.popGlobalMessage(message, POP_INTERVAL);
@@ -140,8 +142,8 @@ public class MessageService {
 
     /**
      * 全局弹出消息
-     * @param message
-     * @param interval
+     * @param message 信息
+     * @param interval 消息持续时间
      */
     public void popGlobalMessage(String message, long interval) {
         for (Player player : players) {

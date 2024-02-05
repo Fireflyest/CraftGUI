@@ -49,9 +49,7 @@ public class Brush<T> {
     }
 
     /**
-     * @param <T> type of particle data (see {@link Particle#getDataType()}
-     * @param data the data to use for the particle or null,
-     *             the type of this depends on {@link Particle#getDataType()}
+     * @param data the data to use for the particle or null
      * @return brush itself
      */
     public Brush<T> data(T data) {
