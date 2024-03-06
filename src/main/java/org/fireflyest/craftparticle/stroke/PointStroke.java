@@ -18,18 +18,23 @@ public class PointStroke<T> extends Stroke<T> {
     @Override
     public boolean draw() {
         if (this.canDraw()) {
-            Location location = dLocation.getLocation();
-            World world = location.getWorld();
-            world.spawnParticle(brush.getParticle(), 
-                location, 
-                brush.getCount(), 
-                brush.getOffsetX(), 
-                brush.getOffsetY(), 
-                brush.getOffsetZ(), 
-                brush.getExtra(), 
-                brush.getData());
+            this.realtimeDraw();
         }
         return maxTime >= 0;
+    }
+
+    @Override
+    public void realtimeDraw() {
+        Location location = dLocation.getLocation();
+        World world = location.getWorld();
+        world.spawnParticle(brush.getParticle(), 
+            location, 
+            brush.getCount(), 
+            brush.getOffsetX(), 
+            brush.getOffsetY(), 
+            brush.getOffsetZ(), 
+            brush.getExtra(), 
+            brush.getData());
     }
     
 }
