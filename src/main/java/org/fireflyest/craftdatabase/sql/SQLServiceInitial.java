@@ -107,7 +107,7 @@ public class SQLServiceInitial {
             case "java.lang.Short":
                 return "tinyint";
             case "java.lang.String":
-                return "varchar(511)";
+                return "varchar(127)";
             case "java.lang.Double":
             case "java.lang.Float":
             case "double":
@@ -137,7 +137,7 @@ public class SQLServiceInitial {
             case "java.lang.Short":
                 return "integer";
             case "java.lang.String":
-                return "varchar(511)";
+                return "varchar(127)";
             case "java.lang.Double":
             case "java.lang.Float":
             case "float":
