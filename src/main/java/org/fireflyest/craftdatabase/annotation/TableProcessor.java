@@ -126,6 +126,12 @@ public class TableProcessor extends AbstractProcessor {
 
     public static class ColumnInfo {
 
+        /**
+         * 建表信息
+         * @param varName 成员变量名称
+         * @param columnName 表名
+         * @param dataType 愿数据类型
+         */
         public ColumnInfo(String varName, String columnName, String dataType) {
             this.varName = varName;
             this.columnName = columnName;
@@ -135,11 +141,11 @@ public class TableProcessor extends AbstractProcessor {
         public final String varName;
         public final String columnName;
         public final String dataType;
-        public String columnDataType;
-        public boolean id;
-        public boolean primary;
-        public String defaultValue;
-        public boolean noNull;
+        public String columnDataType;  // 数据库数据类型
+        public boolean id;  // 是否自增主键
+        public boolean primary;  // 是否主键
+        public String defaultValue;  // 默认值
+        public boolean noNull;  // 是否非空
 
         @Override
         public String toString() {

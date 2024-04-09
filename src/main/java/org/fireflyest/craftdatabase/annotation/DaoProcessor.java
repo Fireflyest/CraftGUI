@@ -101,7 +101,7 @@ public class DaoProcessor extends AbstractProcessor {
         ExecutableElement executableElement = ((ExecutableElement) enclosedElement);
         // 返回的类型
         String returnType = executableElement.getReturnType().toString();
-
+        // 方法名称
         javaFileBuilder.append(returnType)
                 .append(" ")
                 .append(executableElement.getSimpleName())
@@ -110,8 +110,8 @@ public class DaoProcessor extends AbstractProcessor {
         int varNum = 0;
         Set<String> stringParameter = new HashSet<>();
         for (VariableElement parameter : executableElement.getParameters()) {
-            String parameterName = parameter.getSimpleName().toString();
-            String parameterType = parameter.asType().toString();
+            String parameterName = parameter.getSimpleName().toString(); // 参数名称
+            String parameterType = parameter.asType().toString(); // 参数类型
             // 拼接
             if (varNum++ > 0) javaFileBuilder.append(", ");
             javaFileBuilder.append(parameterType)
@@ -120,6 +120,8 @@ public class DaoProcessor extends AbstractProcessor {
             // 字符串需要转换单引号
             if (STRING.equals(parameterType)) stringParameter.add(parameterName);
         }
+
+
         // sql语句
         javaFileBuilder.append(") {\n        String sql = \"");
         // 查询内容
@@ -182,6 +184,7 @@ public class DaoProcessor extends AbstractProcessor {
             String tableClassName = obj;
             String tableName = TableProcessor.getTableName(tableClassName);
             SQLCreateTable createTableBuilder = new SQLCreateTable(tableName);
+            // 生成建表指令
             for (TableProcessor.ColumnInfo value : TableProcessor.getTableColumns(tableName).values()) {
                 if (value.id) {
                     createTableBuilder.id(value.columnName);
@@ -203,15 +206,16 @@ public class DaoProcessor extends AbstractProcessor {
      * @param javaFileBuilder builder
      */
     private void appendUpdate(StringBuilder javaFileBuilder){
-        javaFileBuilder.append("\n        long num = 0;");
-        javaFileBuilder.append("\n        Connection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
-        javaFileBuilder.append("\n        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {");
-        javaFileBuilder.append("\n            num = preparedStatement.executeUpdate();");
-        javaFileBuilder.append("\n            return num;");
-        javaFileBuilder.append("\n        } catch (SQLException e) {");
-        javaFileBuilder.append("\n            e.printStackTrace();");
-        javaFileBuilder.append("\n        }");
-        javaFileBuilder.append("\n        return num;\n    }\n");
+        javaFileBuilder.append(
+            "\n        long num = 0;" +
+            "\n        Connection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);" +
+            "\n        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {" +
+            "\n            num = preparedStatement.executeUpdate();" +
+            "\n            return num;" +
+            "\n        } catch (SQLException e) {" +
+            "\n            e.printStackTrace();" +
+            "\n        }" +
+            "\n        return num;\n    }\n");
     }
 
     /**
