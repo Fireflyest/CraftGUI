@@ -207,15 +207,15 @@ public class DaoProcessor extends AbstractProcessor {
      */
     private void appendUpdate(StringBuilder javaFileBuilder){
         javaFileBuilder.append(
-            "\n        long num = 0;" +
+            "\n        long updateDataNum = 0;" +
             "\n        Connection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);" +
             "\n        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {" +
-            "\n            num = preparedStatement.executeUpdate();" +
-            "\n            return num;" +
+            "\n            updateDataNum = preparedStatement.executeUpdate();" +
+            "\n            return updateDataNum;" +
             "\n        } catch (SQLException e) {" +
             "\n            e.printStackTrace();" +
             "\n        }" +
-            "\n        return num;\n    }\n");
+            "\n        return updateDataNum;\n    }\n");
     }
 
     /**
