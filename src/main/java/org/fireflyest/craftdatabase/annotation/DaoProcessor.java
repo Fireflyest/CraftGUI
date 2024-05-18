@@ -283,7 +283,7 @@ public class DaoProcessor extends AbstractProcessor {
         javaFileBuilder.append("\n        List<").append(objDataType).append("> objList = new ArrayList<>();");
         javaFileBuilder.append("\n        ");
         javaFileBuilder.append("\n        Connection connection = org.fireflyest.craftdatabase.sql.SQLConnector.getConnect(url);");
-        javaFileBuilder.append("\n        if (sql.contains(\"RAND()\") && url.contains(\"sqlite\"))  sql.replace(\"RAND()\", \"RANDOM()\");");
+        javaFileBuilder.append("\n        if (sql.contains(\"RAND()\") && url.contains(\"sqlite\"))  sql = sql.replace(\"RAND()\", \"RANDOM()\");");
         javaFileBuilder.append("\n        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sql)) {");
         if (returnArray){
             javaFileBuilder.append("\n            while (resultSet.next()) {");
