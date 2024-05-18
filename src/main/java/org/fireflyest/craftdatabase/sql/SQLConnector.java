@@ -123,21 +123,20 @@ public class SQLConnector {
 
     private static class ConnectInfo {
 
-        public ConnectInfo(String url, String user, String password) {
+        public ConnectInfo(@Nonnull String url, @Nullable String user, @Nullable String password) {
             this.url = url;
             this.user = user;
             this.password = password;
         }
 
-        public ConnectInfo(String url) {
-            this.url = url;
-            this.user = null;
-            this.password = null;
+        public ConnectInfo(@Nonnull String url) {
+            this(url, null, null);
         }
 
         public final String url;
         public final String user;
         public final String password;
+
     }
 
 }
