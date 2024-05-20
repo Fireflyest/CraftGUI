@@ -5,6 +5,11 @@ import org.fireflyest.craftparticle.Brush;
 import org.fireflyest.craftparticle.DynamicLocation;
 import org.fireflyest.craftparticle.DynamicVector;
 
+/**
+ * 线
+ * @author Fireflyest
+ * @since 1.2
+ */
 public class LineStroke<T> extends Stroke<T> {
 
     protected final DynamicVector dVector;

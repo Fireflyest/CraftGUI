@@ -5,6 +5,11 @@ import org.bukkit.World;
 import org.fireflyest.craftparticle.Brush;
 import org.fireflyest.craftparticle.DynamicLocation;
 
+/**
+ * 点
+ * @author Fireflyest
+ * @since 1.2
+ */
 public class PointStroke<T> extends Stroke<T> {
 
     protected PointStroke(Brush<T> brush, DynamicLocation dLocation, int maxTime, int drawSpacing) {
@@ -13,14 +18,6 @@ public class PointStroke<T> extends Stroke<T> {
 
     public PointStroke(Brush<T> brush, DynamicLocation dLocation, int maxTime) {
         super(brush, dLocation, maxTime);
-    }
-
-    @Override
-    public boolean draw() {
-        if (this.canDraw()) {
-            this.realtimeDraw();
-        }
-        return maxTime >= 0;
     }
 
     @Override
