@@ -11,6 +11,11 @@ import org.bukkit.util.Vector;
 import org.fireflyest.craftparticle.Brush;
 
 
+/**
+ * 绘制工具类
+ * @author Fireflyest
+ * @since 1.2
+ */
 public class ParticleUtils {
     
     private ParticleUtils() {
