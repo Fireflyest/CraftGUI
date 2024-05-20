@@ -3,6 +3,11 @@ package org.fireflyest.craftparticle.stroke;
 import org.fireflyest.craftparticle.Brush;
 import org.fireflyest.craftparticle.DynamicLocation;
 
+/**
+ * 线组成的规则立方体
+ * @author Fireflyest
+ * @since 
+ */
 public class CuboidStroke<T> extends Stroke<T> {
 
     protected final DynamicLocation dLocation2;

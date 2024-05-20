@@ -3,6 +3,11 @@ package org.fireflyest.craftparticle.stroke;
 import org.fireflyest.craftparticle.Brush;
 import org.fireflyest.craftparticle.DynamicLocation;
 
+/**
+ * 四条线组成的长方形
+ * @author Fireflyest
+ * @since 1.2
+ */
 public class RectangleStroke<T> extends Stroke<T> {
 
     protected final DynamicLocation dLocation2;
