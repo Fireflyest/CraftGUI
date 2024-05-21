@@ -12,10 +12,10 @@ public class BooleanArgs implements Argument {
     @Override
     public List<String> tab(@Nonnull CommandSender sender, @Nonnull String arg) {
         List<String> argList = new ArrayList<>();
-        if (arg.startsWith("true")) {
+        if ("true".startsWith(arg)) {
             argList.add("true");
         }
-        if (arg.startsWith("false")) {
+        if ("false".startsWith(arg)) {
             argList.add("false");
         }
         return argList;
