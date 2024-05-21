@@ -12,6 +12,7 @@ import java.time.Instant;
 public class Cache<T> {
 
     private T value;
+    private Instant born;
     private Instant deadline;
 
     public Cache(T value) {
@@ -20,6 +21,7 @@ public class Cache<T> {
 
     public Cache(T value, long ms) {
         this.value = value;
+        this.born = Instant.now();
         this.deadline = Instant.now().plusMillis(ms);
     }
 
@@ -54,6 +56,14 @@ public class Cache<T> {
      */
     public void expire(long second){
          deadline = Instant.now().plusSeconds(second);
+    }
+
+    /**
+     * 获取数据最后修改后的存在时间
+     * @return 存在时间
+     */
+    public long age() {
+        return Duration.between(born, Instant.now()).toSeconds();
     }
 
     /**

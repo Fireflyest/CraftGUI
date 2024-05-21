@@ -12,17 +12,19 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CacheService<T> {
 
+    private final Random random;
     protected final Map<String, Cache<T>> cacheMap = new ConcurrentHashMap<>();
     protected final Map<String, Cache<Set<T>>> cacheSetMap = new ConcurrentHashMap<>();
 
     public CacheService() {
+        random = new Random();
     }
 
     /**
      * 删除数据
      * @param key 键
      */
-    public void del(@Nonnull String key){
+    public void del(@Nonnull String key) {
         cacheMap.remove(key);
         cacheSetMap.remove(key);
     }
@@ -32,7 +34,7 @@ public class CacheService<T> {
      * @param key 键
      * @param second 限制秒数
      */
-    public void expire(@Nonnull String key, int second){
+    public void expire(@Nonnull String key, int second) {
         Cache<T> stringCache;
         Cache<Set<T>> stringSetCache;
         if ((stringCache = cacheMap.get(key)) != null) stringCache.expire(second);
@@ -45,7 +47,7 @@ public class CacheService<T> {
      * @param key 键
      * @return 存在
      */
-    public boolean exist(@Nonnull String key){
+    public boolean exist(@Nonnull String key) {
         return this.existValue(key) || this.existValueSet(key);
     }
 
@@ -54,7 +56,7 @@ public class CacheService<T> {
      * @param key 键
      * @return 是否存在
      */
-    private boolean existValue(@Nonnull String key){
+    private boolean existValue(@Nonnull String key) {
         if (!cacheMap.containsKey(key)) return false;
         return cacheMap.get(key).get() != null;
     }
@@ -64,7 +66,7 @@ public class CacheService<T> {
      * @param key 键
      * @return 是否存在
      */
-    private boolean existValueSet(@Nonnull String key){
+    private boolean existValueSet(@Nonnull String key) {
         if (!cacheSetMap.containsKey(key)) return false;
         return cacheSetMap.get(key).get() != null;
     }
@@ -73,7 +75,7 @@ public class CacheService<T> {
      * 设置显示数据为永久
      * @param key 键
      */
-    public void persist(@Nonnull String key){
+    public void persist(@Nonnull String key) {
         Cache<T> stringCache;
         Cache<Set<T>> stringSetCache;
         if ((stringCache = cacheMap.get(key)) != null) stringCache.persist();
@@ -85,7 +87,7 @@ public class CacheService<T> {
      * @param key 键
      * @return 剩余时间
      */
-    public long ttl(@Nonnull String key){
+    public long ttl(@Nonnull String key) {
         Cache<T> stringCache;
         Cache<Set<T>> stringSetCache;
         if (existValue(key) && (stringCache = cacheMap.get(key)) != null){
@@ -102,7 +104,7 @@ public class CacheService<T> {
      * @param key 键
      * @param value 值
      */
-    public void set(@Nonnull String key, T value){
+    public void set(@Nonnull String key, T value) {
         cacheMap.put(key, new Cache<>(value));
     }
 
@@ -112,7 +114,7 @@ public class CacheService<T> {
      * @param second 期限
      * @param value 值
      */
-    public void setex(@Nonnull String key, int second, T value){
+    public void setex(@Nonnull String key, int second, T value) {
         cacheMap.put(key, new Cache<>(value, second * 1000L));
     }
 
@@ -122,7 +124,7 @@ public class CacheService<T> {
      * @param ms 期限
      * @param value 值
      */
-    public void setexms(@Nonnull String key, int ms, T value){
+    public void setexms(@Nonnull String key, int ms, T value) {
         cacheMap.put(key, new Cache<>(value, ms));
     }
 
@@ -132,7 +134,7 @@ public class CacheService<T> {
      * @return 值
      */
     @Nullable
-    public T get(@Nonnull String key){
+    public T get(@Nonnull String key) {
         return cacheMap.containsKey(key) ? cacheMap.get(key).get() : null;
     }
 
@@ -142,10 +144,19 @@ public class CacheService<T> {
      * @param value 新值
      * @return 旧值
      */
-    public T getSet(@Nonnull String key, T value){
+    public T getSet(@Nonnull String key, T value) {
         T cacheValue = get(key);
         set(key, value);
         return cacheValue;
+    }
+
+    /**
+     * 获取数据最后修改后存在时间
+     * @param key 键
+     * @return 存在时间
+     */
+    public long age(@Nonnull String key) {
+        return cacheMap.containsKey(key) ? cacheMap.get(key).age() : -1;
     }
 
     /**
@@ -154,10 +165,9 @@ public class CacheService<T> {
      * @param value 值
      */
     @SafeVarargs
-    public final void sadd(@Nonnull String key, T... value){
-        if (!cacheSetMap.containsKey(key)) cacheSetMap.put(key, new Cache<>(new HashSet<>()));
-        Set<T> stringSet;
-        if ((stringSet = cacheSetMap.get(key).get()) != null){
+    public final void sadd(@Nonnull String key, T... value) {
+        Set<T> stringSet = cacheSetMap.computeIfAbsent(key, k -> new Cache<>(new HashSet<>())).get();
+        if (stringSet != null){
             stringSet.addAll(Set.of(value));
         }
     }
@@ -167,7 +177,7 @@ public class CacheService<T> {
      * @param key 键
      * @return 数据集
      */
-    public Set<T> smembers(@Nonnull String key){
+    public Set<T> smembers(@Nonnull String key) {
         return cacheSetMap.containsKey(key) ? cacheSetMap.get(key).get() : Collections.emptySet();
     }
 
@@ -177,7 +187,7 @@ public class CacheService<T> {
      * @param value 值
      */
     @SafeVarargs
-    public final void srem(@Nonnull String key, T... value){
+    public final void srem(@Nonnull String key, T... value) {
         smembers(key).removeAll(Set.of(value));
     }
 
@@ -187,15 +197,15 @@ public class CacheService<T> {
      * @return 值
      */
     @Nullable
-    public T spop(@Nonnull String key){
+    public T spop(@Nonnull String key) {
         Set<T> smembers = smembers(key);
         int size;
         if ((size = smembers.size()) == 0) return null;
-        int random = new Random().nextInt(size);
+        int randomInt = random.nextInt(size);
         Iterator<T> iterator = smembers.iterator();
         while (iterator.hasNext()){
             T value = iterator.next();
-            if (random-- == 0){
+            if (randomInt-- == 0){
                 iterator.remove();
                 return value;
             }
@@ -208,7 +218,7 @@ public class CacheService<T> {
      * @param key 键
      * @return 数量
      */
-    public int scard(@Nonnull String key){
+    public int scard(@Nonnull String key) {
         return smembers(key).size();
     }
 
