@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 public class StringCacheService extends CacheService<String>{
 
     public StringCacheService() {
+        //
     }
 
     /**
@@ -17,7 +18,7 @@ public class StringCacheService extends CacheService<String>{
      * @param key 键
      * @param value 扩展值
      */
-    public void append(@Nonnull String key, String value){
+    public void append(@Nonnull String key, String value) {
         Cache<String> cache;
         if ((cache = cacheMap.get(key)) != null){
             String cacheValue = cache.get();
