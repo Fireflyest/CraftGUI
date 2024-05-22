@@ -30,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.fireflyest.CraftGUI;
+import org.fireflyest.craftdatabase.cache.StringCacheService;
 import org.fireflyest.craftgui.api.View;
 import org.fireflyest.craftgui.api.ViewGuide;
 import org.fireflyest.craftgui.api.ViewPage;
@@ -58,6 +59,8 @@ public class ViewGuideImpl implements ViewGuide {
     public final Set<String> viewRedirect = new HashSet<>();
 
     private final Map<String, PacketContainer> packets = new ConcurrentHashMap<>();
+
+    private final StringCacheService cache = new StringCacheService();
 
     public static final boolean DEBUG = false;
 
@@ -316,6 +319,11 @@ public class ViewGuideImpl implements ViewGuide {
     @Override
     public boolean unUsed(String playerName) {
         return !viewPageUsing.containsKey(playerName);
+    }
+
+    @Override
+    public StringCacheService getViewVariable() {
+        return cache;
     }
 
     /**
