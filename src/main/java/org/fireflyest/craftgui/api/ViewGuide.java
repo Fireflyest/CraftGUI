@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.fireflyest.craftdatabase.cache.StringCacheService;
 
 /**
  * 视图导航
@@ -96,6 +97,8 @@ public interface ViewGuide {
      */
     void updateButton(@Nonnull Player player, int slot, @Nonnull ItemStack buttonItem);
 
+    // void updateTitle();
+
     /**
      * 获取所有正在浏览的玩家
      * @return 玩家集
@@ -108,5 +111,11 @@ public interface ViewGuide {
      * @return 是否浏览者
      */
     boolean unUsed(String playerName);
+
+    /**
+     * 获取文本变量
+     * @return 文本变量
+     */
+    StringCacheService getViewVariable();
 
 }
