@@ -9,12 +9,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.fireflyest.crafttask.exception.ExecuteException;
 
+/**
+ * 任务
+ * @author Fireflyest
+ * @since 1.2
+ */
 public abstract class Task {
     
     protected final String playerName;
     protected final Player player;
 
-    protected Task(String playerName) {
+    protected Task(@Nonnull String playerName) {
         this.playerName = playerName;
         this.player = Bukkit.getPlayerExact(playerName);
     }
