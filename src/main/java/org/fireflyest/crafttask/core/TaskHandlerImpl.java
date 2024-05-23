@@ -3,6 +3,7 @@ package org.fireflyest.crafttask.core;
 import java.util.HashMap;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -53,17 +54,17 @@ public class TaskHandlerImpl implements TaskHandler {
     }
 
     @Override
-    public void prepareTask(String key, TaskFactory<?> factory) {
+    public void prepareTask(@Nonnull String key, @Nonnull TaskFactory<?> factory) {
         factoryMap.put(key, factory);
     }
 
     @Override
-    public void runTask(JavaPlugin plugin, String key, String value) {
+    public void runTask(@Nonnull JavaPlugin plugin, @Nonnull String key, @Nullable String value) {
         this.runTask(plugin, key, value, 0, 0, 1);
     }
 
     @Override
-    public void runTask(JavaPlugin plugin, String key, String value, long delay, long period, int count) {
+    public void runTask(@Nonnull JavaPlugin plugin, @Nonnull String key, @Nullable String value, long delay, long period, int count) {
         BukkitRunnable runnable = this.runnable(plugin, key, value, count);
         if (runnable != null) {
             runnable.runTaskTimer(plugin, delay, period);
@@ -71,12 +72,12 @@ public class TaskHandlerImpl implements TaskHandler {
     }
 
     @Override
-    public void runTaskAsynchronously(JavaPlugin plugin, String key, String value) {
+    public void runTaskAsynchronously(@Nonnull JavaPlugin plugin, @Nonnull String key, @Nullable String value) {
         this.runTaskAsynchronously(plugin, key, value, 0, 0, 1);
     }
 
     @Override
-    public void runTaskAsynchronously(JavaPlugin plugin, String key, String value, long delay, long period, int count) {
+    public void runTaskAsynchronously(@Nonnull JavaPlugin plugin, @Nonnull String key, @Nullable String value, long delay, long period, int count) {
         BukkitRunnable runnable = this.runnable(plugin, key, value, count);
         if (runnable != null) {
             runnable.runTaskTimerAsynchronously(plugin, delay, period);
