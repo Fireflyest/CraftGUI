@@ -17,6 +17,7 @@ public class Cache<T> {
 
     public Cache(T value) {
         this.value = value;
+        this.born = Instant.now();
     }
 
     public Cache(T value, long ms) {
