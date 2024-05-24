@@ -290,7 +290,7 @@ public class DaoProcessor extends AbstractProcessor {
         } else {
             javaFileBuilder.append("\n            if (resultSet.next()) {");
         }
-        if (returnAll) {
+        if (returnAll) { // 返回所有column
             javaFileBuilder.append("\n                ").append(objType).append(" obj = new ").append(objType).append("();");
             for (Map.Entry<String, TableProcessor.ColumnInfo> columnInfoEntry : TableProcessor.getTableColumns(tableName).entrySet()) {
                 TableProcessor.ColumnInfo columnInfo = columnInfoEntry.getValue();
@@ -300,7 +300,13 @@ public class DaoProcessor extends AbstractProcessor {
                         .append(this.toSqlDataType(columnInfo.dataType))
                         .append("(\"").append(columnInfo.columnName).append("\"));");
             }
-        } else {
+        } else if (selectColumn.contains("(")) { // 函数例如SUM()
+            javaFileBuilder.append("\n                ")
+            .append(objType)
+            .append(" obj = resultSet.get")
+            .append(objDataType)
+            .append("(1);");
+        } else { // 返回单个column
             TableProcessor.ColumnInfo columnInfo = TableProcessor.getTableColumns(tableName).get(selectColumn.replace("`", ""));
             if (columnInfo != null) {
                 javaFileBuilder.append("\n                ")
