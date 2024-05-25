@@ -17,11 +17,13 @@ public class MapCanvasDrawer {
      * @param x1 终点x
      * @param y1 终点y
      * @param color 颜色
-     * @return
+     * @return 画笔
      */
     public MapCanvasDrawer drawLine(int x0, int y0, int x1, int y1,  byte color) {
-        int dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-        int dy = Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+        int dx = Math.abs(x1 - x0);
+        int sx = x0 < x1 ? 1 : -1;
+        int dy = Math.abs(y1 - y0);
+        int sy = y0 < y1 ? 1 : -1;
         int erro = (dx > dy ? dx : -dy) / 2;
      
         do {

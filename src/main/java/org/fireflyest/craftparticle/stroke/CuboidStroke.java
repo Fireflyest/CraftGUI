@@ -6,7 +6,7 @@ import org.fireflyest.craftparticle.DynamicLocation;
 /**
  * 线组成的规则立方体
  * @author Fireflyest
- * @since 
+ * @since 1.2
  */
 public class CuboidStroke<T> extends Stroke<T> {
 
