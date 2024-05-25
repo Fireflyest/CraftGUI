@@ -90,7 +90,7 @@ public class StringUtils {
 
 	/**
 	 * 列表转换为文本
-	 * @param list 列表
+	 * @param obj 列表
 	 * @return 文本
 	 */
 	public static String toJsonString(@Nonnull Object obj) {
