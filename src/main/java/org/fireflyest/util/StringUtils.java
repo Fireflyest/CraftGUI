@@ -118,6 +118,24 @@ public class StringUtils {
         return string == null ? null : gson.fromJson(string, type);
 	}
 
+	/**
+	 * 文本进度条
+	 * @param progress 进度
+	 * @param bgc 背景颜色
+	 * @param fgc 前景颜色
+	 * @param max 最大数量
+	 * @return 进度条文本
+	 */
+	public static String stringProgress(double progress, String bgc, String fgc, int max) {
+		StringBuilder sb = new StringBuilder(fgc);
+		String bar = "▎";
+		int progressBar = (int)(max * progress);
+		sb.append(bar.repeat(progressBar))
+			.append(bgc)
+			.append(bar.repeat(max - progressBar));
+		return sb.toString();
+	}
+
     /**
 	 * 版本号比较
 	 * @param v1 版本1
