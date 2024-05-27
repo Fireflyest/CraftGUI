@@ -127,6 +127,10 @@ public class StringUtils {
 	 * @return 进度条文本
 	 */
 	public static String stringProgress(double progress, String bgc, String fgc, int max) {
+		if (progress < 0) progress = 0;
+		if (progress > 1) progress = 1;
+		if (max < 2) max = 2;
+		if (max > 50) max = 50;
 		StringBuilder sb = new StringBuilder(fgc);
 		String bar = "▎";
 		int progressBar = (int)(max * progress);
