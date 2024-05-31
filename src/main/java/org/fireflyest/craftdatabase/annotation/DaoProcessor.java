@@ -316,6 +316,8 @@ public class DaoProcessor extends AbstractProcessor {
                     .append("(\"")
                     .append(columnInfo.columnName)
                     .append("\");");
+            } else {
+                javaFileBuilder.append("\n                ").append("// columnInfo is null: ").append(tableName).append(".").append(selectColumn.replace("`", ""));
             }
         }
         javaFileBuilder.append("\n                objList.add(obj);");
