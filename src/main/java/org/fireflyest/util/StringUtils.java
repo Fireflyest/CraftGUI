@@ -31,7 +31,7 @@ public class StringUtils {
      * @param vars 变量
      * @return 文本
      */
-    public static String format(String text, String... vars) {
+    public static String format(String text, Object... vars) {
         if (text == null) {
             return null;
         }
@@ -39,8 +39,8 @@ public class StringUtils {
             int index = 0;
             @Override
             public String getVar(String key) {
-                if ("".equals(key)) return vars[index++];
-                return vars[NumberConversions.toInt(key)];
+				Object ret = "".equals(key) ? vars[index++] : vars[NumberConversions.toInt(key)];
+				return String.valueOf(ret);
             }
         });
     }
@@ -133,7 +133,7 @@ public class StringUtils {
 		if (max > 50) max = 50;
 		StringBuilder sb = new StringBuilder(fgc);
 		String bar = "▎";
-		int progressBar = (int)(max * progress);
+		int progressBar = NumberConversions.round(max * progress);
 		sb.append(bar.repeat(progressBar))
 			.append(bgc)
 			.append(bar.repeat(max - progressBar));
