@@ -9,32 +9,11 @@ import javax.annotation.Nonnull;
  */
 public abstract class PrepareTask extends Task {
 
-    protected String value;
+    protected Object[] values;
 
-    protected PrepareTask(@Nonnull String playerName, String value) {
+    protected PrepareTask(@Nonnull String playerName, Object... values) {
         super(playerName);
-        this.value = value;
+        this.values = values;
     }
-
-    protected PrepareTask(String value) {
-        this("", value);
-    }
-
-    /**
-     * 获取数据值
-     * @return 数据文本
-     */
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * 设置数据值
-     * @param value 数据文本
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
-
 
 }
