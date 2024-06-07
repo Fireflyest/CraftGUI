@@ -11,9 +11,9 @@ public abstract class TaskFactory<T extends PrepareTask> {
     
     /**
      * @see TaskHandler#prepareTask(String, TaskFactory)
-     * @param values 创建任务所需参数
+     * @param value 创建任务所需参数
      * @return 任务
      */
-    public abstract T create(@Nonnull String playerName, Object... values);
+    public abstract T create(@Nonnull String value);
 
 }
