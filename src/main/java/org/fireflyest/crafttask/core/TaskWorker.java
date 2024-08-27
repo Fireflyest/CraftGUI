@@ -115,7 +115,7 @@ public class TaskWorker {
                 // Restore interrupted state...
                 Thread.currentThread().interrupt();
                 this.stop();
-            } catch (ExecuteException e) {
+            } catch (Exception e) {
                 String info = String.format("error on '%s' execute, '%s' stop working!", taskName, name);
                 plugin.getLogger().severe(info);
                 e.printStackTrace();
